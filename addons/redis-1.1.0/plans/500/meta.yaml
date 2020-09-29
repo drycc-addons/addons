@@ -1,0 +1,5 @@
+name: 500
+id: 560817c2-5aa1-41c4-9ee6-a77e3ee552d5
+description: "Redis 500 plan which limit resources memory size 500Mi."
+displayName: 500
+bindable: true

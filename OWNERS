@@ -1,0 +1,24 @@
+filters:
+  '.*':
+    approvers:
+      - polskikiel
+      - mszostok
+      - piotrmiskiewicz
+      - PK85
+      - jasiu001
+      - adamwalach
+      - ksputo
+      - kjaksik
+      - crabtree
+    labels:
+      - area/service-catalog
+  '\.md$|/docs/|^milv\.config\.yaml$':
+    approvers:
+      - kazydek
+      - klaudiagrz
+      - bszwarc
+      - mmitoraj
+      - majakurcius
+      - alexandra-simeonova
+    labels:
+      - area/documentation

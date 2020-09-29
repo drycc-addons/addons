@@ -1,0 +1,15 @@
+name: mysql
+version: 1.1.0
+id: 332588e0-6c2c-4f56-a6af-a56fd01ec4b4
+description: "MySQL by Helm Broker."
+displayName: "mysql"
+
+tags: database
+labels:
+  experimental: "true"
+providerDisplayName: bitnami
+longDescription: "MySQL by Helm Broker."
+documentationURL: https://github.com/bitnami/bitnami-docker-mysql
+supportURL: https://bitnami.com/support
+bindable: true
+bindingsRetrievable: true

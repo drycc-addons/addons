@@ -1,0 +1,5 @@
+name: standard-800
+id: b9647b2c-a7f6-474e-8c69-9f9049de2df1
+description: "mysql standard-800 plan which limit persistence size 800Gi."
+displayName: standard-800
+bindable: true

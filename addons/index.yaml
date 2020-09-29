@@ -1,0 +1,18 @@
+apiVersion: v1
+entries:
+  memcached:
+    - name: memcached
+      description: "Memcached is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering."
+      version: 1.1.0
+  mysql:
+    - name: mysql
+      description: "MySQL is a fast, reliable, scalable, and easy to use open-source relational database system."
+      version: 1.1.0
+  postgresql:
+    - name: postgresql
+      description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
+      version: 1.1.0
+  redis:
+    - name: redis
+      description: "Redis is an advanced key-value cache and store."
+      version: 1.1.0

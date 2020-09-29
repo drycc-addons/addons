@@ -1,0 +1,5 @@
+name: standard-512
+id: a6662a84-8c26-405f-b705-223c0ab24047
+description: "postgresql standard-512 plan which limit persistence size 512Gi."
+displayName: standard-512
+bindable: true

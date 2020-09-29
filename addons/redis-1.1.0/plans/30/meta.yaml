@@ -1,0 +1,5 @@
+name: 30
+id: 8a74b20e-f443-47f7-aeab-1dd21b9b6ad6
+description: "Redis 30 plan which limit resources memory size 30Mi."
+displayName: 30
+bindable: true

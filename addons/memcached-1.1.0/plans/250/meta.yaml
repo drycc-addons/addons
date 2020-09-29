@@ -1,0 +1,5 @@
+name: 250
+id: c8530abf-46fc-4e14-b7b4-dca3ceca7156
+description: "Memcached 250 plan which which limit resources memory size 250Mi."
+displayName: 250
+bindable: true

@@ -1,0 +1,12 @@
+credential:
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "memcached.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "memcached.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="memcache")].port }'

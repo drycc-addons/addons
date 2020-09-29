@@ -1,0 +1,5 @@
+name: standard-1000
+id: 6fee6333-8c29-446c-a37c-e76c3ec70ca2
+description: "postgresql standard-1000 plan which limit persistence size 1Ti."
+displayName: standad-1000
+bindable: true

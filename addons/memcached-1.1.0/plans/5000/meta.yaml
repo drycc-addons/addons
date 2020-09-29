@@ -1,0 +1,5 @@
+name: 5000
+id: 3c45190e-1f8b-4b02-8ba8-61a3b7a72591
+description: "Memcached 5000 plan which which limit resources memory size 5Gi."
+displayName: 5000
+bindable: true

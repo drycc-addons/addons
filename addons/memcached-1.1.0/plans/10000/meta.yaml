@@ -1,0 +1,5 @@
+name: 10000
+id: f1e8050e-e69b-49f5-a0d7-d72a073eb973
+description: "Memcached 10000 plan which which limit resources memory size 10Gi."
+displayName: 10000
+bindable: true

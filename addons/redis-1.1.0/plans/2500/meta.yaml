@@ -1,0 +1,5 @@
+name: 2500
+id: ad51b7bb-9b12-4ffd-8e49-010c0141b263
+description: "Redis 2500 plan which limit resources memory size 2.5Gi."
+displayName: 2500
+bindable: true

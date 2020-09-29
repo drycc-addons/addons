@@ -1,0 +1,5 @@
+name: 50000
+id: 98bb0468-df09-4aff-8572-211a31a8debf
+description: "Redis 50000 plan which limit resources memory size 50Gi."
+displayName: 50000
+bindable: true

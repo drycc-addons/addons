@@ -1,0 +1,64 @@
+credential:
+  {{- if not .Values.sentinel.enabled }}
+  - name: MASTERHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-master
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: MASTERPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-master
+        jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
+  {{- end }}
+
+  {{- if .Values.sentinel.enabled }}
+  - name: SENTINELHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: REDISPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}
+        {{- if .Values.master.service.nodePort }}
+        jsonpath: '{ .spec.ports[?(@.name=="redis")].nodePort }'
+        {{- else }}
+        jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
+        {{- end }}
+
+  - name: SENTINELPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}
+        {{- if .Values.sentinel.service.redisNodePort }}
+        jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].nodePort }'
+        {{- else }}
+        jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].port }'
+        {{- end }}
+  {{- end }}
+
+  {{- if and .Values.cluster.enabled (not .Values.sentinel.enabled) }}
+  - name: SLAVEHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-slave
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: SLAVEPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-slave
+        jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
+  {{- end }}
+
+  {{- if .Values.usePassword }}
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "redis.fullname" . }}
+        key: redis-password
+  {{- end }}

@@ -1,0 +1,5 @@
+name: 40000
+id: d85104e4-704c-423d-9cd2-9ab30a29fbe6
+description: "Memcached 40000 plan which which limit resources memory size 40Gi."
+displayName: 40000
+bindable: true

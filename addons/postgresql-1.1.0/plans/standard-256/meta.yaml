@@ -1,0 +1,5 @@
+name: standard-256
+id: e25f11f4-724d-4989-b24c-be3ead7c3614
+description: "postgresql standard-256 plan which limit persistence size 256Gi."
+displayName: standard-256
+bindable: true
