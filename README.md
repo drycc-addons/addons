@@ -1,5 +1,7 @@
 # Addons
 
+[![Build Status](https://travis-ci.org/zhumengyuan/addons.svg?branch=master)](https://travis-ci.org/zhumengyuan/addons)
+
 ## Overview
 
 This repository contains addons which the Helm Broker uses. For more information on what the Helm Broker is, how it uses addons, and how to create your own addons, read the official Helm Broker [documentation](https://kyma-project.io/docs/master/components/helm-broker/#overview-overview).
