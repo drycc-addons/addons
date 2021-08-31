@@ -1,0 +1,49 @@
+kind: pipeline
+type: docker
+name: linux-amd64
+
+platform:
+  arch: amd64
+  os: linux
+
+steps:
+- name: check
+  image: docker.io/drycc/go-dev
+  pull: always
+  privileged: true
+  commands:
+  - make check
+  when:
+    event:
+    - pull_request
+    - push
+
+- name: release
+  image: docker.io/drycc/go-dev
+  pull: always
+  privileged: true
+  commands:
+  - make prepare-assets
+  - make latest-release
+  environment:
+    GIT_REPO: ${DRONE_REPO}
+    GIT_TAG: ${DRONE_TAG}
+    REPO_OWNER: ${DRONE_REPO_OWNER}
+    REPO_NAME: ${DRONE_REPO_NAME}
+    BOT_GITHUB_TOKEN:
+      from_secret: github_token
+  when:
+    event:
+    - push
+  volumes:
+  - name: image_registries
+    path: /etc/containers/registries.conf
+
+trigger:
+  event:
+  - push
+
+volumes:
+- name: image_registries
+  host:
+    path: /etc/containers/registries.conf

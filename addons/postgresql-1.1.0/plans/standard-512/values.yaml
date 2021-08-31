@@ -43,7 +43,7 @@ replication:
   ## NOTE: It cannot be > slaveReplicas
   numSynchronousReplicas: 0
   ## Replication Cluster application name. Useful for defining multiple replication policies
-  applicationName: hb-postgresql-standard
+  applicationName: hb-postgresql-512
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/

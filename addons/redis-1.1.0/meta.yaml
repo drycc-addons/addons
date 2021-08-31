@@ -3,13 +3,14 @@ version: 1.1.0
 id: e1fd0d37-9046-4152-a29b-d155c5657c8b
 description: "redis."
 displayName: "redis"
-
+metadata:
+  displayName: "redis"
+  provider:
+    name: bitnami
+    supportURL: http://redis.io/
+  documentationURL: https://github.com/bitnami/bitnami-docker-redis
 tags: redis
-labels:
-  experimental: "true"
-providerDisplayName: bitnami
-longDescription: "Redis by Helm Broker."
-documentationURL: https://github.com/bitnami/bitnami-docker-redis
-supportURL: http://redis.io/
 bindable: true
-bindingsRetrievable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true

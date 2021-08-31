@@ -4,7 +4,7 @@ export GITHUB_TOKEN=$(BOT_GITHUB_TOKEN)
 
 .PHONY: check
 check:
-	./scripts/checker.sh --helm-lint --directories ./addons --helm-version v2.10.0
+	./scripts/checker.sh --helm-lint --directories ./addons --helm-version v3.6.3
 
 .PHONY: prepare-assets
 prepare-assets:
