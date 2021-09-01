@@ -1,6 +1,6 @@
 # Addons
 
-[![Build Status](https://drone.drycc.cc/api/badges/zhumengyuan/addons/status.svg)](https://drone.drycc.cc/zhumengyuan/addons)
+[![Build Status](https://drone.drycc.cc/api/badges/drycc/addons/status.svg)](https://drone.drycc.cc/drycc/addons)
 
 ## Overview
 
@@ -8,7 +8,7 @@ This repository contains addons which the Helm Broker uses. For more information
 
 ## Usage
 
-The `addons` folder contains sources of addons and index files that are available in [releases](https://github.com/drycc/zhumengyuan/releases). Choose a set of addons you want to use, add your own addons, and configure the Helm Broker to fetch them.
+The `addons` folder contains sources of addons and index files that are available in [releases](https://github.com/drycc/addons/releases). Choose a set of addons you want to use, add your own addons, and configure the Helm Broker to fetch them.
 
 ### Project structure
 
