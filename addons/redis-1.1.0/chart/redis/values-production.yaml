@@ -732,8 +732,8 @@ volumePermissions:
 ## ref: https://redis.io/topics/config
 ##
 configmap: |-
-  # Enable AOF https://redis.io/topics/persistence#append-only-file
-  appendonly yes
+  # Disable AOF https://redis.io/topics/persistence#append-only-file
+  appendonly no
   # Disable RDB persistence, AOF persistence already enabled.
   save ""
 
