@@ -60,5 +60,5 @@ credential:
     valueFrom:
       secretKeyRef:
         name: {{ template "redis.fullname" . }}
-        key: redis-password
+        jsonpath: '{ .data.redis-password }'
   {{- end }}

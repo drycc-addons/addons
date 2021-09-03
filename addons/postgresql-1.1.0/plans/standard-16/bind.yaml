@@ -18,7 +18,7 @@ credential:
     valueFrom:
       secretKeyRef:
         name: {{ template "postgresql.fullname" . }}
-        key: postgresql-password
+        jsonpath: '{ .data.postgresql-password }'
 
   {{- if .Values.replication.enabled }}
   - name: READHOST
@@ -34,13 +34,13 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
 
   - name: REPLICATIONUSERNAME
-    value: {{ include "postgresql.replication.username" . | quote }}
+    value: {{ template "postgresql.replication.username" . }}
 
   - name: REPLICATIONPASSWORD
     valueFrom:
       secretKeyRef:
         name: {{ template "postgresql.fullname" . }}
-        key: postgresql-replication-password
+        jsonpath: '{ .data.postgresql-replication-password }'
   {{- end }}
 
   {{- if .Values.postgresqlDatabase }}
