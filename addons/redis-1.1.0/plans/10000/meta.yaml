@@ -1,5 +1,5 @@
-name: 10000
+name: "10000"
 id: be3fa2d0-36d2-47c5-9561-9deffe5ba373
 description: "Redis 10000 plan which limit resources memory size 10Gi."
-displayName: 10000
+displayName: "10000"
 bindable: true

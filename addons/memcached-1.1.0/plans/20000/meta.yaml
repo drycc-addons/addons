@@ -1,5 +1,5 @@
-name: 20000
+name: "20000"
 id: daa93cfc-17c7-4382-9f46-e4256359b122
 description: "Memcached 20000 plan which which limit resources memory size 20Gi."
-displayName: 20000
+displayName: "20000"
 bindable: true
