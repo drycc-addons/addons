@@ -28,8 +28,7 @@ The repository has the following service classes:
 ```
 CLASS NAME |   PLANS NAME  |           DESCRIPTION
 -----------|---------------|------------------------------------
-memcached  |  30           | Memcached 30 plan which which limit resources memory size 30Mi.
-memcached  |  100          | Memcached 100 plan which which limit resources memory size 100Mi.
+memcached  |  128          | Memcached 128 plan which which limit resources memory size 128Mi.
 memcached  |  250          | Memcached 250 plan which which limit resources memory size 250Mi.
 memcached  |  1000         | Memcached 1000 plan which which limit resources memory size 1Gi.
 memcached  |  2500         | Memcached 2500 plan which which limit resources memory size 2.5Gi.
@@ -52,8 +51,7 @@ postgresql |  standard-256 | postgresql standard-256 plan which limit persistenc
 postgresql |  standard-512 | postgresql standard-512 plan which limit persistence size 512Gi.
 postgresql |  standard-768 | postgresql standard-768 plan which limit persistence size 768Gi.
 postgresql |  standard-1000| postgresql standard-1000 plan which limit persistence size 1Ti.
-redis      |  30           | Redis 30 plan which limit resources memory size 30Mi.
-redis      |  100          | Redis 100 plan which limit resources memory size 100Mi.
+redis      |  128          | Redis 128 plan which limit resources memory size 128Mi.
 redis      |  250          | Redis 250 plan which limit resources memory size 250Mi.
 redis      |  500          | Redis 500 plan which limit resources memory size 500Mi.
 redis      |  1000         | Redis 1000 plan which limit resources memory size 1Gi.

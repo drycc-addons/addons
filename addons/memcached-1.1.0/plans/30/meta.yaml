@@ -1,5 +1,0 @@
-name: "30"
-id: 78c706f7-af99-4e43-82cb-30a7ecb40648
-description: "Memcached 30 plan which which limit resources memory size 30Mi."
-displayName: "30"
-bindable: true

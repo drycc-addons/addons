@@ -7,7 +7,7 @@ global:
 
 ## String to fully override redis.fullname template
 ##
-fullnameOverride: hb-redis-30
+fullnameOverride: hb-redis-128
 
 ## Cluster settings
 cluster:
@@ -29,10 +29,10 @@ sentinel:
   resources:
     limits:
       cpu: 100m
-      memory: 30Mi
+      memory: 128Mi
     requests:
       cpu: 10m
-      memory: 30Mi
+      memory: 64Mi
 
 ##
 ## Redis Master parameters
@@ -46,10 +46,10 @@ master:
   resources:
     limits:
       cpu: 100m
-      memory: 30Mi
+      memory: 128Mi
     requests:
       cpu: 10m
-      memory: 30Mi
+      memory: 64Mi
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -84,15 +84,13 @@ master:
 ## The rest of the parameters are either optional or, if undefined, will inherit those declared in Redis Master
 ##
 slave:
-  ## Slave Service properties
-
   resources:
     limits:
       cpu: 100m
-      memory: 30Mi
+      memory: 128Mi
     requests:
       cpu: 10m
-      memory: 30Mi
+      memory: 64Mi
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

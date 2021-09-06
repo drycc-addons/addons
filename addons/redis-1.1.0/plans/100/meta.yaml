@@ -1,5 +1,0 @@
-name: "100"
-id: 8d659058-a3b4-4058-b039-cc03a31b9442
-description: "Redis 100 plan which limit resources memory size 100Mi."
-displayName: "100"
-bindable: true
