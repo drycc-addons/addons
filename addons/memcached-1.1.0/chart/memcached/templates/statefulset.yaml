@@ -37,6 +37,28 @@ spec:
         fsGroup: {{ .Values.securityContext.fsGroup }}
         runAsUser: {{ .Values.securityContext.runAsUser }}
       {{- end }}
+      {{- if .Values.persistence.enabled }}
+      initContainers:
+        {{- if .Values.persistence.enabled }}
+        - name: volume-permissions
+          image: {{ template "memcached.volumePermissions.image" . }}
+          imagePullPolicy: {{ .Values.volumePermissions.image.pullPolicy | quote }}
+          command:
+            - /bin/bash
+            - -ec
+            - |
+              touch /cache-state/memory_file
+              chown -R {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.fsGroup }} /cache-state
+          securityContext:
+            runAsUser: 0
+          {{- if .Values.volumePermissions.resources }}
+          resources: {{- toYaml .Values.volumePermissions.resources | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /cache-state
+        {{- end }}
+      {{- end }}
       containers:
         - name: memcached
           {{- if .Values.persistence.enabled }}

@@ -96,6 +96,13 @@ The following tables lists the configurable parameters of the Memcached chart an
 | `metrics.service.type`                   | Kubernetes service type for Prometheus metrics                                                         | `ClusterIP`                                                  |
 | `metrics.service.port`                   | Prometheus metrics service port                                                                        | `9150`                                                       |
 | `metrics.service.annotations`            | Prometheus exporter svc annotations                                                                    | `{prometheus.io/scrape: "true", prometheus.io/port: "9150"}` |
+| `volumePermissions.image.registry`             | Init container volume-permissions image registry                                               | `docker.io`                                                  |
+| `volumePermissions.image.repository`           | Init container volume-permissions image name                                                   | `bitnami/bitnami-shell`                                      |
+| `volumePermissions.image.tag`                  | Init container volume-permissions image tag                                                    | `"10"`                                                       |
+| `volumePermissions.image.pullPolicy`           | Init container volume-permissions image pull policy                                            | `Always`                                                     |
+| `volumePermissions.image.pullSecrets`          | Specify docker-registry secret names as an array                                               | `[]` (does not add image pull secrets to deployed pods)      |
+| `volumePermissions.resources.limits`           | Init container volume-permissions resource  limits                                             | `{}`                                                         |
+| `volumePermissions.resources.requests`         | Init container volume-permissions resource  requests                                           | `{}`                                                         |
 
 The above parameters map to the env variables defined in [bitnami/memcached](http://github.com/bitnami/bitnami-docker-memcached). For more information please refer to the [bitnami/memcached](http://github.com/bitnami/bitnami-docker-memcached) image documentation.
 
