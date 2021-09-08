@@ -231,7 +231,7 @@ spec:
               containerPort: 9121
           resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
   {{- end }}
-      {{- $needsVolumePermissions := and .Values.volumePermissions.enabled (and ( and .Values.master.persistence.enabled (not .Values.persistence.existingClaim) ) .Values.securityContext.enabled) }}
+      {{- $needsVolumePermissions := and .Values.volumePermissions.enabled (and ( and .Values.master.persistence.enabled ) .Values.securityContext.enabled) }}
       {{- if or $needsVolumePermissions .Values.sysctlImage.enabled }}
       initContainers:
       {{- if $needsVolumePermissions }}
@@ -287,11 +287,9 @@ spec:
         - name: "redis-data"
           emptyDir: {}
         {{- else }}
-        {{- if .Values.persistence.existingClaim }}
         - name: "redis-data"
           persistentVolumeClaim:
-            claimName: {{ .Values.persistence.existingClaim }}
-        {{- end }}
+            claimName: {{ template "redis.fullname" . }}-master
         {{- end }}
         {{- if .Values.sysctlImage.mountHostSys }}
         - name: host-sys
@@ -306,32 +304,6 @@ spec:
             secretName: {{ required "A secret containing the certificates for the TLS traffic is required when TLS in enabled" .Values.tls.certificatesSecret }}
             defaultMode: 256
         {{- end }}
-  {{- if and .Values.master.persistence.enabled (not .Values.persistence.existingClaim) }}
-  volumeClaimTemplates:
-    - metadata:
-        name: redis-data
-        labels:
-          app: {{ template "redis.name" . }}
-          release: {{ .Release.Name }}
-          heritage: {{ .Release.Service }}
-          component: master
-      spec:
-        accessModes:
-        {{- range .Values.master.persistence.accessModes }}
-          - {{ . | quote }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.master.persistence.size | quote }}
-        {{ include "redis.master.storageClass" . }}
-        selector:
-        {{- if .Values.master.persistence.matchLabels }}
-          matchLabels: {{- toYaml .Values.master.persistence.matchLabels | nindent 12 }}
-        {{- end -}}
-        {{- if .Values.master.persistence.matchExpressions }}
-          matchExpressions: {{- toYaml .Values.master.persistence.matchExpressions | nindent 12 }}
-        {{- end -}}
-  {{- end }}
   updateStrategy:
     type: {{ .Values.master.statefulset.updateStrategy }}
     {{- if .Values.master.statefulset.rollingUpdatePartition }}

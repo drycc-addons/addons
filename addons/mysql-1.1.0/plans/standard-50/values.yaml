@@ -46,9 +46,6 @@ master:
     ## Persistent Volume size
     ##
     size: 50Gi
-    ## Use an existing PVC
-    ##
-    # existingClaim:
 
 ## Slave nodes parameters
 ##
@@ -98,6 +95,3 @@ slave:
     ## Persistent Volume size
     ##
     size: 50Gi
-    ## Use an existing PVC
-    ##
-    # existingClaim:

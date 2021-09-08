@@ -1,0 +1,26 @@
+{{- if .Values.master.persistence.enabled }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "redis.fullname" . }}-master
+  labels:
+    app: {{ template "redis.name" . }}
+    component: master
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- with .Values.master.persistence.annotations }}
+annotations:
+  {{- range $key, $value := . }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+  {{- end }}
+spec:
+  accessModes:
+  {{- range .Values.master.persistence.accessModes }}
+  - {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.master.persistence.size | quote }}
+  {{ include "redis.master.storageClass" . }}
+{{- end }}

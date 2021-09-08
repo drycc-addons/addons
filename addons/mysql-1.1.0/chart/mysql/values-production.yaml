@@ -311,9 +311,6 @@ master:
     ## Persistent Volume size
     ##
     size: 8Gi
-    ## Use an existing PVC
-    ##
-    # existingClaim:
 
 ## Slave nodes parameters
 ##
@@ -475,9 +472,6 @@ slave:
     ## Persistent Volume size
     ##
     size: 8Gi
-    ## Use an existing PVC
-    ##
-    # existingClaim:
 
 ## MySQL Service properties
 ##

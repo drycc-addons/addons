@@ -238,27 +238,9 @@ spec:
 {{- if not .Values.slave.persistence.enabled }}
         - name: "data"
           emptyDir: {}
-{{- else if and .Values.slave.persistence.enabled .Values.slave.persistence.existingClaim }}
+{{- else }}
         - name: "data"
           persistentVolumeClaim:
-            claimName: {{ .Values.slave.persistence.existingClaim }}
-{{- else if and .Values.slave.persistence.enabled (not .Values.slave.persistence.existingClaim) }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-        labels:
-          app: {{ template "mysql.name" . }}
-          component: slave
-          release: {{ .Release.Name }}
-          heritage: {{ .Release.Service }}
-      spec:
-        accessModes:
-        {{- range .Values.slave.persistence.accessModes }}
-          - {{ . | quote }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.slave.persistence.size | quote }}
-        {{ include "mysql.slave.storageClass" . }}
+            claimName: {{ template "mysql.slave.fullname" . }}
 {{- end }}
 {{- end }}

@@ -139,24 +139,7 @@ spec:
       volumes:
         - name: tmp
           emptyDir: {}
-{{- if .Values.persistence.enabled }}
-  volumeClaimTemplates:
-    - metadata:
-        name: data
-      {{- with .Values.persistence.annotations }}
-        annotations:
-        {{- range $key, $value := . }}
-          {{ $key }}: {{ $value }}
-        {{- end }}
-      {{- end }}
-      spec:
-        accessModes:
-        {{- range .Values.persistence.accessModes }}
-          - {{ . | quote }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.persistence.size | quote }}
-        {{ include "memcached.storageClass" . | nindent 8 }}
-{{- end }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ template "memcached.fullname" . }}
 {{- end }}

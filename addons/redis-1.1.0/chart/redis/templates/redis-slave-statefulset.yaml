@@ -316,31 +316,10 @@ spec:
         - name: redis-data
           emptyDir: {}
     {{- else }}
-  volumeClaimTemplates:
-    - metadata:
-        name: redis-data
-        labels:
-          app: {{ template "redis.name" . }}
-          release: {{ .Release.Name }}
-          heritage: {{ .Release.Service }}
-          component: slave
-      spec:
-        accessModes:
-        {{- range .Values.slave.persistence.accessModes }}
-          - {{ . | quote }}
-        {{- end }}
-        resources:
-          requests:
-            storage: {{ .Values.slave.persistence.size | quote }}
-        {{ include "redis.slave.storageClass" . }}
-        selector:
-        {{- if .Values.slave.persistence.matchLabels }}
-          matchLabels: {{- toYaml .Values.slave.persistence.matchLabels | nindent 12 }}
-        {{- end -}}
-        {{- if .Values.slave.persistence.matchExpressions }}
-          matchExpressions: {{- toYaml .Values.slave.persistence.matchExpressions | nindent 12 }}
-        {{- end -}}
-  {{- end }}
+        - name: "redis-data"
+          persistentVolumeClaim:
+            claimName: {{ template "redis.fullname" . }}-slave
+    {{- end }}
   updateStrategy:
     type: {{ .Values.slave.statefulset.updateStrategy }}
     {{- if .Values.slave.statefulset.rollingUpdatePartition }}

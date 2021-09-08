@@ -123,7 +123,6 @@ The following table lists the configurable parameters of the Redis chart and the
 | `metrics.prometheusRule.additionalLabels`     | Additional labels that can be used so prometheusRules will be discovered by Prometheus                                                              | `{}`                                                    |
 | `metrics.prometheusRule.namespace`            | namespace where prometheusRules resource should be created                                                                                          | Same namespace as redis                                 |
 | `metrics.prometheusRule.rules`                | [rules](https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/) to be created, check values for an example.                     | `[]`                                                    |
-| `persistence.existingClaim`                   | Provide an existing PersistentVolumeClaim                                                                                                           | `nil`                                                   |
 | `master.persistence.enabled`                  | Use a PVC to persist data (master node)                                                                                                             | `true`                                                  |
 | `master.persistence.path`                     | Path to mount the volume at, to use other images                                                                                                    | `/data`                                                 |
 | `master.persistence.subPath`                  | Subdirectory of the volume to mount at                                                                                                              | `""`                                                    |
@@ -439,16 +438,6 @@ Note that this will not disable transparent huge tables.
 
 By default, the chart mounts a [Persistent Volume](http://kubernetes.io/docs/user-guide/persistent-volumes/) at the `/data` path. The volume is created using dynamic volume provisioning. If a Persistent Volume Claim already exists, specify it during installation.
 
-### Existing PersistentVolumeClaim
-
-1. Create the PersistentVolume
-2. Create the PersistentVolumeClaim
-3. Install the chart
-
-```bash
-$ helm install my-release --set persistence.existingClaim=PVC_NAME bitnami/redis
-```
-
 ## Backup and restore
 
 ### Backup
@@ -593,12 +582,6 @@ For releases with `metrics.enabled: true` the default tag for the exporter image
 ### To 7.0.0
 
 This version causes a change in the Redis Master StatefulSet definition, so the command helm upgrade would not work out of the box. As an alternative, one of the following could be done:
-
-  - Recommended: Create a clone of the Redis Master PVC (for example, using projects like [this one](https://github.com/edseymour/pvc-transfer)). Then launch a fresh release reusing this cloned PVC.
-
-   ```
-   helm install my-release bitnami/redis --set persistence.existingClaim=<NEW PVC>
-   ```
 
   - Alternative (not recommended, do at your own risk): `helm delete --purge` does not remove the PVC assigned to the Redis Master StatefulSet. As a consequence, the following commands can be done to upgrade the release
 
