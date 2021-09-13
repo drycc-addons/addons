@@ -22,7 +22,7 @@ persistence:
   ##
   subPath: ''
 
-  storageClass: "longhorn"
+  storageClass: ""
   accessModes:
     - ReadWriteOnce
   size: 16Gi

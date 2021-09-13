@@ -35,7 +35,7 @@ master:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "longhorn"
+    storageClass: ""
     ## PVC annotations
     ##
     annotations: {}
@@ -84,7 +84,7 @@ slave:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "longhorn"
+    storageClass: ""
     ## PVC annotations
     ##
     annotations: {}

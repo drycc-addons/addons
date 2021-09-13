@@ -3,7 +3,7 @@
 ## Current available global Docker image parameters: imageRegistry and imagePullSecrets
 ##
 global:
-  storageClass: "longhorn"
+  storageClass: ""
 
 ## String to fully override redis.fullname template
 ##
@@ -73,7 +73,7 @@ master:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "longhorn"
+    storageClass: ""
     accessModes:
       - ReadWriteOnce
     size: 1Gi
@@ -114,7 +114,7 @@ slave:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    storageClass: "longhorn"
+    storageClass: ""
     accessModes:
       - ReadWriteOnce
     size: 1Gi

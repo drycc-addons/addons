@@ -30,7 +30,7 @@ CLASS NAME |   PLANS NAME  |           DESCRIPTION
 -----------|---------------|------------------------------------
 memcached  |  128          | Memcached 128 plan which which limit resources memory size 128Mi.
 memcached  |  250          | Memcached 250 plan which which limit resources memory size 250Mi.
-memcached  |  500         | Memcached 1000 plan which which limit resources memory size 500Mi.
+memcached  |  500          | Memcached 1000 plan which which limit resources memory size 500Mi.
 memcached  |  1000         | Memcached 1000 plan which which limit resources memory size 1Gi.
 memcached  |  2500         | Memcached 2500 plan which which limit resources memory size 2.5Gi.
 memcached  |  5000         | Memcached 5000 plan which which limit resources memory size 5Gi.
