@@ -3,3 +3,4 @@ id: 44958a07-a9d3-4b26-a2be-c98324ed883f
 description: "Memcached 2500 plan which which limit resources memory size 2.5Gi."
 displayName: "2500"
 bindable: true
+maximum_polling_duration: 1800

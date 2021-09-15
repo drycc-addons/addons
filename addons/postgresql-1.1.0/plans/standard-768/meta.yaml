@@ -3,3 +3,4 @@ id: 040cc65e-7017-40ef-9c55-55d0d3bab09d
 description: "postgresql standard-768 plan which limit persistence size 768Gi."
 displayName: standard-768
 bindable: true
+maximum_polling_duration: 1800

@@ -3,3 +3,4 @@ id: e35b6726-14c2-46f1-b29c-fa937fda785e
 description: "mysql standard-50 plan which limit persistence size 50Gi."
 displayName: standard-50
 bindable: true
+maximum_polling_duration: 1800

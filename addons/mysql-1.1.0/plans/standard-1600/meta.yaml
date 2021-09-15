@@ -3,3 +3,4 @@ id: 4d1dbd33-201b-45bc-9abb-757584ef7ab8
 description: "mysql standard-1600 plan which limit persistence size 1600Gi."
 displayName: standard-1600
 bindable: true
+maximum_polling_duration: 1800

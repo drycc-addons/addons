@@ -3,3 +3,4 @@ id: 5097d76e-557c-453f-bdb1-54009e0df78d
 description: "Redis 5000 plan which limit resources memory size 5Gi."
 displayName: "5000"
 bindable: true
+maximum_polling_duration: 1800

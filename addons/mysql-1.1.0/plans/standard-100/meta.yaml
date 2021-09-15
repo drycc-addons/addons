@@ -3,3 +3,4 @@ id: d58962e4-ddd4-4b2e-8d33-01783a287d48
 description: "mysql standard-100 plan which limit persistence size 100Gi."
 displayName: standard-100
 bindable: true
+maximum_polling_duration: 1800
