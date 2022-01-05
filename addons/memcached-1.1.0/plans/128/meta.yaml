@@ -1,6 +1,0 @@
-name: "128"
-id: c8530abf-46fc-4e14-b7b4-dca3ceca7156
-description: "Memcached 128 plan which which limit resources memory size 128Mi."
-displayName: "128"
-bindable: true
-maximum_polling_duration: 1800

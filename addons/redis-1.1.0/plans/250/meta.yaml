@@ -1,6 +1,0 @@
-name: "250"
-id: 36e3dbec-fc51-4f6b-9baa-e31e316858be
-description: "Redis 250 plan which limit resources memory size 250Mi."
-displayName: "250"
-bindable: true
-maximum_polling_duration: 1800

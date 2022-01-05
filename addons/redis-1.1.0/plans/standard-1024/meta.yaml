@@ -1,0 +1,6 @@
+name: "standard-1024"
+id: d544d989-9fb8-43e9-a74e-0840ce1b8f0f
+description: "Redis standard-1024 plan which limit resources memory size 1Gi."
+displayName: "standard-1024"
+bindable: true
+maximum_polling_duration: 1800

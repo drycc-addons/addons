@@ -53,4 +53,4 @@ resources:
     memory: 4Gi
 
 ## Maximum connections for the created user
-postgresqlDbUserConnectionLimit: 400
+postgresqlDbUserConnectionLimit: 256

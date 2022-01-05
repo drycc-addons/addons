@@ -1,6 +1,0 @@
-name: standard-25
-id: 5c90e749-1db9-425e-b7d6-7978fc7fa4fb
-description: "mysql standard-25 plan which limit persistence size 25Gi."
-displayName: standard-25
-bindable: true
-maximum_polling_duration: 1800

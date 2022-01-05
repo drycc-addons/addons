@@ -1,6 +1,0 @@
-name: "40000"
-id: 25c6b5d5-7505-47c8-95b1-dc9bdc698063
-description: "Redis 40000 plan which limit resources memory size 40Gi."
-displayName: "40000"
-bindable: true
-maximum_polling_duration: 1800

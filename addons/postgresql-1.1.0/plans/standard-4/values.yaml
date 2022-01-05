@@ -1,5 +1,5 @@
 
-fullnameOverride: hb-postgresql-standard-16
+fullnameOverride: hb-postgresql-standard-4
 
 ## PostgreSQL data Persistent Volume Storage Class
 ## If defined, storageClassName: <storageClass>
@@ -25,7 +25,7 @@ persistence:
   storageClass: ""
   accessModes:
     - ReadWriteOnce
-  size: 16Gi
+  size: 4Gi
 
 replication:
   enabled: true
@@ -39,18 +39,18 @@ replication:
   ## NOTE: It cannot be > slaveReplicas
   numSynchronousReplicas: 0
   ## Replication Cluster application name. Useful for defining multiple replication policies
-  applicationName: hb-postgresql-16
+  applicationName: hb-postgresql-4
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
   limits:
-    cpu: 1000m
-    memory: 1024Mi
+    cpu: 250m
+    memory: 256Mi
   requests:
-    cpu: 100m
-    memory: 512Mi
+    cpu: 25m
+    memory: 128Mi
 
 ## Maximum connections for the created user
-postgresqlDbUserConnectionLimit: 32
+postgresqlDbUserConnectionLimit: 8

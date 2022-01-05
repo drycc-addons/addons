@@ -1,6 +1,0 @@
-name: standard-200
-id: c21d7deb-d763-4832-ad69-4bbc0e684424
-description: "mysql standard-200 plan which limit persistence size 200Gi."
-displayName: standard-200
-bindable: true
-maximum_polling_duration: 1800

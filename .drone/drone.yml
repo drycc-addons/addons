@@ -35,15 +35,3 @@ steps:
   when:
     event:
     - push
-  volumes:
-  - name: image_registries
-    path: /etc/containers/registries.conf
-
-trigger:
-  event:
-  - push
-
-volumes:
-- name: image_registries
-  host:
-    path: /etc/containers/registries.conf

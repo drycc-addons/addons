@@ -1,0 +1,6 @@
+name: "standard-8192"
+id: be3fa2d0-36d2-47c5-9561-9deffe5ba373
+description: "Redis standard-8192 plan which limit resources memory size 8Gi."
+displayName: "standard-8192"
+bindable: true
+maximum_polling_duration: 1800

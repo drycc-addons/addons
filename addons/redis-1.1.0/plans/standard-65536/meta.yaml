@@ -1,0 +1,6 @@
+name: "standard-65536"
+id: 25c6b5d5-7505-47c8-95b1-dc9bdc698063
+description: "Redis standard-65536 plan which limit resources memory size 64Gi."
+displayName: "standard-65536"
+bindable: true
+maximum_polling_duration: 1800

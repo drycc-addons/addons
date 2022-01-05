@@ -1,6 +1,0 @@
-name: "50000"
-id: ce637902-5932-4ce9-91ab-70634ba8fa79
-description: "Memcached 50000 plan which which limit resources memory size 50Gi."
-displayName: "50000"
-bindable: true
-maximum_polling_duration: 1800

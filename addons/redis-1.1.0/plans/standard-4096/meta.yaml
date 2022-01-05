@@ -1,0 +1,6 @@
+name: "standard-4096"
+id: 5097d76e-557c-453f-bdb1-54009e0df78d
+description: "Redis standard-4096 plan which limit resources memory size 4Gi."
+displayName: "standard-4096"
+bindable: true
+maximum_polling_duration: 1800

@@ -1,6 +1,0 @@
-name: standard-400
-id: 56c8168b-fba9-47ad-9a66-ae24bb419230
-description: "mysql standard-400 plan which limit persistence size 400Gi."
-displayName: standard-400
-bindable: true
-maximum_polling_duration: 1800
