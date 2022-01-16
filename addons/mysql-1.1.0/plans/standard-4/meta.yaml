@@ -1,6 +1,0 @@
-name: standard-4
-id: 5c90e749-1db9-425e-b7d6-7978fc7fa4fb
-description: "mysql standard-4 plan which limit persistence size 4Gi."
-displayName: standard-4
-bindable: true
-maximum_polling_duration: 1800

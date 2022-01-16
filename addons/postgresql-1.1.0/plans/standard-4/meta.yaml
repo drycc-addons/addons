@@ -1,6 +1,0 @@
-name: standard-4
-id: 18528a73-4954-4642-85b9-1deae4e002ec
-description: "postgresql standard-4 plan which limit persistence size 4Gi."
-displayName: standard-4
-bindable: true
-maximum_polling_duration: 1800
