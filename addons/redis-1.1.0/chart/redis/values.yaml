@@ -131,8 +131,6 @@ sentinel:
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
   annotations:
-    lb.kubesphere.io/v1alpha1: porter
-    protocol.porter.kubesphere.io/v1alpha1: layer2
     labels: {}
     loadBalancerIP:
 
@@ -368,8 +366,6 @@ master:
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
   annotations:
-    lb.kubesphere.io/v1alpha1: porter
-    protocol.porter.kubesphere.io/v1alpha1: layer2
     labels: {}
     loadBalancerIP:
     # loadBalancerSourceRanges: ["10.0.0.0/8"]
@@ -455,8 +451,6 @@ slave:
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
     annotations:
-      lb.kubesphere.io/v1alpha1: porter
-      protocol.porter.kubesphere.io/v1alpha1: layer2
     labels: {}
     loadBalancerIP:
     # loadBalancerSourceRanges: ["10.0.0.0/8"]
