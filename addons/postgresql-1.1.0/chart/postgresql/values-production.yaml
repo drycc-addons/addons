@@ -414,6 +414,8 @@ slave:
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
 resources:
+  limits:
+    hugepages-2Mi: 256Mi
   requests:
     memory: 256Mi
     cpu: 250m
