@@ -1,0 +1,17 @@
+name: mariadb
+version: 1.1.0
+id: c8ed89bb-d6b7-458b-bb92-a4cf6dc1c3c9
+description: "MariaDB by Helm Broker."
+displayName: "mariadb"
+metadata:
+  displayName: "mariadb"
+  provider:
+    name: drycc
+    supportURL: https://drycc.cc
+  longDescription: "MariaDB by Helm Broker."
+  documentationURL: https://github.com/drycc-addons/drycc-docker-mariadb
+tags: database
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true

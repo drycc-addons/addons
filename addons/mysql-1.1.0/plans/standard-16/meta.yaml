@@ -1,6 +1,0 @@
-name: standard-16
-id: e35b6726-14c2-46f1-b29c-fa937fda785e
-description: "mysql standard-16 plan which limit persistence size 16Gi."
-displayName: standard-16
-bindable: true
-maximum_polling_duration: 1800

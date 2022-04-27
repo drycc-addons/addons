@@ -1,0 +1,6 @@
+name: standard-256
+id: 919bc6c0-bcfa-45e0-947c-ffaf5025f871
+description: "mariadb standard-256 plan which limit persistence size 256Gi."
+displayName: standard-256
+bindable: true
+maximum_polling_duration: 1800

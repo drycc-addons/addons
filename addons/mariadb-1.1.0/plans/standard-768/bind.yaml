@@ -1,0 +1,58 @@
+credential:
+  - name: PRIMARYHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "mariadb.primary.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: PRIMARYPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "mariadb.primary.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+
+  {{- if eq .Values.architecture "replication" }}
+  - name: SECONDARYHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "mariadb.secondary.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: SECONDARYPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "mariadb.secondary.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+  {{- end }}
+
+  - name: MARIADBROOTPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.mariadb-root-password }'
+
+  {{- if .Values.auth.username }}
+  - name: MARIADBUSERNAME
+    value: {{ .Values.auth.username | quote }}
+  {{- end }}
+
+  {{- if (not (empty .Values.auth.username)) }}
+  - name: MARIADBPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.mariadb-password }'
+  {{- end }}
+
+  {{- if .Values.auth.replicationUser }}
+  - name: MARIADBREPLICATIONUSERNAME
+    value: {{ .Values.auth.replicationUser | quote }}
+  {{- end }}
+
+  {{- if eq .Values.architecture "replication" }}
+  - name: MARIADBREPLICATIONPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.mariadb-replication-password }'
+  {{- end }}

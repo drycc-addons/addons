@@ -6,9 +6,9 @@ displayName: "redis"
 metadata:
   displayName: "redis"
   provider:
-    name: bitnami
+    name: drycc
     supportURL: http://redis.io/
-  documentationURL: https://github.com/bitnami/bitnami-docker-redis
+  documentationURL: https://github.com/dryccadons/drycc-docker-redis
 tags: redis
 bindable: true
 instances_retrievable: true

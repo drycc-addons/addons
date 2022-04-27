@@ -3,62 +3,34 @@ credential:
   - name: MASTERHOST
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}-master
+        name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: MASTERPORT
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}-master
-        jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
+        name: {{ printf "%s-master" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
   {{- end }}
 
-  {{- if .Values.sentinel.enabled }}
-  - name: SENTINELHOST
+  {{- if and (eq .Values.architecture "replication") (not .Values.sentinel.enabled) }}
+  - name: REPLICASHOST
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}
+        name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
-  - name: REDISPORT
+  - name: REPLICASPORT
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}
-        {{- if .Values.master.service.nodePort }}
-        jsonpath: '{ .spec.ports[?(@.name=="redis")].nodePort }'
-        {{- else }}
-        jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
-        {{- end }}
-
-  - name: SENTINELPORT
-    valueFrom:
-      serviceRef:
-        name: {{ template "redis.fullname" . }}
-        {{- if .Values.sentinel.service.redisNodePort }}
-        jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].nodePort }'
-        {{- else }}
-        jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].port }'
-        {{- end }}
+        name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
   {{- end }}
 
-  {{- if and .Values.cluster.enabled (not .Values.sentinel.enabled) }}
-  - name: SLAVEHOST
-    valueFrom:
-      serviceRef:
-        name: {{ template "redis.fullname" . }}-slave
-        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-
-  - name: SLAVEPORT
-    valueFrom:
-      serviceRef:
-        name: {{ template "redis.fullname" . }}-slave
-        jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
-  {{- end }}
-
-  {{- if .Values.usePassword }}
+  {{- if and .Values.auth.enabled (not .Values.auth.existingSecret) -}}
   - name: REDIS_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ template "redis.fullname" . }}
+        name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.redis-password }'
   {{- end }}

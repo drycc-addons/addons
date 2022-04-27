@@ -1,8 +1,8 @@
 apiVersion: v1
 entries:
-  mysql:
-    - name: mysql
-      description: "MySQL is a fast, reliable, scalable, and easy to use open-source relational database system."
+  mariadb:
+    - name: mariadb
+      description: "MariaDB Server is one of the most popular open source relational databases. It’s made by the original developers of MySQL and guaranteed to stay open source. "
       version: 1.1.0
   postgresql:
     - name: postgresql

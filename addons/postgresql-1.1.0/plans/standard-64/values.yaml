@@ -1,4 +1,3 @@
-
 fullnameOverride: hb-postgresql-standard-64
 
 ## PostgreSQL data Persistent Volume Storage Class
@@ -8,49 +7,44 @@ fullnameOverride: hb-postgresql-standard-64
 ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
 ##   GKE, AWS & OpenStack)
 ##
-persistence:
-  enabled: true
-  ## A manually managed Persistent Volume and Claim
-
-  ## The path the volume will be mounted at, useful when using different
-  ## PostgreSQL images.
+primary:
+  ## PostgreSQL Primary persistence configuration
   ##
-  mountPath: /bitnami/postgresql
+  persistence:
+    ## @param primary.persistence.enabled Enable PostgreSQL Primary data persistence using PVC
+    ##
+    enabled: true
+     ## @param primary.persistence.size PVC Storage Request for PostgreSQL volume
+    ##
+    size: 64Gi
 
-  ## The subdirectory of the volume to mount to, useful in dev environments
-  ## and one PV for multiple services.
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 200m
+      memory: 2Gi
+
+readReplicas:
+  ## @param readReplicas.replicaCount Number of PostgreSQL read only replicas
   ##
-  subPath: ''
+  replicaCount: 1
+  persistence:
+    ## @param readReplicas.persistence.enabled Enable PostgreSQL read only data persistence using PVC
+    ##
+    enabled: true
+    ## @param readReplicas.persistence.size PVC Storage Request for PostgreSQL volume
+    ##
+    size: 64Gi
 
-  storageClass: ""
-  accessModes:
-    - ReadWriteOnce
-  size: 64Gi
-
-replication:
-  enabled: true
-  user: repl_user
-  password: repl_password
-  slaveReplicas: 1
-  ## Set synchronous commit mode: on, off, remote_apply, remote_write and local
-  ## ref: https://www.postgresql.org/docs/9.6/runtime-config-wal.html#GUC-WAL-LEVEL
-  synchronousCommit: "off"
-  ## From the number of `slaveReplicas` defined above, set the number of those that will have synchronous replication
-  ## NOTE: It cannot be > slaveReplicas
-  numSynchronousReplicas: 0
-  ## Replication Cluster application name. Useful for defining multiple replication policies
-  applicationName: hb-postgresql-64
-
-## Configure resource requests and limits
-## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-##
-resources:
-  limits:
-    cpu: 2000m
-    memory: 4Gi
-  requests:
-    cpu: 200m
-    memory: 2Gi
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 200m
+      memory: 2Gi
 
 ## Maximum connections for the created user
 postgresqlDbUserConnectionLimit: 128

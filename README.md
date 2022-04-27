@@ -6,6 +6,8 @@
 
 This repository contains addons which the Helm Broker uses. For more information on what the Helm Broker is, how it uses addons, and how to create your own addons, read the Helm Broker [helmbroker](https://github.com/drycc/helmbroker).
 
+The charts of this project refer to the [charts](https://github.com/bitnami/charts) project of bitnami, 
+
 ## Usage
 
 The `addons` folder contains sources of addons and index files that are available in [releases](https://github.com/drycc/addons/releases). Choose a set of addons you want to use, add your own addons, and configure the Helm Broker to fetch them.
@@ -39,13 +41,13 @@ memcached  |  20000        | Memcached 20000 plan which which limit resources me
 memcached  |  30000        | Memcached 30000 plan which which limit resources memory size 30Gi.
 memcached  |  40000        | Memcached 40000 plan which which limit resources memory size 40Gi.
 memcached  |  50000        | Memcached 50000 plan which which limit resources memory size 50Gi.
-mysql      |  standard-25  | mysql standard-25 plan which limit persistence size 25Gi.
-mysql      |  standard-50  | mysql standard-50 plan which limit persistence size 50Gi.
-mysql      |  standard-100 | mysql standard-100 plan which limit persistence size 100Gi.
-mysql      |  standard-200 | mysql standard-200 plan which limit persistence size 200Gi.
-mysql      |  standard-400 | mysql standard-400 plan which limit persistence size 400Gi.
-mysql      |  standard-800 | mysql standard-800 plan which limit persistence size 800Gi.
-mysql      |  standard-1600| mysql standard-1600 plan which limit persistence size 1600Gi.
+mariadb    |  standard-25  | mysql standard-25 plan which limit persistence size 25Gi.
+mariadb    |  standard-50  | mysql standard-50 plan which limit persistence size 50Gi.
+mariadb    |  standard-100 | mysql standard-100 plan which limit persistence size 100Gi.
+mariadb    |  standard-200 | mysql standard-200 plan which limit persistence size 200Gi.
+mariadb    |  standard-400 | mysql standard-400 plan which limit persistence size 400Gi.
+mariadb    |  standard-800 | mysql standard-800 plan which limit persistence size 800Gi.
+mariadb    |  standard-1600| mysql standard-1600 plan which limit persistence size 1600Gi.
 postgresql |  standard-16  | postgresql standard-16 plan which limit persistence size 16Gi.
 postgresql |  standard-64  | postgresql standard-64 plan which limit persistence size 64Gi.
 postgresql |  standard-256 | postgresql standard-256 plan which limit persistence size 256Gi.

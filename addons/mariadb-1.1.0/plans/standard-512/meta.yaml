@@ -1,0 +1,6 @@
+name: standard-512
+id: 100fdba5-2752-4c5c-8ece-255c65b495e5
+description: "mariadb standard-512 plan which limit persistence size 512Gi."
+displayName: standard-512
+bindable: true
+maximum_polling_duration: 1800

@@ -142,6 +142,9 @@ function lintHelmChartsIfRequested() {
     do
         for addon in ${directory}/*/; do
             for chart in ${addon}chart/*/; do
+                if [ -e ${chart}/Chart.lock ]; then
+                    helm dependency update ${chart}
+                fi
                 for plan in ${addon}/plans/*/; do
                     if [ -e ${plan}values.yaml ]
                     then

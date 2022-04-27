@@ -1,0 +1,6 @@
+name: standard-64
+id: b2dbad19-2c89-49d2-a815-79c2db1fe436
+description: "mariadb standard-64 plan which limit persistence size 64Gi."
+displayName: standard-64
+bindable: true
+maximum_polling_duration: 1800

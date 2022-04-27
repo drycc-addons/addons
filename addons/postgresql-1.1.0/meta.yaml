@@ -6,10 +6,10 @@ displayName: "postgresql"
 metadata:
   displayName: "postgresql"
   provider:
-    name: bitnami
-    supportURL: https://bitnami.com/support
+    name: drycc
+    supportURL: https://drycc.cc
   longDescription: "PostgreSQL by Helm Broker."
-  documentationURL: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+  documentationURL: https://github.com/drycc-addons/addons/tree/main/addons/postgresql-1.1.0/chart/postgresql
 tags: database
 bindable: true
 instances_retrievable: true

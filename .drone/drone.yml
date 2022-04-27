@@ -1,6 +1,7 @@
+---
 kind: pipeline
-type: docker
-name: linux-amd64
+type: exec
+name: default
 
 platform:
   arch: amd64
@@ -8,9 +9,6 @@ platform:
 
 steps:
 - name: check
-  image: docker.io/drycc/go-dev
-  pull: always
-  privileged: true
   commands:
   - make check
   when:
@@ -19,15 +17,12 @@ steps:
     - push
 
 - name: release
-  image: docker.io/drycc/go-dev
-  pull: always
-  privileged: true
   commands:
   - make prepare-assets
   - make latest-release
   environment:
     GIT_REPO: ${DRONE_REPO}
-    GIT_TAG: ${DRONE_TAG}
+    GIT_TAG: ${DRONE_TAG:-latest}
     REPO_OWNER: ${DRONE_REPO_OWNER}
     REPO_NAME: ${DRONE_REPO_NAME}
     BOT_GITHUB_TOKEN:

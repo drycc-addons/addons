@@ -1,48 +1,61 @@
-## Global Docker image parameters
-## Please, note that this will override the image parameters, including dependencies, configured to use the global value
-## Current available global Docker image parameters: imageRegistry and imagePullSecrets
-##
-global:
-  storageClass: ""
-
-## String to fully override redis.fullname template
+## @param fullnameOverride String to fully override common.names.fullname
 ##
 fullnameOverride: hb-redis-standard-128
 
-## Cluster settings
-cluster:
-  enabled: true
-  slaveCount: 1
-
-## Use redis sentinel in the redis pod. This will disable the master and slave services and
-## create one redis service with ports to the sentinel and the redis instances
-sentinel:
-  enabled: false
-  ## Require password authentication on the sentinel itself
-  ## ref: https://redis.io/topics/sentinel
-  usePassword: true
-  ## Bitnami Redis Sentintel image version
-  ## ref: https://hub.docker.com/r/bitnami/redis-sentinel/tags/
-  ##
-  ## Redis Sentinel resource requests and limits
-  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-  resources:
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 10m
-      memory: 64Mi
-
+## @section Redis&trade; master configuration parameters
 ##
-## Redis Master parameters
-##
+
 master:
-  ## Redis command arguments
+  ## Redis&trade; master resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param master.resources.limits The resources limits for the Redis&trade; master containers
+  ## @param master.resources.requests The requested resources for the Redis&trade; master containers
   ##
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+  ## Persistence parameters
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    ## @param master.persistence.enabled Enable persistence on Redis&trade; master nodes using Persistent Volume Claims
+    ##
+    enabled: true
+    ## @param master.persistence.path The path the volume will be mounted at on Redis&trade; master containers
+    ## NOTE: Useful when using different Redis&trade; images
+    ##
+    path: /drycc/redis/data
+    ## @param master.persistence.storageClass Persistent Volume storage class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner
+    ##
+    storageClass: ""
+    ## @param master.persistence.accessModes Persistent Volume access modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## @param master.persistence.size Persistent Volume size
+    ##
+    size: 256Mi
 
-  ## Redis Master resource requests and limits
-  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+## @section Redis&trade; replicas configuration parameters
+##
+
+replica:
+  ## @param replica.replicaCount Number of Redis&trade; replicas to deploy
+  ##
+  replicaCount: 3
+
+  ## Redis&trade; replicas resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param replica.resources.limits The resources limits for the Redis&trade; replicas containers
+  ## @param replica.resources.requests The requested resources for the Redis&trade; replicas containers
+  ##
   resources:
     limits:
       cpu: 100m
@@ -51,70 +64,27 @@ master:
       cpu: 10m
       memory: 64Mi
 
-  ## Enable persistence using Persistent Volume Claims
-  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ## Persistence Parameters
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
   persistence:
+    ## @param replica.persistence.enabled Enable persistence on Redis&trade; replicas nodes using Persistent Volume Claims
+    ##
     enabled: true
-    ## The path the volume will be mounted at, useful when using different
-    ## Redis images.
-    path: /data
-    ## The subdirectory of the volume to mount to, useful in dev environments
-    ## and one PV for multiple services.
-    subPath: ""
-    ## redis data Persistent Volume Storage Class
+    ## @param replica.persistence.path The path the volume will be mounted at on Redis&trade; replicas containers
+    ## NOTE: Useful when using different Redis&trade; images
+    ##
+    path: /drycc/redis/data
+    ## @param replica.persistence.storageClass Persistent Volume storage class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
+    ## If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner
     ##
     storageClass: ""
-    accessModes:
-      - ReadWriteOnce
-    size: 256Mi
-    ## Persistent Volume selectors
-    ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
-    matchLabels: {}
-    matchExpressions: {}
-
-##
-## Redis Slave properties
-## Note: service.type is a mandatory parameter
-## The rest of the parameters are either optional or, if undefined, will inherit those declared in Redis Master
-##
-slave:
-  resources:
-    limits:
-      cpu: 100m
-      memory: 128Mi
-    requests:
-      cpu: 10m
-      memory: 64Mi
-
-  ## Enable persistence using Persistent Volume Claims
-  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-  ##
-  persistence:
-    enabled: true
-    ## The path the volume will be mounted at, useful when using different
-    ## Redis images.
-    path: /data
-    ## The subdirectory of the volume to mount to, useful in dev environments
-    ## and one PV for multiple services.
-    subPath: ""
-    ## redis data Persistent Volume Storage Class
-    ## If defined, storageClassName: <storageClass>
-    ## If set to "-", storageClassName: "", which disables dynamic provisioning
-    ## If undefined (the default) or set to null, no storageClassName spec is
-    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-    ##   GKE, AWS & OpenStack)
+    ## @param replica.persistence.accessModes Persistent Volume access modes
     ##
-    storageClass: ""
     accessModes:
       - ReadWriteOnce
+    ## @param replica.persistence.size Persistent Volume size
+    ##
     size: 256Mi
-    ## Persistent Volume selectors
-    ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
-    matchLabels: {}
-    matchExpressions: {}

@@ -1,0 +1,6 @@
+name: standard-768
+id: 1ceaecd5-19d7-4791-9870-56bb67190ecc
+description: "mariadb standard-768 plan which limit persistence size 768Gi."
+displayName: standard-768
+bindable: true
+maximum_polling_duration: 1800

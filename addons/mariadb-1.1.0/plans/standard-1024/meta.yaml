@@ -1,0 +1,6 @@
+name: standard-1024
+id: 0b958440-64cb-4f20-9fd4-295798a834c7
+description: "mariadb standard-1024 plan which limit persistence size 1024Gi."
+displayName: standard-1024
+bindable: true
+maximum_polling_duration: 1800
