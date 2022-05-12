@@ -27,7 +27,7 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
   {{- end }}
 
-  {{- if and .Values.auth.enabled (not .Values.auth.existingSecret) -}}
+  {{- if and .Values.auth.enabled (not .Values.auth.existingSecret) }}
   - name: REDIS_PASSWORD
     valueFrom:
       secretKeyRef:
