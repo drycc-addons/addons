@@ -170,32 +170,34 @@ primary:
   ## @param primary.configuration [string] MariaDB Primary configuration to be injected as ConfigMap
   ## ref: https://mysql.com/kb/en/mysql/configuring-mysql-with-mycnf/#example-of-configuration-file
   ##
-  configuration: |-
-    [mysqld]
-    skip-name-resolve
-    explicit_defaults_for_timestamp
-    basedir=/opt/drycc/mariadb
-    plugin_dir=/opt/drycc/mariadb/plugin
-    port=3306
-    socket=/opt/drycc/mariadb/tmp/mysql.sock
-    tmpdir=/opt/drycc/mariadb/tmp
-    max_allowed_packet=16M
-    bind-address=0.0.0.0
-    pid-file=/opt/drycc/mariadb/tmp/mysqld.pidz
-    log-error=/opt/drycc/mariadb/logs/mysqld.log
-    character-set-server=UTF8
-    collation-server=utf8_general_ci
 
-    [client]
-    port=3306
-    socket=/opt/drycc/mariadb/tmp/mysql.sock
-    default-character-set=UTF8
-    plugin_dir=/opt/drycc/mariadb/plugin
+  # configuration: |-
+  #   [mysqld]
+  #   skip-name-resolve
+  #   explicit_defaults_for_timestamp
+  #   basedir=/opt/drycc/mariadb
+  #   plugin_dir=/opt/drycc/mariadb/plugin
+  #   port=3306
+  #   socket=/opt/drycc/mariadb/tmp/mysql.sock
+  #   tmpdir=/opt/drycc/mariadb/tmp
+  #   max_allowed_packet=16M
+  #   bind-address=0.0.0.0
+  #   pid-file=/opt/drycc/mariadb/tmp/mysqld.pidz
+  #   log-error=/opt/drycc/mariadb/logs/mysqld.log
+  #   character-set-server=UTF8
+  #   collation-server=utf8_general_ci
 
-    [manager]
-    port=3306
-    socket=/opt/drycc/mariadb/tmp/mysql.sock
-    pid-file=/opt/drycc/mariadb/tmp/mysqld.pid
+  #   [client]
+  #   port=3306
+  #   socket=/opt/drycc/mariadb/tmp/mysql.sock
+  #   default-character-set=UTF8
+  #   plugin_dir=/opt/drycc/mariadb/plugin
+
+  #   [manager]
+  #   port=3306
+  #   socket=/opt/drycc/mariadb/tmp/mysql.sock
+  #   pid-file=/opt/drycc/mariadb/tmp/mysqld.pid
+
   ## @param primary.existingConfigmap Name of existing ConfigMap with MariaDB Primary configuration.
   ## NOTE: When it's set the 'configuration' parameter is ignored
   ##
@@ -544,30 +546,32 @@ secondary:
   ## @param secondary.configuration [string] MariaDB Secondary configuration to be injected as ConfigMap
   ## ref: https://mysql.com/kb/en/mysql/configuring-mysql-with-mycnf/#example-of-configuration-file
   ##
-  configuration: |-
-    [mysqld]
-    skip-name-resolve
-    explicit_defaults_for_timestamp
-    basedir=/opt/drycc/mariadb
-    port=3306
-    socket=/opt/drycc/mariadb/tmp/mysql.sock
-    tmpdir=/opt/drycc/mariadb/tmp
-    max_allowed_packet=16M
-    bind-address=0.0.0.0
-    pid-file=/opt/drycc/mariadb/tmp/mysqld.pid
-    log-error=/opt/drycc/mariadb/logs/mysqld.log
-    character-set-server=UTF8
-    collation-server=utf8_general_ci
 
-    [client]
-    port=3306
-    socket=/opt/drycc/mariadb/tmp/mysql.sock
-    default-character-set=UTF8
+  # configuration: |-
+  #   [mysqld]
+  #   skip-name-resolve
+  #   explicit_defaults_for_timestamp
+  #   basedir=/opt/drycc/mariadb
+  #   port=3306
+  #   socket=/opt/drycc/mariadb/tmp/mysql.sock
+  #   tmpdir=/opt/drycc/mariadb/tmp
+  #   max_allowed_packet=16M
+  #   bind-address=0.0.0.0
+  #   pid-file=/opt/drycc/mariadb/tmp/mysqld.pid
+  #   log-error=/opt/drycc/mariadb/logs/mysqld.log
+  #   character-set-server=UTF8
+  #   collation-server=utf8_general_ci
 
-    [manager]
-    port=3306
-    socket=/opt/drycc/mariadb/tmp/mysql.sock
-    pid-file=/opt/drycc/mariadb/tmp/mysqld.pid
+  #   [client]
+  #   port=3306
+  #   socket=/opt/drycc/mariadb/tmp/mysql.sock
+  #   default-character-set=UTF8
+
+  #   [manager]
+  #   port=3306
+  #   socket=/opt/drycc/mariadb/tmp/mysql.sock
+  #   pid-file=/opt/drycc/mariadb/tmp/mysqld.pid
+
   ## @param secondary.existingConfigmap Name of existing ConfigMap with MariaDB Secondary configuration.
   ## NOTE: When it's set the 'configuration' parameter is ignored
   ##
@@ -718,7 +722,7 @@ secondary:
   ##
   livenessProbe:
     enabled: true
-    initialDelaySeconds: 120
+    initialDelaySeconds: 240
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
@@ -732,7 +736,7 @@ secondary:
   ##
   readinessProbe:
     enabled: true
-    initialDelaySeconds: 30
+    initialDelaySeconds: 120
     periodSeconds: 10
     timeoutSeconds: 1
     failureThreshold: 3
