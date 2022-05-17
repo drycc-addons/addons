@@ -1,6 +1,6 @@
 # Addons
 
-[![Build Status](https://drone.drycc.cc/api/badges/drycc/addons/status.svg)](https://drone.drycc.cc/drycc/addons)
+[![Build Status](https://drone.drycc.cc/api/badges/drycc-addons/addons/status.svg)](https://drone.drycc.cc/drycc-addons/addons)
 
 ## Overview
 
