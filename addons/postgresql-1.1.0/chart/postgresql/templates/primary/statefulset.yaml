@@ -400,6 +400,7 @@ spec:
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.startupProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
+                - init-stack
                 - /bin/sh
                 - -c
                 {{- if (include "postgresql.database" .) }}
@@ -414,6 +415,7 @@ spec:
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
+                - init-stack
                 - /bin/sh
                 - -c
                 {{- if (include "postgresql.database" .) }}
@@ -428,6 +430,7 @@ spec:
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.primary.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
+                - init-stack
                 - /bin/sh
                 - -c
                 - -e

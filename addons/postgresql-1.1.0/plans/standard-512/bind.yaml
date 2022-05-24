@@ -2,48 +2,50 @@ credential:
   - name: HOST
     valueFrom:
       serviceRef:
-        name: {{ template "postgresql.fullname" . }}
+        name: {{ template "postgresql.primary.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: PORT
-    valueFrom:
+    valueFrom:  
       serviceRef:
-        name: {{ template "postgresql.fullname" . }}
+        name: {{ template "postgresql.primary.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
 
+  {{- if not (empty (include "postgresql.username" .)) }}
   - name: USERNAME
-    value: {{ .Values.postgresqlUsername }}
+    value: {{ template "postgresql.username" . }}
+  {{- end }}
 
   - name: PASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ template "postgresql.fullname" . }}
-        jsonpath: '{ .data.postgresql-password }'
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.postgres-password }'
 
-  {{- if .Values.replication.enabled }}
+  {{- if (include "postgresql.database" .) }}
+  - name: DATABASE
+    value: {{ template "postgresql.database" . }}
+  {{- end }}
+
+  {{- if eq .Values.architecture "replication" }}
   - name: READHOST
     valueFrom:
       serviceRef:
-        name: {{ template "postgresql.fullname" . }}-read
+        name: {{ template "postgresql.readReplica.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: READPORT
     valueFrom:
       serviceRef:
-        name: {{ template "postgresql.fullname" . }}-read
+        name: {{ template "postgresql.readReplica.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
 
   - name: REPLICATIONUSERNAME
-    value: {{ template "postgresql.replication.username" . }}
+    value: {{ .Values.auth.replicationUsername }}
 
   - name: REPLICATIONPASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ template "postgresql.fullname" . }}
-        jsonpath: '{ .data.postgresql-replication-password }'
-  {{- end }}
-
-  {{- if .Values.postgresqlDatabase }}
-  - name: DATABASE
-    value: {{ .Values.postgresqlDatabase }}
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.replication-password }'
   {{- end }}

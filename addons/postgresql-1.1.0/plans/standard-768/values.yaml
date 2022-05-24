@@ -22,6 +22,7 @@ primary:
     limits:
       cpu: 8000m
       memory: 32Gi
+      hugepages-2Mi: 256Mi
     requests:
       cpu: 800m
       memory: 16Gi
@@ -42,6 +43,7 @@ readReplicas:
     limits:
       cpu: 8000m
       memory: 32Gi
+      hugepages-2Mi: 256Mi
     requests:
       cpu: 800m
       memory: 16Gi

@@ -218,7 +218,7 @@ ldap:
 postgresqlDataDir: /drycc/postgresql/data
 ## @param postgresqlSharedPreloadLibraries Shared preload libraries (comma-separated list)
 ##
-postgresqlSharedPreloadLibraries: "pgaudit"
+# postgresqlSharedPreloadLibraries: "pgaudit"  # todo add pgaudit
 ## Start PostgreSQL pod(s) without limitations on shm memory.
 ## By default docker and containerd (and possibly other container runtimes) limit `/dev/shm` to `64M`
 ## ref: https://github.com/docker-library/postgres/issues/416
