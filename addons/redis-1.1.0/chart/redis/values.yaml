@@ -112,7 +112,7 @@ auth:
   enabled: true
   ## @param auth.sentinel Enable password authentication on sentinels too
   ##
-  sentinel: false
+  sentinel: true
   ## @param auth.password Redis&trade; password
   ## Defaults to a random 10-character alphanumeric string if not set
   ##
@@ -875,7 +875,7 @@ sentinel:
   ## IMPORTANT: this will disable the master and replicas services and
   ## create a single Redis&trade; service exposing both the Redis and Sentinel ports
   ##
-  enabled: false
+  enabled: true
   ## Bitnami Redis&trade; Sentinel image version
   ## ref: https://hub.docker.com/r/bitnami/redis-sentinel/tags/
   ## @param sentinel.image.registry Redis&trade; Sentinel image registry
@@ -887,9 +887,9 @@ sentinel:
   ##
   ## todo: support both of amd64 and arm64
   image:
-    registry: docker.io
-    repository: bitnami/redis-sentinel
-    tag: 6.2.6-debian-10-r176
+    registry: registry.drycc.cc
+    repository: drycc-addons/redis-sentinel
+    tag: 6.2
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
     ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -1026,7 +1026,7 @@ sentinel:
   persistence:
     ## @param sentinel.persistence.enabled Enable persistence on Redis&trade; sentinel nodes using Persistent Volume Claims (Experimental)
     ##
-    enabled: false
+    enabled: true
     ## @param sentinel.persistence.storageClass Persistent Volume storage class
     ## If defined, storageClassName: <storageClass>
     ## If set to "-", storageClassName: "", which disables dynamic provisioning
@@ -1039,7 +1039,7 @@ sentinel:
       - ReadWriteOnce
     ## @param sentinel.persistence.size Persistent Volume size
     ##
-    size: 100Mi
+    size: 8Gi
     ## @param sentinel.persistence.annotations Additional custom annotations for the PVC
     ##
     annotations: {}
@@ -1083,7 +1083,7 @@ sentinel:
   service:
     ## @param sentinel.service.type Redis&trade; Sentinel service type
     ##
-    type: ClusterIP
+    type: LoadBalancer
     ## @param sentinel.service.ports.redis Redis&trade; service port for Redis&trade;
     ## @param sentinel.service.ports.sentinel Redis&trade; service port for Redis&trade; Sentinel
     ##

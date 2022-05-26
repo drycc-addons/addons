@@ -88,3 +88,38 @@ replica:
     ## @param replica.persistence.size Persistent Volume size
     ##
     size: 4Gi
+
+sentinel:
+  ## Persistence parameters
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    ## @param sentinel.persistence.enabled Enable persistence on Redis&trade; sentinel nodes using Persistent Volume Claims (Experimental)
+    ##
+    enabled: true
+    ## @param sentinel.persistence.storageClass Persistent Volume storage class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner
+    ##
+    storageClass: ""
+    ## @param sentinel.persistence.accessModes Persistent Volume access modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## @param sentinel.persistence.size Persistent Volume size
+    ##
+    size: 4Gi
+
+  ## Redis&trade; Sentinel resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param sentinel.resources.limits The resources limits for the Redis&trade; Sentinel containers
+  ## @param sentinel.resources.requests The requested resources for the Redis&trade; Sentinel containers
+  ##
+  resources:
+    limits:
+      cpu: 300m
+      memory: 2Gi
+    requests:
+      cpu: 30m
+      memory: 1Gi

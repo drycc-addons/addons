@@ -108,6 +108,7 @@ spec:
           command: {{- include "common.tplvalues.render" (dict "value" .Values.replica.command "context" $) | nindent 12 }}
           {{- else }}
           command:
+            - init-stack
             - /bin/bash
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}
@@ -208,6 +209,7 @@ spec:
             failureThreshold: {{ .Values.replica.livenessProbe.failureThreshold }}
             exec:
               command:
+                - init-stack
                 - sh
                 - -c
                 - /health/ping_liveness_local.sh {{ .Values.replica.livenessProbe.timeoutSeconds }}
@@ -223,6 +225,7 @@ spec:
             failureThreshold: {{ .Values.replica.readinessProbe.failureThreshold }}
             exec:
               command:
+                - init-stack
                 - sh
                 - -c
                 - /health/ping_readiness_local.sh {{ .Values.replica.livenessProbe.timeoutSeconds }}
@@ -267,6 +270,7 @@ spec:
             preStop:
               exec:
                 command:
+                  - init-stack
                   - /bin/bash
                   - -c
                   - /opt/drycc/scripts/start-scripts/prestop-redis.sh
@@ -285,6 +289,7 @@ spec:
           command: {{- include "common.tplvalues.render" (dict "value" .Values.sentinel.command "context" $) | nindent 12 }}
           {{- else }}
           command:
+            - init-stack
             - /bin/bash
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}
@@ -375,6 +380,7 @@ spec:
             failureThreshold: {{ .Values.sentinel.livenessProbe.failureThreshold }}
             exec:
               command:
+                - init-stack
                 - sh
                 - -c
                 - /health/ping_sentinel.sh {{ .Values.sentinel.livenessProbe.timeoutSeconds }}
@@ -392,6 +398,7 @@ spec:
             failureThreshold: {{ .Values.sentinel.readinessProbe.failureThreshold }}
             exec:
               command:
+                - init-stack
                 - sh
                 - -c
                 - /health/ping_sentinel.sh {{ .Values.sentinel.livenessProbe.timeoutSeconds }}
@@ -404,6 +411,7 @@ spec:
             preStop:
               exec:
                 command:
+                  - init-stack
                   - /bin/bash
                   - -c
                   - /opt/drycc/scripts/start-scripts/prestop-sentinel.sh
@@ -446,6 +454,7 @@ spec:
           command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
           {{- else }}
           command:
+            - init-stack
             - /bin/bash
             - -c
             - |

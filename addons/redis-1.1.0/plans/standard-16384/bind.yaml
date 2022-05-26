@@ -34,3 +34,23 @@ credential:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.redis-password }'
   {{- end }}
+
+  {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
+  - name: SENTINELHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: SENTINELPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-sentinel")].port }'
+
+  - name: REDISPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
+  {{- end }}
