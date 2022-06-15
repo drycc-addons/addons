@@ -1,0 +1,6 @@
+name: "standard-128"
+id: d0d3d1b4-5db6-4a3c-b2b3-36112187995e
+description: "Kafka standard-128 plan which limit resources memory size 128Mi."
+displayName: "standard-128"
+bindable: true
+maximum_polling_duration: 1800

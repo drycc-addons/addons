@@ -1,0 +1,86 @@
+credential:
+  {{- if not .Values.sentinel.enabled }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: CLIENT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+  {{- end }}
+
+  {{- if and .Values.externalAccess.enabled (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) }}
+  - name: EXTERNAL_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-external")].port }'
+  {{- end }}
+
+  {{- if .Values.externalAccess.enabled }}
+  {{- $fullName := include "common.names.fullname" . }}
+  {{- $replicaCount := .Values.replicaCount | int }}
+  {{- $root := . }}
+
+  {{- range $i, $e := until $replicaCount }}
+  {{- $targetPod := printf "%s-%d" (printf "%s" $fullName) $i }}
+  {{- $_ := set $ "targetPod" $targetPod }}
+  - name: EXTERNAL_ACCESS_HOST_$i
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-%d-external" (include "common.names.fullname" $) $i | trunc 63 | trimSuffix "-" }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: EXTERNAL_ACCESS_PORT_$i
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-%d-external" (include "common.names.fullname" $) $i | trunc 63 | trimSuffix "-" }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-kafka")].port }'
+  {{- end }}
+  {{- end }}
+
+
+  {{- if (include "kafka.createJaasSecret" .) }}
+  {{- if (include "kafka.client.saslAuthentication" .) }}
+  {{- $clientUsers := .Values.auth.sasl.jaas.clientUsers }}
+  {{- $clientPasswords := .Values.auth.sasl.jaas.clientPasswords }}
+  {{- if $clientPasswords }}
+  - name: CLIENT_PASSPORTS
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-jaas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.client-passwords }'
+
+  - name: SYSTEM_USER_PASSPORT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-jaas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.system-user-password }'
+  {{- end }}
+  {{- end }}
+
+  {{- $zookeeperUser := .Values.auth.sasl.jaas.zookeeperUser }}
+  {{- if and .Values.zookeeper.auth.enabled $zookeeperUser }}
+  - name: ZOOKEEPER_USER
+    value: {{ .Values.auth.sasl.jaas.zookeeperUser }}
+
+  - name: ZOOKEEPER_PASSPORT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-jaas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.zookeeper-password }'
+  {{- end }}
+
+  {{- if (include "kafka.interBroker.saslAuthentication" .) }}
+  {{- $interBrokerPassword := .Values.auth.sasl.jaas.interBrokerPassword }}
+  - name: INTER_BROKER_PASSPORT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-jaas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.inter-broker-password }'
+  {{- end }}
+  {{- end }}

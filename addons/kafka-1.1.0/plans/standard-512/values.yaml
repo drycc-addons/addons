@@ -1,0 +1,86 @@
+## @param fullnameOverride String to fully override common.names.fullname
+##
+fullnameOverride: hb-kafka-standard-128
+## Kafka resource requests and limits
+## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+## @param resources.limits The resources limits for the container
+## @param resources.requests The requested resources for the container
+##
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 10m
+    memory: 64Mi
+## @section Persistence parameters
+
+## Enable persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  ## @param persistence.enabled Enable Kafka data persistence using PVC, note that ZooKeeper persistence is unaffected
+  ##
+  enabled: true
+  ## @param persistence.storageClass PVC Storage Class for Kafka data volume
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ## set, choosing the default provisioner.
+  ##
+  storageClass: ""
+  ## @param persistence.accessModes Persistent Volume Access Modes
+  ##
+  accessModes:
+    - ReadWriteOnce
+  ## @param persistence.size PVC Storage Request for Kafka data volume
+  ##
+  size: 512Mi
+  ## @param persistence.mountPath Mount path of the Kafka data volume
+  ##
+  mountPath: /drycc/kafka
+
+## @section ZooKeeper chart parameters
+
+## ZooKeeper chart configuration
+## https://github.com/bitnami/charts/blob/master/bitnami/zookeeper/values.yaml
+##
+zookeeper:
+  ## @param zookeeper.enabled Switch to enable or disable the ZooKeeper helm chart
+  ##
+  enabled: true
+  ## @param zookeeper.replicaCount Number of ZooKeeper nodes
+  ##
+  replicaCount: 1
+  ## ZooKeeper authenticaiton
+  ##
+  auth:
+    ## @param zookeeper.auth.enabled Enable ZooKeeper auth
+    ##
+    enabled: false
+    ## @param zookeeper.auth.clientUser User that will use ZooKeeper clients to auth
+    ##
+    clientUser: ""
+    ## @param zookeeper.auth.clientPassword Password that will use ZooKeeper clients to auth
+    ##
+    clientPassword: ""
+    ## @param zookeeper.auth.serverUsers Comma, semicolon or whitespace separated list of user to be created. Specify them as a string, for example: "user1,user2,admin"
+    ##
+    serverUsers: ""
+    ## @param zookeeper.auth.serverPasswords Comma, semicolon or whitespace separated list of passwords to assign to users when created. Specify them as a string, for example: "pass4user1, pass4user2, pass4admin"
+    ##
+    serverPasswords: ""
+  ## ZooKeeper Persistence parameters
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ## @param zookeeper.persistence.enabled Enable persistence on ZooKeeper using PVC(s)
+  ## @param zookeeper.persistence.storageClass Persistent Volume storage class
+  ## @param zookeeper.persistence.accessModes Persistent Volume access modes
+  ## @param zookeeper.persistence.size Persistent Volume size
+  ##
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessModes:
+      - ReadWriteOnce
+    size: 512Mi
+
