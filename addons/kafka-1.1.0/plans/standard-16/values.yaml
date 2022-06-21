@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: hb-kafka-standard-512
+fullnameOverride: hb-kafka-standard-16
 ## Kafka resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
 ## @param resources.limits The resources limits for the container
@@ -8,11 +8,11 @@ fullnameOverride: hb-kafka-standard-512
 ##
 resources:
   limits:
-    cpu: 4000m
-    memory: 16Gi
+    cpu: 1000m
+    memory: 1024Mi
   requests:
-    cpu: 400m
-    memory: 8Gi
+    cpu: 100m
+    memory: 512Mi
 
 ## @param replicaCount Number of Kafka nodes
 ##
@@ -40,7 +40,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for Kafka data volume
   ##
-  size: 512Gi
+  size: 16Gi
   ## @param persistence.mountPath Mount path of the Kafka data volume
   ##
   mountPath: /drycc/kafka

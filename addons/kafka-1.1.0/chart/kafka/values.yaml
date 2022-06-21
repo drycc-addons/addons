@@ -229,6 +229,7 @@ auth:
   ## @param auth.interBrokerProtocol Authentication protocol for inter-broker communications. Allowed protocols: `plaintext`, `tls`, `mtls`, `sasl` and `sasl_tls`
   ##
   clientProtocol: plaintext
+  controllerProtocol: plaintext
   # Note: empty by default for backwards compatibility reasons, find more information at
   # https://github.com/bitnami/charts/pull/8902/
   externalClientProtocol: ""
@@ -422,7 +423,7 @@ extraEnvVarsSecret: ""
 
 ## @param replicaCount Number of Kafka nodes
 ##
-replicaCount: 1
+replicaCount: 3
 ## @param minBrokerId Minimal broker.id value, nodes increment their `broker.id` respectively
 ## Brokers increment their ID starting at this minimal value.
 ## E.g., with `minBrokerId=100` and 3 nodes, IDs will be 100, 101, 102 for brokers 0, 1, and 2, respectively.
@@ -434,8 +435,9 @@ minBrokerId: 0
 ##
 containerPorts:
   client: 9092
-  internal: 9093
-  external: 9094
+  controller: 9093
+  internal: 9094
+  external: 9095
 ## Configure extra options for Kafka containers' liveness, readiness and startup probes
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
 ## @param livenessProbe.enabled Enable livenessProbe on Kafka containers
@@ -447,7 +449,7 @@ containerPorts:
 ##
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 60
+  initialDelaySeconds: 10
   timeoutSeconds: 5
   failureThreshold: 3
   periodSeconds: 10
@@ -461,7 +463,7 @@ livenessProbe:
 ##
 readinessProbe:
   enabled: true
-  initialDelaySeconds: 30
+  initialDelaySeconds: 5
   failureThreshold: 6
   timeoutSeconds: 5
   periodSeconds: 10
@@ -671,8 +673,9 @@ service:
   ##
   ports:
     client: 9092
-    internal: 9093
-    external: 9094
+    controller: 9093
+    internal: 9094
+    external: 9095
   ## @param service.nodePorts.client Node port for the Kafka client connections
   ## @param service.nodePorts.external Node port for the Kafka external connections
   ## NOTE: choose port between <30000-32767>
@@ -782,7 +785,7 @@ externalAccess:
     ## @param externalAccess.service.ports.external Kafka port used for external access when service type is LoadBalancer
     ##
     ports:
-      external: 9094
+      external: 9095
     ## @param externalAccess.service.loadBalancerIPs Array of load balancer IPs for each Kafka broker. Length must be the same as replicaCount
     ## e.g:
     ## loadBalancerIPs:
@@ -1629,6 +1632,14 @@ provisioning:
   ##
   waitForKafka: true
 
+kraft:
+  ## @param kraft.enabled for kafka without Zookeeper
+  ##
+  enabled: true
+  ## @param kraft.cluster_id for Kafka Raft metadata mode.
+  ##
+  cluster_id: ""
+
 ## @section ZooKeeper chart parameters
 
 ## ZooKeeper chart configuration
@@ -1637,7 +1648,7 @@ provisioning:
 zookeeper:
   ## @param zookeeper.enabled Switch to enable or disable the ZooKeeper helm chart
   ##
-  enabled: true
+  enabled: false
   ## @param zookeeper.replicaCount Number of ZooKeeper nodes
   ##
   replicaCount: 1
@@ -1674,7 +1685,7 @@ zookeeper:
     size: 8Gi
 
 ## External Zookeeper Configuration
-## All of these values are only used if `zookeeper.enabled=false`
+## All of these values are only used if `zookeeper.enabled=false` and `kraft.enabled=false`
 ##
 externalZookeeper:
   ## @param externalZookeeper.servers List of external zookeeper servers to use. Typically used in combination with 'zookeeperChrootPath'.

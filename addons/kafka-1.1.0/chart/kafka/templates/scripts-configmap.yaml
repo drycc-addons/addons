@@ -14,8 +14,11 @@ data:
   {{- $fullname := include "common.names.fullname" . }}
   {{- $releaseNamespace := .Release.Namespace }}
   {{- $clusterDomain := .Values.clusterDomain }}
+  {{- $interBrokerListenerName := .Values.interBrokerListenerName }}
   {{- $interBrokerPort := .Values.service.ports.internal }}
   {{- $clientPort := .Values.service.ports.client }}
+  {{- $controllerPort := .Values.service.ports.controller }}
+  {{- $externalPort := .Values.service.ports.external }}
   {{- $jksTruststoreSecret := .Values.auth.tls.jksTruststoreSecret -}}
   {{- $jksTruststore := .Values.auth.tls.jksTruststore -}}
   {{- $jksKeystoreSAN := .Values.auth.tls.jksKeystoreSAN -}}
@@ -76,11 +79,17 @@ data:
     #!/bin/bash
 
     ID="${MY_POD_NAME#"{{ $fullname }}-"}"
-    if [[ -f "/drycc/kafka/data/meta.properties" ]]; then
-        export KAFKA_CFG_BROKER_ID="$(grep "broker.id" /drycc/kafka/data/meta.properties | awk -F '=' '{print $2}')"
-    else
-        export KAFKA_CFG_BROKER_ID="$((ID + {{ .Values.minBrokerId }}))"
-    fi
+    export KAFKA_CFG_BROKER_ID="$((ID + {{ .Values.minBrokerId }}))"
+    CONTROLLER_QUORUM_VOTERS=""
+    for i in $( seq 0 $REPLICAS); do
+        if [[ $i != $REPLICAS ]]; then
+            BROKER_ID="$((i + {{ .Values.minBrokerId }}))"
+            CONTROLLER_QUORUM_VOTERS="$CONTROLLER_QUORUM_VOTERS$BROKER_ID@"{{ $fullname }}-$i".{{ $fullname }}-headless.{{ $releaseNamespace }}.svc.{{ $clusterDomain }}:{{ $controllerPort }},"
+        else
+            CONTROLLER_QUORUM_VOTERS=${CONTROLLER_QUORUM_VOTERS::-1}
+        fi
+    done
+    export KAFKA_CFG_CONTROLLER_QUORUM_VOTERS="$CONTROLLER_QUORUM_VOTERS"
 
     {{- if .Values.externalAccess.enabled }}
     # Configure external ip and port
@@ -112,7 +121,7 @@ data:
     {{- if .Values.advertisedListeners }}
     export KAFKA_CFG_ADVERTISED_LISTENERS={{ join "," .Values.advertisedListeners }}
     {{- else }}
-    export KAFKA_CFG_ADVERTISED_LISTENERS="INTERNAL://${MY_POD_NAME}.{{ $fullname }}-headless.{{ $releaseNamespace }}.svc.{{ $clusterDomain }}:{{ $interBrokerPort }},CLIENT://${MY_POD_NAME}.{{ $fullname }}-headless.{{ $releaseNamespace }}.svc.{{ $clusterDomain }}:{{ $clientPort }},EXTERNAL://${EXTERNAL_ACCESS_HOST}:${EXTERNAL_ACCESS_PORT}"
+    export KAFKA_CFG_ADVERTISED_LISTENERS="{{ $interBrokerListenerName }}://${MY_POD_NAME}.{{ $fullname }}-headless.{{ $releaseNamespace }}.svc.{{ $clusterDomain }}:{{ $interBrokerPort }},CLIENT://${MY_POD_NAME}.{{ $fullname }}-headless.{{ $releaseNamespace }}.svc.{{ $clusterDomain }}:{{ $clientPort }},EXTERNAL://${EXTERNAL_ACCESS_HOST}:${EXTERNAL_ACCESS_PORT}"
     {{- end }}
     {{- end }}
 

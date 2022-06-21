@@ -30,39 +30,32 @@ The repository has the following service classes:
 ```
 CLASS NAME |   PLANS NAME  |           DESCRIPTION
 -----------|---------------|------------------------------------
-memcached  |  128          | Memcached 128 plan which which limit resources memory size 128Mi.
-memcached  |  250          | Memcached 250 plan which which limit resources memory size 250Mi.
-memcached  |  500          | Memcached 1000 plan which which limit resources memory size 500Mi.
-memcached  |  1000         | Memcached 1000 plan which which limit resources memory size 1Gi.
-memcached  |  2500         | Memcached 2500 plan which which limit resources memory size 2.5Gi.
-memcached  |  5000         | Memcached 5000 plan which which limit resources memory size 5Gi.
-memcached  |  10000        | Memcached 10000 plan which which limit resources memory size 10Gi.
-memcached  |  20000        | Memcached 20000 plan which which limit resources memory size 20Gi.
-memcached  |  30000        | Memcached 30000 plan which which limit resources memory size 30Gi.
-memcached  |  40000        | Memcached 40000 plan which which limit resources memory size 40Gi.
-memcached  |  50000        | Memcached 50000 plan which which limit resources memory size 50Gi.
-mariadb    |  standard-25  | mysql standard-25 plan which limit persistence size 25Gi.
-mariadb    |  standard-50  | mysql standard-50 plan which limit persistence size 50Gi.
-mariadb    |  standard-100 | mysql standard-100 plan which limit persistence size 100Gi.
-mariadb    |  standard-200 | mysql standard-200 plan which limit persistence size 200Gi.
-mariadb    |  standard-400 | mysql standard-400 plan which limit persistence size 400Gi.
-mariadb    |  standard-800 | mysql standard-800 plan which limit persistence size 800Gi.
-mariadb    |  standard-1600| mysql standard-1600 plan which limit persistence size 1600Gi.
+mariadb    |  standard-16  | mysql standard-25 plan which limit persistence size 16Gi.
+mariadb    |  standard-64  | mysql standard-50 plan which limit persistence size 64Gi.
+mariadb    |  standard-256 | mysql standard-100 plan which limit persistence size 256Gi.
+mariadb    |  standard-512 | mysql standard-200 plan which limit persistence size 512Gi.
+mariadb    |  standard-768 | mysql standard-400 plan which limit persistence size 768Gi.
+mariadb    |  standard-1024| mysql standard-1600 plan which limit persistence size 1Ti.
 postgresql |  standard-16  | postgresql standard-16 plan which limit persistence size 16Gi.
 postgresql |  standard-64  | postgresql standard-64 plan which limit persistence size 64Gi.
 postgresql |  standard-256 | postgresql standard-256 plan which limit persistence size 256Gi.
 postgresql |  standard-512 | postgresql standard-512 plan which limit persistence size 512Gi.
 postgresql |  standard-768 | postgresql standard-768 plan which limit persistence size 768Gi.
-postgresql |  standard-1000| postgresql standard-1000 plan which limit persistence size 1Ti.
+postgresql |  standard-1024| postgresql standard-1000 plan which limit persistence size 1Ti.
+kafka      |  standard-16  | kafka standard-16 plan which limit persistence size 16Gi.
+kafka      |  standard-64  | kafka standard-64 plan which limit persistence size 64Gi.
+kafka      |  standard-256 | kafka standard-256 plan which limit persistence size 256Gi.
+kafka      |  standard-512 | kafka standard-512 plan which limit persistence size 512Gi.
+kafka      |  standard-768 | kafka standard-768 plan which limit persistence size 768Gi.
+kafka      |  standard-1024| kafka standard-1000 plan which limit persistence size 1Ti.
 redis      |  128          | Redis 128 plan which limit resources memory size 128Mi.
-redis      |  250          | Redis 250 plan which limit resources memory size 250Mi.
-redis      |  500          | Redis 500 plan which limit resources memory size 500Mi.
-redis      |  1000         | Redis 1000 plan which limit resources memory size 1Gi.
-redis      |  2500         | Redis 2500 plan which limit resources memory size 2.5Gi.
-redis      |  5000         | Redis 5000 plan which limit resources memory size 5Gi.
-redis      |  10000        | Redis 10000 plan which limit resources memory size 10Gi.
-redis      |  20000        | Redis 20000 plan which limit resources memory size 20Gi.
-redis      |  30000        | Redis 30000 plan which limit resources memory size 30Gi.
-redis      |  40000        | Redis 40000 plan which limit resources memory size 40Gi.
-redis      |  50000        | Redis 50000 plan which limit resources memory size 50Gi
+redis      |  256          | Redis 250 plan which limit resources memory size 256Mi.
+redis      |  512          | Redis 500 plan which limit resources memory size 512Mi.
+redis      |  1024         | Redis 1000 plan which limit resources memory size 1Gi.
+redis      |  2048         | Redis 2500 plan which limit resources memory size 2Gi.
+redis      |  4096         | Redis 5000 plan which limit resources memory size 4Gi.
+redis      |  8192         | Redis 10000 plan which limit resources memory size 8Gi.
+redis      |  16384        | Redis 20000 plan which limit resources memory size 16Gi.
+redis      |  32768        | Redis 30000 plan which limit resources memory size 32Gi.
+redis      |  65536        | Redis 40000 plan which limit resources memory size 64Gi
 ```
