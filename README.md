@@ -48,6 +48,12 @@ kafka      |  standard-256 | kafka standard-256 plan which limit persistence siz
 kafka      |  standard-512 | kafka standard-512 plan which limit persistence size 512Gi.
 kafka      |  standard-768 | kafka standard-768 plan which limit persistence size 768Gi.
 kafka      |  standard-1024| kafka standard-1000 plan which limit persistence size 1Ti.
+minio      |  standard-16  | minio standard-16 plan which limit persistence size 16Gi.
+minio      |  standard-64  | minio standard-64 plan which limit persistence size 64Gi.
+minio      |  standard-256 | minio standard-256 plan which limit persistence size 256Gi.
+minio      |  standard-512 | minio standard-512 plan which limit persistence size 512Gi.
+minio      |  standard-768 | minio standard-768 plan which limit persistence size 768Gi.
+minio      |  standard-1024| minio standard-1000 plan which limit persistence size 1Ti.
 redis      |  128          | Redis 128 plan which limit resources memory size 128Mi.
 redis      |  256          | Redis 250 plan which limit resources memory size 256Mi.
 redis      |  512          | Redis 500 plan which limit resources memory size 512Mi.

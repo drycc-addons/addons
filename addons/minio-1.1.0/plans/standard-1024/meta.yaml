@@ -1,0 +1,6 @@
+name: "standard-1024"
+id: 2361b3cc-62f2-4e99-b3f0-628d4eac08fc
+description: "Minio standard-1024 plan which limit persistence size 1Ti."
+displayName: "standard-1024"
+bindable: true
+maximum_polling_duration: 1800

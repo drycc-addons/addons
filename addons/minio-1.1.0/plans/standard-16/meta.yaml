@@ -1,0 +1,6 @@
+name: "standard-16"
+id: dea72135-fbd1-47ed-b7ae-d838b7ad3f66
+description: "Minio standard-16 plan which limit persistence size 16Gi."
+displayName: "standard-16"
+bindable: true
+maximum_polling_duration: 1800

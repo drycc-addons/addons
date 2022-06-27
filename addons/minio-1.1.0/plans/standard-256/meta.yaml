@@ -1,0 +1,6 @@
+name: "standard-256"
+id: 6a4ec8c2-251a-47fe-9bb4-5d1d6b4757b8
+description: "Minio standard-256 plan which limit persistence size 256Gi."
+displayName: "standard-256"
+bindable: true
+maximum_polling_duration: 1800

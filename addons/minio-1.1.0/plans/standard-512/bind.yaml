@@ -1,0 +1,34 @@
+credential:
+  {{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: API_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="minio-api")].port }'
+  
+  - name: CONSOLE_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="minio-console")].port }'
+  {{- end }}
+
+  {{- if (include "minio.createSecret" .) }}
+  - name: ROOT_USER
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .data.root-user }'
+
+  - name: ROOT_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .data.root-password }'
+  {{- end }}
