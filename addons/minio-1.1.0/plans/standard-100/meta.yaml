@@ -1,0 +1,6 @@
+name: "standard-100"
+id: 6b0b261c-3109-4fcc-8102-1d0c3f0a6a8f
+description: "Minio standard-100 plan which limit persistence size 1Ti."
+displayName: "standard-100"
+bindable: true
+maximum_polling_duration: 1800

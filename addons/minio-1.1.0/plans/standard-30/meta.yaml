@@ -1,0 +1,6 @@
+name: "standard-30"
+id: 6a4ec8c2-251a-47fe-9bb4-5d1d6b4757b8
+description: "Minio standard-30 plan which limit persistence size 30Gi."
+displayName: "standard-30"
+bindable: true
+maximum_polling_duration: 1800

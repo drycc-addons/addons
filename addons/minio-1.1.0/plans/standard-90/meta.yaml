@@ -1,0 +1,6 @@
+name: "standard-90"
+id: e82970c8-b130-466b-b71e-7863242fe0a7
+description: "Minio standard-90 plan which limit persistence size 1Ti."
+displayName: "standard-90"
+bindable: true
+maximum_polling_duration: 1800

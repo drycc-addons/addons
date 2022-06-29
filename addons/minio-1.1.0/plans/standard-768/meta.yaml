@@ -1,6 +1,0 @@
-name: "standard-768"
-id: 99cc7f84-4aa1-438b-8bfb-0f4d67a1e804
-description: "Minio standard-768 plan which limit persistence size 768Gi."
-displayName: "standard-768"
-bindable: true
-maximum_polling_duration: 1800
