@@ -14,7 +14,7 @@ function prepareAssets() {
           mkdir -p toCopy
 
           # do not fail if there is no .md file
-          cp addons/*.md ${destination} | true
+          cp addons/*.md ${destination} 2>/dev/null || true
           cp addons/*.yaml ${destination}
 
           echo "Executing targz"

@@ -1,0 +1,31 @@
+platform: linux/amd64
+
+labels:
+  type: exec
+
+pipeline:
+- name: check
+  image: bash
+  commands:
+  - make check
+  when:
+    event:
+    - pull_request
+    - push
+
+- name: publish
+  image: bash
+  commands:
+  - export BOT_GITHUB_TOKEN=$GITHUB_TOKEN
+  - make prepare-assets
+  - make latest-release
+  environment:
+    GIT_REPO: ${CI_REPO}
+    GIT_TAG: ${CI_COMMIT_TAG=latest}
+    REPO_NAME: ${CI_REPO_NAME}
+    REPO_OWNER: ${CI_REPO_OWNER}
+  secrets:
+  - github_token
+  when:
+    event:
+    - push
