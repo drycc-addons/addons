@@ -47,3 +47,4 @@ Temporary Items
 toCopy/
 out/
 Chart.lock
+*.tgz

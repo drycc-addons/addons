@@ -115,15 +115,12 @@ function checkAddons() {
 }
 
 function installHelm() {
-    echo -e "${INVERTED}Installing Helm...\n${NC}"
-    curl https://raw.githubusercontent.com/helm/helm/master/scripts/get > get_helm.sh
-    chmod 700 get_helm.sh
-
-    ./get_helm.sh --version ${helmVersion}
-
-    echo -e "\n${GREEN}Installed Helm [version $(helm version --client)]${NC}\n"
-
-    rm ./get_helm.sh
+    if [ command -v helm >/dev/null 2>&1 ]; then
+        echo -e "${INVERTED}Helm has been installed.\n"
+    else
+        echo -e "${INVERTED}Installing Helm...\n${NC}"
+        curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+    fi
 }
 
 function lintHelmChartsIfRequested() {
@@ -142,7 +139,7 @@ function lintHelmChartsIfRequested() {
     do
         for addon in ${directory}/*/; do
             for chart in ${addon}chart/*/; do
-                if [ -e ${chart}/Chart.lock ]; then
+                if [ ! -e ${chart}/Chart.lock ]; then
                     helm dependency update ${chart}
                 fi
                 for plan in ${addon}/plans/*/; do
