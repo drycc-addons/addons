@@ -4,10 +4,8 @@ apiVersion: v2
 appVersion: 6.2.6
 dependencies:
   - name: common
-    repository: https://charts.bitnami.com/bitnami
-    tags:
-      - bitnami-common
-    version: 1.x.x
+    repository: oci://registry.drycc.cc/charts
+    version: ~1.1.1
 description: Redis(TM) is an open source, advanced key-value store. It is often referred to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.
 engine: gotpl
 home: https://github.com/bitnami/charts/tree/master/bitnami/redis

@@ -4,10 +4,8 @@ apiVersion: v2
 appVersion: 2022.6.20
 dependencies:
   - name: common
-    repository: https://charts.bitnami.com/bitnami
-    tags:
-      - bitnami-common
-    version: 1.x.x
+    repository: oci://registry.drycc.cc/charts
+    version: ~1.1.1
 description: MinIO(R) is an object storage server, compatible with Amazon S3 cloud storage service, mainly used for storing unstructured data (such as photos, videos, log files, etc.).
 engine: gotpl
 home: https://github.com/bitnami/charts/tree/master/bitnami/minio

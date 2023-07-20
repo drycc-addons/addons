@@ -1,6 +1,0 @@
-name: "standard-512"
-id: 5d0c8944-1289-4c1c-a484-8612ddaa8c4c
-description: "Kafka standard-512 plan which limit persistence size 512Gi."
-displayName: "standard-512"
-bindable: true
-maximum_polling_duration: 1800
