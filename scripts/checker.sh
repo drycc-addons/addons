@@ -123,6 +123,16 @@ function installHelm() {
     fi
 }
 
+function installYq() {
+    if [ command -v yq >/dev/null 2>&1 ]; then
+        echo -e "${INVERTED}yq has been installed.\n"
+    else
+        version=$(curl -Ls https://github.com/mikefarah/yq/releases|grep /mikefarah/yq/releases/tag/ | sed -E 's/.*\/mikefarah\/yq\/releases\/tag\/(v[0-9\.]{1,}(-rc.[0-9]{1,})?)".*/\1/g' | head -1)
+        curl -fsSL https://github.com/mikefarah/yq/releases/download/$version/yq_linux_$(dpkg-architecture -q DEB_BUILD_ARCH) -o /usr/local/bin/yq
+        chmod +x /usr/local/bin/yq
+    fi
+}
+
 function lintHelmChartsIfRequested() {
     if [ "$helmLint" = false ];
     then
@@ -166,6 +176,7 @@ function lintHelmChartsIfRequested() {
     fi
 }
 
+installYq
 validateInputParams
 
 checkAddons
