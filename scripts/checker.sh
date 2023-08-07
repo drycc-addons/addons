@@ -100,7 +100,7 @@ function checkAddons() {
     do
         echo -e "${INVERTED}Checking addons in directory ${directory}${NC}"
         for addon in ${directory}/*/; do
-            executeCmd "bin/checker ${addon}"
+            executeCmd "scripts/helm_checker.sh ${addon}"
             if [ $? -eq 1 ];
             then
                 errOccurred=1

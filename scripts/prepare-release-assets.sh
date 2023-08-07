@@ -18,7 +18,7 @@ function prepareAssets() {
           cp addons/*.yaml ${destination}
 
           echo "Executing targz"
-          bin/targz addons/ ${destination}
+          scripts/targz.sh addons/ ${destination}
 
           echo "Processing done"
           echo
