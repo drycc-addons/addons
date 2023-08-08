@@ -29,7 +29,7 @@ for addon in $addons/chart/*/; do
     echo -e "Copy $bind"
     cp $bind templates
     success=$(helm template . || echo false)
-    rm templates/bind.yaml
+    rm templates/bind.yaml -f
     if [[ success == "false" ]]; then
       echo -e "\033[31mCheck $addon error\033[0m"
       exit 100

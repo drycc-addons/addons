@@ -1,0 +1,34 @@
+credential:
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  
+  {{- if not .Values.service.disableBaseClientPort }}
+  - name: TCP_CLIENT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+  {{- end }}
+
+  {{- if .Values.tls.client.enabled }}
+  - name: TCP_CLIENTT_TLS_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client-tls")].port }'
+  {{- end }}
+
+  - name: TCP_FOLLOWER_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-follower")].port }'
+
+  - name: TCP_ELECTION_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-election")].port }'

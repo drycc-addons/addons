@@ -1,0 +1,6 @@
+name: "standard-128"
+id: 4b9ae236-b30e-4652-b8be-c03e58652c11
+description: "RabbitMQ standard-128 plan which limit resources memory size 128Mi."
+displayName: "standard-128"
+bindable: true
+maximum_polling_duration: 1800

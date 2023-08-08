@@ -8,7 +8,7 @@ metadata:
   provider:
     name: drycc
     supportURL: https://min.io
-  documentationURL: https://github.com/drycc-adons/drycc-docker-minio
+  documentationURL: https://github.com/drycc-addons/drycc-docker-minio
 tags: minio
 bindable: true
 instances_retrievable: true

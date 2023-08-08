@@ -8,7 +8,7 @@ metadata:
   provider:
     name: drycc
     supportURL: http://redis.io/
-  documentationURL: https://github.com/drycc-adons/drycc-docker-redis
+  documentationURL: https://github.com/drycc-addons/drycc-docker-redis
 tags: redis
 bindable: true
 instances_retrievable: true

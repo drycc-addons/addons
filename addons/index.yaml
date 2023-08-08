@@ -4,15 +4,27 @@ entries:
     - name: mariadb
       description: "MariaDB Server is one of the most popular open source relational databases. It’s made by the original developers of MySQL and guaranteed to stay open source. "
       version: 1.1.0
+  minio:
+    - name: minio
+      description: "MinIO offers high-performance, S3 compatible object storage."
+      version: 1.1.0
   postgresql:
     - name: postgresql
       description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
+      version: 1.1.0
+  rabbitmq:
+    - name: rabbitmq
+      description: "RabbitMQ is the most widely deployed open source message broker."
       version: 1.1.0
   redis:
     - name: redis
       description: "Redis is an advanced key-value cache and store."
       version: 1.1.0
-  minio:
-    - name: minio
-      description: "MinIO offers high-performance, S3 compatible object storage."
+  redis-cluster:
+    - name: redis-cluster
+      description: "Redis is an advanced key-value cache and store."
+      version: 1.1.0
+  zookeeper:
+    - name: zookeeper
+      description: "Apache ZooKeeper is an effort to develop and maintain an open-source server which enables highly reliable distributed coordination."
       version: 1.1.0
