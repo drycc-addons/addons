@@ -6,6 +6,6 @@ cd $source_dir
 for addon in *; do
   if [[ -d $addon ]]; then
     addon=$(echo $addon | awk -F '/' '{print $NF}')
-    tar -czvf ../$destination_dir/$addon.tar.gz $addon
+    tar -czvf ../$destination_dir/$addon.tgz $addon
   fi
 done
