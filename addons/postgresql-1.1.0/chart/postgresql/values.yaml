@@ -87,7 +87,7 @@ diagnosticMode:
 image:
   registry: registry.drycc.cc
   repository: drycc-addons/postgresql
-  tag: 15
+  tag: "15"
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -1059,7 +1059,7 @@ volumePermissions:
   image:
     registry: registry.drycc.cc
     repository: drycc/base
-    tag: bookworm
+    tag: "bookworm"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
@@ -1145,7 +1145,7 @@ metrics:
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/postgres-exporter
-    tag: 0
+    tag: "0"
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.

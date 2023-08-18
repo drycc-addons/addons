@@ -73,7 +73,7 @@ image:
   ## Bitnami Redis&reg; image tag
   ## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#supported-tags-and-respective-dockerfile-links
   ##
-  tag: 7.0
+  tag: "7.0"
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -339,7 +339,7 @@ volumePermissions:
   image:
     registry: registry.drycc.cc
     repository: drycc/base
-    tag: bookworm
+    tag: "bookworm"
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -801,7 +801,7 @@ metrics:
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/redis-exporter
-    tag: 1
+    tag: "1"
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -963,7 +963,7 @@ sysctlImage:
   ##
   registry: registry.drycc.cc
   repository: drycc/base
-  tag: bookworm
+  tag: "bookworm"
   digest: ""
   pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.

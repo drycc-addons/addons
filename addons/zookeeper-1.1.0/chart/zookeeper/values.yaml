@@ -76,7 +76,7 @@ diagnosticMode:
 image:
   registry: registry.drycc.cc
   repository: drycc-addons/zookeeper
-  tag: 3.9
+  tag: "3.9"
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -657,7 +657,7 @@ volumePermissions:
   image:
     registry: registry.drycc.cc
     repository: drycc/base
-    tag: bookworm
+    tag: "bookworm"
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
