@@ -92,7 +92,7 @@ spec:
           {{- else if .Values.redis.command }}
           command: {{- include "common.tplvalues.render" (dict "value" .Values.redis.command "context" $) | nindent 12 }}
           {{- else }}
-          command: ['/bin/bash', '-c']
+          command: ['init-stack', '/bin/bash', '-c']
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}
           args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
@@ -222,6 +222,7 @@ spec:
             failureThreshold: {{ .Values.redis.livenessProbe.failureThreshold }}
             exec:
               command:
+                - init-stack
                 - sh
                 - -c
                 - /scripts/ping_liveness_local.sh {{ .Values.redis.livenessProbe.timeoutSeconds }}
@@ -238,6 +239,7 @@ spec:
             failureThreshold: {{ .Values.redis.readinessProbe.failureThreshold }}
             exec:
               command:
+                - init-stack
                 - sh
                 - -c
                 - /scripts/ping_readiness_local.sh {{ .Values.redis.readinessProbe.timeoutSeconds }}
@@ -297,6 +299,7 @@ spec:
           args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
           {{- else }}
           command:
+            - init-stack
             - /bin/bash
             - -c
             - |

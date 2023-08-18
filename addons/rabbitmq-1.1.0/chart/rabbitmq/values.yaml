@@ -1067,7 +1067,7 @@ ingress:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: false
+  enabled: true
   ## @param networkPolicy.allowExternal Don't require client label for connections
   ## The Policy model to apply. When set to false, only pods with the correct
   ## client label will have network access to the ports RabbitMQ is listening
@@ -1075,6 +1075,9 @@ networkPolicy:
   ## (with the correct destination port).
   ##
   allowExternal: true
+  
+  allowCurrentNamespace: true
+  allowNamespaces: []
   ## @param networkPolicy.additionalRules Additional NetworkPolicy Ingress "from" rules to set. Note that all rules are OR-ed.
   ## e.g:
   ## additionalRules:

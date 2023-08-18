@@ -114,6 +114,7 @@ spec:
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           command:
+            - init-stack
             - /scripts/init-certs.sh
           env:
             - name: MY_POD_NAME
@@ -372,11 +373,11 @@ spec:
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled" "probeCommandTimeout") "context" $) | nindent 12 }}
             exec:
               {{- if not .Values.service.disableBaseClientPort }}
-              command: ['/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.livenessProbe.probeCommandTimeout }} nc -w {{ .Values.livenessProbe.probeCommandTimeout }} localhost {{ .Values.containerPorts.client }} | grep imok']
+              command: ['init-stack', '/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.livenessProbe.probeCommandTimeout }} nc -w {{ .Values.livenessProbe.probeCommandTimeout }} localhost {{ .Values.containerPorts.client }} | grep imok']
               {{- else if not .Values.tls.client.enabled }}
-              command: ['/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.livenessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} | grep imok']
+              command: ['init-stack', '/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.livenessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} | grep imok']
               {{- else }}
-              command: ['/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.livenessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} -cert {{ .Values.service.tls.client_cert_pem_path }} -key {{ .Values.service.tls.client_key_pem_path }} | grep imok']
+              command: ['init-stack', '/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.livenessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} -cert {{ .Values.service.tls.client_cert_pem_path }} -key {{ .Values.service.tls.client_key_pem_path }} | grep imok']
               {{- end }}
           {{- end }}
           {{- if .Values.customReadinessProbe }}
@@ -385,11 +386,11 @@ spec:
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.readinessProbe "enabled" "probeCommandTimeout") "context" $) | nindent 12 }}
             exec:
               {{- if not .Values.service.disableBaseClientPort }}
-              command: ['/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.readinessProbe.probeCommandTimeout }} nc -w {{ .Values.readinessProbe.probeCommandTimeout }} localhost {{ .Values.containerPorts.client }} | grep imok']
+              command: ['init-stack', '/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.readinessProbe.probeCommandTimeout }} nc -w {{ .Values.readinessProbe.probeCommandTimeout }} localhost {{ .Values.containerPorts.client }} | grep imok']
               {{- else if not .Values.tls.client.enabled }}
-              command: ['/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.readinessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} | grep imok']
+              command: ['init-stack', '/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.readinessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} | grep imok']
               {{- else }}
-              command: ['/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.readinessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} -cert {{ .Values.service.tls.client_cert_pem_path }} -key {{ .Values.service.tls.client_key_pem_path }} | grep imok']
+              command: ['init-stack', '/bin/bash', '-c', 'echo "ruok" | timeout {{ .Values.readinessProbe.probeCommandTimeout }} openssl s_client -quiet -crlf -connect localhost:{{ .Values.containerPorts.tls }} -cert {{ .Values.service.tls.client_cert_pem_path }} -key {{ .Values.service.tls.client_key_pem_path }} | grep imok']
               {{- end }}
           {{- end }}
           {{- if .Values.customStartupProbe }}

@@ -52,6 +52,18 @@ spec:
               {{ template "common.names.fullname" . }}-client: "true"
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
+        {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
+        {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+        {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.networkPolicy.ingressNSMatchLabels }}
         - namespaceSelector:
             matchLabels:

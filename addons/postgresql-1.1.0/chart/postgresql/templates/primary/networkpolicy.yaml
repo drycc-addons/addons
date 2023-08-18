@@ -17,6 +17,21 @@ spec:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: primary
   ingress:
+    {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
+    - from:
+      {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      {{- end }}
+      {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+      {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
     {{- if and .Values.metrics.enabled .Values.networkPolicy.metrics.enabled (or .Values.networkPolicy.metrics.namespaceSelector .Values.networkPolicy.metrics.podSelector) }}
     - from:
         {{- if .Values.networkPolicy.metrics.namespaceSelector }}

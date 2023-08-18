@@ -37,6 +37,18 @@ spec:
         - port: {{ .Values.redis.containerPorts.redis }}
         - port: {{ .Values.redis.containerPorts.bus }}
       from:
+        {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
+        {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+        {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
+        {{- end }}
         {{- if not .Values.networkPolicy.allowExternal }}
         - podSelector:
             matchLabels:

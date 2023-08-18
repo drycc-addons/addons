@@ -16,6 +16,21 @@ spec:
       app.kubernetes.io/component: secondary
       {{- include "common.labels.standard" . | nindent 6 }}
   ingress:
+    {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
+    - from:
+    {{- if .Values.networkPolicy.allowCurrentNamespace }}
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: {{ .Release.Namespace }}
+    {{- end }}
+    {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+    {{- if $namespace }}
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: {{ $namespace }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
     {{- if and .Values.metrics.enabled .Values.networkPolicy.metrics.enabled (or .Values.networkPolicy.metrics.namespaceSelector .Values.networkPolicy.metrics.podSelector) }}
     - from:
         {{- if .Values.networkPolicy.metrics.namespaceSelector }}

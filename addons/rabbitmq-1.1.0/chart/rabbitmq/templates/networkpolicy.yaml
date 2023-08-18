@@ -30,6 +30,20 @@ spec:
         - podSelector:
             matchLabels:
               {{- include "common.labels.matchLabels" . | nindent 14 }}
+        {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
+        {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
+        {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+        {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.networkPolicy.additionalRules }}
         {{- include "common.tplvalues.render" (dict "value" .Values.networkPolicy.additionalRules "context" $) | nindent 8 }}
         {{- end }}

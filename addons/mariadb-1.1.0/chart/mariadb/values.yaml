@@ -1166,11 +1166,13 @@ metrics:
 networkPolicy:
   ## @param networkPolicy.enabled Enable network policies
   ##
-  enabled: false
+  enabled: true
   ## @param networkPolicy.metrics.enabled Enable network policy for metrics (prometheus)
   ## @param networkPolicy.metrics.namespaceSelector [object] Monitoring namespace selector labels. These labels will be used to identify the prometheus' namespace.
   ## @param networkPolicy.metrics.podSelector [object] Monitoring pod selector labels. These labels will be used to identify the Prometheus pods.
   ##
+  allowCurrentNamespace: true
+  allowNamespaces: []
   metrics:
     enabled: false
     ## e.g:

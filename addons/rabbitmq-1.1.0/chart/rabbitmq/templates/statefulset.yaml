@@ -145,6 +145,7 @@ spec:
             preStop:
               exec:
                 command:
+                  - init-stack
                   - /bin/bash
                   - -ec
                   - |
@@ -277,6 +278,7 @@ spec:
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.livenessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
+                - init-stack
                 - /bin/bash
                 - -ec
                 - rabbitmq-diagnostics -q ping
@@ -287,6 +289,7 @@ spec:
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.readinessProbe "enabled") "context" $) | nindent 12 }}
             exec:
               command:
+                - init-stack
                 - /bin/bash
                 - -ec
                 - rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms

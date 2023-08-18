@@ -98,13 +98,15 @@ image:
 ## @param networkPolicy.ingressNSPodMatchLabels For other namespaces match by pod labels and namespace labels
 ##
 networkPolicy:
-  enabled: false
+  enabled: true
   ## When set to false, only pods with the correct
   ## client label will have network access to the port Redis&reg; is listening
   ## on. When true, Redis&reg; will accept connections from any source
   ## (with the correct destination port).
   ##
-  allowExternal: true
+  allowExternal: false
+  allowCurrentNamespace: true
+  allowNamespaces: []
   ingressNSMatchLabels: {}
   ingressNSPodMatchLabels: {}
 
