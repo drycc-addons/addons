@@ -228,6 +228,7 @@ extraEnvVarsSecret: ""
 ## @param command Override default container command (useful when using custom images)
 ##
 command:
+  - init-stack
   - /scripts/setup.sh
 ## @param args Override default container args (useful when using custom images)
 ##
@@ -237,7 +238,7 @@ args: []
 
 ## @param replicaCount Number of ZooKeeper nodes
 ##
-replicaCount: 1
+replicaCount: 3
 ## @param containerPorts.client ZooKeeper client container port
 ## @param containerPorts.tls ZooKeeper TLS container port
 ## @param containerPorts.follower ZooKeeper follower container port

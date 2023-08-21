@@ -13,15 +13,15 @@ fullnameOverride: hb-rabbitmq-standard-128
 ##
 resources:
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 1000m
+    memory: 1024Mi
   requests:
-    cpu: 10m
-    memory: 64Mi
+    cpu: 500m
+    memory: 512Mi
 
 ## @param replicaCount Number of RabbitMQ replicas to deploy
 ##
-replicaCount: 1
+replicaCount: 3
 
 ## @section Persistence parameters
 ##
@@ -45,4 +45,4 @@ persistence:
   ## @param persistence.size PVC Storage Request for RabbitMQ data volume
   ## If you change this value, you might have to adjust `rabbitmq.diskFreeLimit` as well
   ##
-  size: 256Mi
+  size: 512Mi
