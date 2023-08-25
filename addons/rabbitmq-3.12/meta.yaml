@@ -1,0 +1,16 @@
+name: rabbitmq
+version: 3.12
+id: f8186d36-f334-4094-8e02-d21a61da657b
+description: "RabbitMQ is the most widely deployed open source message broker.."
+displayName: "rabbitmq"
+metadata:
+  displayName: "rabbitmq"
+  provider:
+    name: drycc
+    supportURL: https://www.rabbitmq.com/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/rabbitmq
+tags: rabbitmq
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true

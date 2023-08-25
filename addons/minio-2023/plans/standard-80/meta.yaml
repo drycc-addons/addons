@@ -1,0 +1,6 @@
+name: "standard-80"
+id: 8fbcf6e4-bc0e-4802-ac42-44c209793a96
+description: "Minio standard-80 plan which limit persistence size 80Gi."
+displayName: "standard-80"
+bindable: true
+maximum_polling_duration: 1800

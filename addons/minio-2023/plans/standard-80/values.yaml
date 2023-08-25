@@ -1,0 +1,48 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: hb-minio-standard-80
+
+## MinIO&reg; containers' resource requests and limits
+## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+## We usually recommend not to specify default resources and to leave this as a conscious
+## choice for the user. This also increases chances charts run on environments with little
+## resources, such as Minikube. If you do want to specify resources, uncomment the following
+## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+## @param resources.limits The resources limits for the MinIO&reg; container
+## @param resources.requests The requested resources for the MinIO&reg; container
+##
+resources:
+  limits:
+    cpu: 8000m
+    memory: 32Gi
+  requests:
+    cpu: 800m
+    memory: 16Gi
+
+## @section Persistence parameters
+
+## Enable persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  ## @param persistence.enabled Enable MinIO&reg; data persistence using PVC. If false, use emptyDir
+  ##
+  enabled: true
+  ## @param persistence.storageClass PVC Storage Class for MinIO&reg; data volume
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  ## @param persistence.mountPath Data volume mount path
+  ##
+  mountPath: /data
+  ## @param persistence.accessModes PVC Access Modes for MinIO&reg; data volume
+  ##
+  accessModes:
+    - ReadWriteOnce
+  ## @param persistence.size PVC Storage Request for MinIO&reg; data volume
+  ##
+  size: 80Gi

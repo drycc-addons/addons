@@ -1,0 +1,17 @@
+name: postgresql
+version: 15
+id: 595d6e9e-431e-4b29-82b4-152368164171
+description: "postgresql by Helm Broker."
+displayName: "postgresql"
+metadata:
+  displayName: "postgresql"
+  provider:
+    name: drycc
+    supportURL: https://drycc.cc
+  longDescription: "PostgreSQL by Helm Broker."
+  documentationURL: https://github.com/drycc-addons/addons/tree/main/addons/postgresql-1.1.0/chart/postgresql
+tags: database
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true

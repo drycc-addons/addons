@@ -1,6 +1,0 @@
-name: standard-16
-id: a76869e7-455b-4929-9ad2-36abc12c6bce
-description: "mariadb standard-16 plan which limit persistence size 16Gi."
-displayName: standard-16
-bindable: true
-maximum_polling_duration: 1800
