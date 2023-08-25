@@ -4,6 +4,13 @@ entries:
     - name: mariadb
       description: "MariaDB Server is one of the most popular open source relational databases. It’s made by the original developers of MySQL and guaranteed to stay open source. "
       version: 1.1.0
+  mysql-cluster:
+    - name: mysql-cluster
+      description: " The world's most popular open source database cluster."
+      version: 8.0
+    - name: mysql-cluster
+      description: " The world's most popular open source database cluster."
+      version: 5.7
   minio:
     - name: minio
       description: "MinIO offers high-performance, S3 compatible object storage."

@@ -1,0 +1,16 @@
+name: mysql-cluster
+version: 8.0
+id: fbee746b-f3a7-4bef-8b55-cbecfd4c8ac3
+description: "mysql-cluster"
+displayName: "mysql-cluster"
+metadata:
+  displayName: "mysql-cluster"
+  provider:
+    name: drycc
+    supportURL: https://mysql.io
+  documentationURL: https://github.com/drycc-addons/drycc-docker-mysql-cluster
+tags: mysql-cluster
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
