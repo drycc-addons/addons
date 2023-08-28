@@ -2,9 +2,9 @@ name: mysql-cluster
 version: 5.7
 id: 01397d06-d5b1-4b3d-a7e0-d79e00dcd0f1
 description: "mysql-cluster"
-displayName: "mysql-cluster"
+displayName: "mysql-cluster-5.7"
 metadata:
-  displayName: "mysql-cluster"
+  displayName: "mysql-cluster-5.7"
   provider:
     name: drycc
     supportURL: https://mysql.io

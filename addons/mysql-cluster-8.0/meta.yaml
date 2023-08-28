@@ -2,9 +2,9 @@ name: mysql-cluster
 version: 8.0
 id: fbee746b-f3a7-4bef-8b55-cbecfd4c8ac3
 description: "mysql-cluster"
-displayName: "mysql-cluster"
+displayName: "mysql-cluster-8.0"
 metadata:
-  displayName: "mysql-cluster"
+  displayName: "mysql-cluster-8.0"
   provider:
     name: drycc
     supportURL: https://mysql.io
