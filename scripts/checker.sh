@@ -100,11 +100,13 @@ function checkAddons() {
     do
         echo -e "${INVERTED}Checking addons in directory ${directory}${NC}"
         for addon in ${directory}/*/; do
-            executeCmd "scripts/helm_checker.sh ${addon}"
-            if [ $? -eq 1 ];
-            then
-                errOccurred=1
-            fi
+            for addonVersion in ${addon}*/; do
+                executeCmd "scripts/helm_checker.sh ${addonVersion}"
+                if [ $? -eq 1 ];
+                then
+                    errOccurred=1
+                fi
+            done
         done
     done
 
@@ -148,11 +150,11 @@ function lintHelmChartsIfRequested() {
     for directory in ${directories[@]}
     do
         for addon in ${directory}/*/; do
-            for chart in ${addon}chart/*/; do
+            for chart in ${addon}*/chart/*/; do
                 if [ ! -e ${chart}/Chart.lock ]; then
                     helm dependency update ${chart}
                 fi
-                for plan in ${addon}/plans/*/; do
+                for plan in ${addon}*/plans/*/; do
                     if [ -e ${plan}values.yaml ]
                     then
                         helmCmd="helm lint ${chart} --values ${plan}values.yaml"

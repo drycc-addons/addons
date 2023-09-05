@@ -1,0 +1,8 @@
+credential:
+  {{- if (eq .Values.primary.service.type "LoadBalancer") }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}

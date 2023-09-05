@@ -1,34 +1,25 @@
 apiVersion: v1
 entries:
-  mysql-cluster-8.0:
-    - name: mysql-cluster
+  mysql-cluster:
+    - version: 8.0
       description: " The world's most popular open source database cluster."
-      version: 8.0
-  mysql-cluster-5.7:
-    - name: mysql-cluster
+    - version: 5.7
       description: " The world's most popular open source database cluster."
-      version: 5.7
   minio:
-    - name: minio
+    - version: 2023
       description: "MinIO offers high-performance, S3 compatible object storage."
-      version: 2023
   postgresql:
-    - name: postgresql
+    - version: 15
       description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
-      version: 15
   rabbitmq:
-    - name: rabbitmq
+    - version: 3.12
       description: "RabbitMQ is the most widely deployed open source message broker."
-      version: 3.12
   redis:
-    - name: redis
+    - version: 7.0
       description: "Redis is an advanced key-value cache and store."
-      version: 7.0
   redis-cluster:
-    - name: redis-cluster
+    - version: 7.0
       description: "Redis is an advanced key-value cache and store."
-      version: 7.0
   zookeeper:
-    - name: zookeeper
+    - version: 3.9
       description: "Apache ZooKeeper is an effort to develop and maintain an open-source server which enables highly reliable distributed coordination."
-      version: 3.9
