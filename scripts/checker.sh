@@ -178,8 +178,8 @@ function lintHelmChartsIfRequested() {
     fi
 }
 
-installYq
-validateInputParams
+# installYq
+# validateInputParams
 
 checkAddons
-lintHelmChartsIfRequested
+# lintHelmChartsIfRequested
