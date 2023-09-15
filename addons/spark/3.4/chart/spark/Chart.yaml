@@ -1,0 +1,28 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+annotations:
+  category: Infrastructure
+  licenses: Apache-2.0
+  images: |
+    - name: spark
+      image: registry.drycc.cc/drycc-addons/spark:3.4
+apiVersion: v2
+appVersion: 3.4.1
+dependencies:
+  - name: common
+    repository: oci://registry.drycc.cc/charts
+    version: ~1.1.3
+description: Apache Spark is a high-performance engine for large-scale computing tasks, such as data processing, machine learning and real-time data streaming. It includes APIs for Java, Python, Scala and R.
+home: https://bitnami.com
+icon: https://bitnami.com/assets/stacks/spark/img/spark-stack-220x234.png
+keywords:
+  - apache
+  - spark
+maintainers:
+  - name: VMware, Inc.
+    url: https://github.com/bitnami/charts
+name: spark
+sources:
+  - https://github.com/bitnami/charts/tree/main/bitnami/spark
+version: 7.2.1

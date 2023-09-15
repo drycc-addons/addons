@@ -843,7 +843,7 @@ networkPolicy:
   ## listening on. When true, MinIO&reg; will accept connections from any source (with the correct destination port).
   ##
   allowExternal: false
-  allowLocalNamespace: true
+  allowCurrentNamespace: true
   allowNamespaces: []
   ## @param networkPolicy.extraFromClauses Allows to add extra 'from' clauses to the NetworkPolicy
   extraFromClauses: {}

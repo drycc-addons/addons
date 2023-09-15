@@ -1,6 +1,6 @@
 name: "standard-512"
 id: d2a73e1f-3ee5-46ff-b264-9909d4ebbe77
-description: "ZooKeeper standard-512 plan which limit resources memory size 512Mi."
+description: "Spark standard-512 plan which limit resources memory size 512Mi."
 displayName: "standard-512"
 bindable: true
 maximum_polling_duration: 1800

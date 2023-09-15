@@ -1,0 +1,67 @@
+{{- if or .Values.networkPolicy.enabled .Values.networkPolicy.metrics.enabled }}
+apiVersion: {{ include "common.capabilities.networkPolicy.apiVersion" . }}
+kind: NetworkPolicy
+metadata:
+  name: {{ printf "%s-master" (include "common.names.fullname" .) }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: master
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  podSelector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: master
+  ingress:
+    {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
+    - from:
+      {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      {{- end }}
+      {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+      {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if and .Values.metrics.enabled .Values.networkPolicy.metrics.enabled (or .Values.networkPolicy.metrics.namespaceSelector .Values.networkPolicy.metrics.podSelector) }}
+    - from:
+        {{- if .Values.networkPolicy.metrics.namespaceSelector }}
+        - namespaceSelector:
+            matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.networkPolicy.metrics.namespaceSelector "context" $) | nindent 14 }}
+        {{- end }}
+        {{- if .Values.networkPolicy.metrics.podSelector }}
+        - podSelector:
+            matchLabels: {{- include "common.tplvalues.render" (dict "value" .Values.networkPolicy.metrics.podSelector "context" $) | nindent 14 }}
+        {{- end }}
+      ports:
+        {{- if .Values.security.ssl.enabled }}
+        - port: {{ .Values.master.containerPorts.http }}
+        {{- else }}
+        - port: {{ .Values.master.containerPorts.http }}
+        {{- end }}
+        - port: {{ .Values.master.containerPorts.cluster }}
+    {{- end }}
+    {{- $replicaCount := int .Values.worker.replicaCount }}
+    {{- if gt $replicaCount 0 }}
+    - from:
+        - podSelector:
+            matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
+              app.kubernetes.io/component: worker
+      ports:
+        {{- if .Values.security.ssl.enabled }}
+        - port: {{ .Values.master.containerPorts.http }}
+        {{- else }}
+        - port: {{ .Values.master.containerPorts.http }}
+        {{- end }}
+        - port: {{ .Values.master.containerPorts.cluster }}
+    {{- end }}
+{{- end }}

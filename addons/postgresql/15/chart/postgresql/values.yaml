@@ -955,7 +955,7 @@ networkPolicy:
   ## @param networkPolicy.enabled Enable network policies
   ##
   enabled: true
-  allowLocalNamespace: true
+  allowCurrentNamespace: true
   allowNamespaces: []
   ## @param networkPolicy.metrics.enabled Enable network policies for metrics (prometheus)
   ## @param networkPolicy.metrics.namespaceSelector [object] Monitoring namespace selector labels. These labels will be used to identify the prometheus' namespace.

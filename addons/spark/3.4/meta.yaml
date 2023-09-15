@@ -1,0 +1,20 @@
+name: spark
+version: 3.4
+id: b50db3b5-8d5f-4be9-b8bd-467ecd6cc11d
+description: "spark."
+displayName: "spark"
+metadata:
+  displayName: "spark"
+  provider:
+    name: drycc
+    supportURL: https://spark.apache.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/spark
+tags: spark
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false
