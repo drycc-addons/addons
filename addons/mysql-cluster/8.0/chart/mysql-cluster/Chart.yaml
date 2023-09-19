@@ -4,14 +4,14 @@ apiVersion: v2
 appVersion: 8.0.30
 dependencies:
   - name: common
-    repository: https://charts.bitnami.com/bitnami
+    repository: oci://registry.drycc.cc/charts
     tags:
-      - bitnami-common
-    version: 2.x.x
+      - drycc-common
+    version: ~1.1.2
 description: MySQL is a fast, reliable, scalable, and easy to use open source relational database system. Designed to handle mission-critical, heavy-load production applications.
 engine: gotpl
-home: https://github.com/bitnami/charts/tree/master/bitnami/mysql
-icon: https://bitnami.com/assets/stacks/mysql/img/mysql-stack-220x234.png
+home: https://github.com/drycc/charts/tree/master/drycc/mysql
+icon: https://drycc.com/assets/stacks/mysql/img/mysql-stack-220x234.png
 keywords:
   - mysql
   - database
@@ -19,10 +19,10 @@ keywords:
   - cluster
   - high availability
 maintainers:
-  - name: Bitnami
-    url: https://github.com/bitnami/charts
+  - name: Drycc
+    url: https://github.com/drycc/charts
 name: mysql
 sources:
-  - https://github.com/bitnami/containers/tree/main/bitnami/mysql
+  - https://github.com/drycc/containers/tree/main/drycc/mysql
   - https://mysql.com
 version: 9.3.5

@@ -1,0 +1,118 @@
+{{- /*
+Copyright VMware, Inc.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
+kind: Job
+metadata:
+  name: {{ include "mysql.cluster.fullname" . }} 
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: primary
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: init-wait
+          image: registry.uucin.com/drycc/python-dev:latest
+          imagePullPolicy: {{.Values.imagePullPolicy}}
+          args:
+          - netcat
+          - -v
+          - -u
+          - mysql://$(MYSQL_MASTER_HOST)-0.$(MYSQL_MASTER_HOST):$(MYSQL_MASTER_PORT_NUMBER),mysql://$(MYSQL_MASTER_HOST)-1.$(MYSQL_MASTER_HOST):$(MYSQL_MASTER_PORT_NUMBER),mysql://$(MYSQL_MASTER_HOST)-2.$(MYSQL_MASTER_HOST):$(MYSQL_MASTER_PORT_NUMBER)
+
+          env:
+            - name: MYSQL_MASTER_HOST
+              value: {{ include "mysql.primary.fullname" . }}
+            - name: MYSQL_MASTER_PORT_NUMBER
+              value: {{ .Values.primary.service.ports.mysql | quote }}
+
+        - name: mgr
+          image: {{ include "mysql.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- if .Values.primary.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.primary.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          command: 
+            - /bin/bash
+            - -ec
+            - |
+              export HOST_0=${MYSQL_MASTER_HOST}-0.${MYSQL_MASTER_HOST}
+              export HOST_1=${MYSQL_MASTER_HOST}-1.${MYSQL_MASTER_HOST}
+              export HOST_2=${MYSQL_MASTER_HOST}-2.${MYSQL_MASTER_HOST}
+              
+              echo "
+                set global group_replication_bootstrap_group=on;
+                start group_replication;
+                select * from performance_schema.replication_group_members;
+                set global group_replication_bootstrap_group=off;
+              " > /tmp/master.sql
+              mysql -h${HOST_0} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD} < /tmp/master.sql
+              
+              echo "
+              reset master;
+              change master to master_user='$(MYSQL_REPLICATION_USER)',master_password='$(MYSQL_REPLICATION_PASSWORD)' for channel 'group_replication_recovery';
+              start group_replication;
+              select * from performance_schema.replication_group_members;
+              " > /tmp/slave.sql 
+              mysql -h${HOST_1} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD}  < /tmp/slave.sql
+              mysql -h${HOST_2} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD}  < /tmp/slave.sql
+    
+          env:
+            - name: DRYCC_DEBUG
+              value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
+            - name: MYSQL_MASTER_HOST
+              value: {{ include "mysql.primary.fullname" . }}
+            - name: MYSQL_MASTER_PORT_NUMBER
+              value: {{ .Values.primary.service.ports.mysql | quote }}
+            - name: MYSQL_MASTER_ROOT_USER
+              value: "root"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mysql.secretName" . }}
+                  key: mysql-root-password
+            - name: MYSQL_REPLICATION_USER
+              value: {{ .Values.auth.replicationUser | quote }}
+            - name: MYSQL_REPLICATION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mysql.secretName" . }}
+                  key: mysql-replication-password
+                  
+      containers:         
+        - name: cluster
+          image: {{ include "cluster.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- if .Values.primary.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.primary.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          command: 
+            - /bin/bash
+            - -ec
+            - |
+              export HOST_0=${MYSQL_MASTER_HOST}-0.${MYSQL_MASTER_HOST}
+              echo 'Y' |  mysqlsh --uri=${MYSQL_MASTER_ROOT_USER}@${HOST_0}:${MYSQL_MASTER_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -e'var c=dba.createCluster("MXMGR");'
+
+          env:
+            - name: MYSQL_MASTER_HOST
+              value: {{ include "mysql.primary.fullname" . }}
+            - name: MYSQL_MASTER_PORT_NUMBER
+              value: {{ .Values.primary.service.ports.mysql | quote }}
+            - name: MYSQL_MASTER_ROOT_USER
+              value: "root"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mysql.secretName" . }}
+                  key: mysql-root-password

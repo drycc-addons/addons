@@ -1,9 +1,29 @@
 credential:
-  {{- if (eq .Values.service.type "LoadBalancer") }}
-  - name: HOST
+  {{- if (eq .Values.router.service.type "LoadBalancer") }}
+  - name: host
     valueFrom:
-      serviceRef:
-        name: {{ include "common.names.fullname" . }}
-        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.host }' 
+  - name: database
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.database }' 
+  - name: password
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.username }' 
+  - name: username
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.username }' 
+  - name: port
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.port }' 
   {{- end }}
 
