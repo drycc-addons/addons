@@ -41,10 +41,19 @@ spec:
   loadBalancerIP: {{ .Values.router.service.loadBalancerIP }}
   {{- end }}
   ports:
-    - name: router 
-      port: {{ .Values.router.service.ports.router }}
+    - name: routerrw 
+      port: {{ .Values.router.service.portrw }}
       protocol: TCP
-      targetPort: router
+      targetPort: routerrw
+      {{- if (and (or (eq .Values.router.service.type "NodePort") (eq .Values.router.service.type "LoadBalancer")) .Values.router.service.nodePorts.mysql) }}
+      nodePort: {{ .Values.router.service.nodePorts.mysql }}
+      {{- else if eq .Values.router.service.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+    - name: routerro
+      port: {{ .Values.router.service.portro}}
+      protocol: TCP
+      targetPort: routerro
       {{- if (and (or (eq .Values.router.service.type "NodePort") (eq .Values.router.service.type "LoadBalancer")) .Values.router.service.nodePorts.mysql) }}
       nodePort: {{ .Values.router.service.nodePorts.mysql }}
       {{- else if eq .Values.router.service.type "ClusterIP" }}

@@ -214,7 +214,7 @@ primary:
   configuration: |-
     [mysqld]
     # server
-    #default_authentication_plugin=mysql_native_password
+    max_connections=500
     default_authentication_plugin=caching_sha2_password
     skip-name-resolve
     relay-log=relay-log
@@ -857,8 +857,8 @@ router:
     type: LoadBalancer
     ## @param secondary.service.ports.mysql MySQL secondary Kubernetes service port
     ##
-    ports:
-      router: 6446
+    portrw: 3306
+    portro: 3307
     ## @param secondary.service.nodePorts.mysql MySQL secondary Kubernetes service node port
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     ##
