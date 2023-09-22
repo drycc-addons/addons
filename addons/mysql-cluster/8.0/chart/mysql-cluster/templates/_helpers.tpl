@@ -1,3 +1,8 @@
+{{/*
+Copyright VMware, Inc.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
 {{/* vim: set filetype=mustache: */}}
 
 {{- define "mysql.primary.fullname" -}}
@@ -8,8 +13,13 @@
 {{- end -}}
 {{- end -}}
 
-{{- define "mysql.secondary.fullname" -}}
-{{- printf "%s-%s" (include "common.names.fullname" .) .Values.secondary.name | trunc 63 | trimSuffix "-" -}}
+{{- define "mysql.router.fullname" -}}
+{{- printf "%s-%s" (include "common.names.fullname" .) .Values.router.name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+
+{{- define "mysql.cluster.fullname" -}}
+{{- printf "%s-%s" (include "common.names.fullname" .) .Values.cluster.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -17,6 +27,20 @@ Return the proper MySQL image name
 */}}
 {{- define "mysql.image" -}}
 {{- include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+{{- end -}}
+
+{{/*
+Return the proper Router image name
+*/}}
+{{- define "router.image" -}}
+{{- include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+{{- end -}}
+
+{{/*
+Return the proper Cluster image name
+*/}}
+{{- define "cluster.image" -}}
+{{- include "common.images.image" (dict "imageRoot" .Values.cluster.image "global" .Values.global) }}
 {{- end -}}
 
 {{/*

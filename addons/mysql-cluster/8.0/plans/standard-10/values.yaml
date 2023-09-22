@@ -24,25 +24,35 @@ resources:
 ## Enable persistence using Persistent Volume Claims
 ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
-persistence:
-  ## @param persistence.enabled Enable MinIO&reg; data persistence using PVC. If false, use emptyDir
-  ##
-  enabled: true
-  ## @param persistence.storageClass PVC Storage Class for MinIO&reg; data volume
-  ## If defined, storageClassName: <storageClass>
-  ## If set to "-", storageClassName: "", which disables dynamic provisioning
-  ## If undefined (the default) or set to null, no storageClassName spec is
-  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-  ##   GKE, AWS & OpenStack)
-  ##
-  storageClass: ""
-  ## @param persistence.mountPath Data volume mount path
-  ##
-  mountPath: /data
-  ## @param persistence.accessModes PVC Access Modes for MinIO&reg; data volume
-  ##
-  accessModes:
-    - ReadWriteOnce
-  ## @param persistence.size PVC Storage Request for MinIO&reg; data volume
-  ##
-  size: 10Gi
+  persistence:
+    ## @param primary.persistence.enabled Enable persistence on MySQL primary replicas using a `PersistentVolumeClaim`. If false, use emptyDir
+    ##
+    enabled: true
+    ## @param primary.persistence.existingClaim Name of an existing `PersistentVolumeClaim` for MySQL primary replicas
+    ## NOTE: When it's set the rest of persistence parameters are ignored
+    ##
+    existingClaim: ""
+    ## @param primary.persistence.storageClass MySQL primary persistent volume storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: ""
+    ## @param primary.persistence.annotations MySQL primary persistent volume claim annotations
+    ##
+    annotations: {}
+    ## @param primary.persistence.accessModes MySQL primary persistent volume access Modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## @param primary.persistence.size MySQL primary persistent volume size
+    ##
+    size: 10Gi
+    ## @param primary.persistence.selector Selector to match an existing Persistent Volume
+    ## selector:
+    ##   matchLabels:
+    ##     app: my-app
+    ##
+    selector: {}

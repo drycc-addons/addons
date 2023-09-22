@@ -1,0 +1,230 @@
+{{- /*
+Copyright VMware, Inc.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+kind: StatefulSet
+metadata:
+  name: {{ include "mysql.router.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: router
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.router.replicaCount }}
+  podManagementPolicy: {{ .Values.router.podManagementPolicy | quote }}
+  selector:
+    matchLabels: {{ include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: router
+  serviceName: {{ include "mysql.router.fullname" . }} 
+  {{- if .Values.router.updateStrategy }}
+  updateStrategy: {{- toYaml .Values.router.updateStrategy | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      annotations:
+        {{- if .Values.router.podAnnotations }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.router.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: router
+        {{- if .Values.router.podLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.router.podLabels "context" $ ) | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ template "mysql.serviceAccountName" . }}
+      {{- include "mysql.imagePullSecrets" . | nindent 6 }}
+      {{- if .Values.router.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.router.hostAliases "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.router.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.router.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.router.podAffinityPreset "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.router.podAntiAffinityPreset "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.router.nodeAffinityPreset.type "key" .Values.router.nodeAffinityPreset.key "values" .Values.router.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      {{- if .Values.router.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.router.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.router.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.router.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.router.priorityClassName }}
+      priorityClassName: {{ .Values.router.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.router.runtimeClassName }}
+      runtimeClassName: {{ .Values.router.runtimeClassName | quote }}
+      {{- end }}
+      {{- if .Values.router.schedulerName }}
+      schedulerName: {{ .Values.router.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.router.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.router.topologySpreadConstraints "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.router.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.router.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if .Values.router.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.router.terminationGracePeriodSeconds }}
+      {{- end }}
+
+      initContainers:
+        - name: cluster-wait
+          image: {{ include "router.image" . }}
+          imagePullPolicy: {{ .Values.volumePermissions.image.pullPolicy | quote }}
+          command:
+            - /bin/bash
+            - -ec
+            - |
+              echo `date` "begin mysql cluster init ... "
+              echo "show databases like 'mysql_innodb_cluster_metadata'; " >  /tmp/check.sql
+
+              while true 
+              do 
+                has_database=$( mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h ${MYSQL_HOST} -P$(MYSQL_PORT_NUMBER) --wait --connect-timeout=5 -N < /tmp/check.sql  | grep mysql_innodb_cluster_metadata | wc -l  )
+                if [ $has_database == '1' ]; then
+                  echo `date` "mysql cluster is ok!"
+                  break
+                fi 
+                echo `date` "waiting for mysql cluster init ... "
+              done
+
+          env:
+            - name: MYSQL_HOST
+              value: {{ include "mysql.primary.fullname" . }}
+            - name: MYSQL_PORT_NUMBER
+              value: {{ .Values.primary.service.ports.mysql | quote }}
+            - name: MYSQL_MASTER_ROOT_USER
+              value: "root"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mysql.secretName" . }}
+                  key: mysql-root-password
+
+
+        - name: router-config
+          image: {{ include "router.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- if .Values.router.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.router.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          command:
+            - /bin/bash
+            - -ec
+            - |
+      
+              export MYSQL_MASTER_HOST=${MYSQL_HOST}-0.${MYSQL_HOST}
+              echo ${MYSQL_ROOT_PASSWORD} | mysqlrouter --bootstrap root@${MYSQL_MASTER_HOST}:$(MYSQL_PORT_NUMBER)  -d /opt/drycc/mysql/conf/router --name mxrouter --force
+          env:
+            - name: MYSQL_HOST
+              value: {{ include "mysql.primary.fullname" . }}
+            - name: MYSQL_PORT_NUMBER
+              value: {{ .Values.primary.service.ports.mysql | quote }}
+            - name: MYSQL_MASTER_ROOT_USER
+              value: "root"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mysql.secretName" . }}
+                  key: mysql-root-password
+
+          volumeMounts:
+            - name: router-volume
+              mountPath: /opt/drycc/mysql/conf
+
+      containers:
+        - name: router
+          image: {{ include "router.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- if .Values.router.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.router.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          command:
+            - /bin/bash
+            - -ec
+            - |
+              ln -sf /dev/stdout /opt/drycc/mysql/conf/router/log/mysqlrouter.log
+              mysqlrouter -c /opt/drycc/mysql/conf/router/mysqlrouter.conf
+          env:
+            - name: MYSQL_HOST
+              value: {{ include "mysql.primary.fullname" . }}
+            - name: MYSQL_PORT_NUMBER
+              value: {{ .Values.primary.service.ports.mysql | quote }}
+            - name: MYSQL_MASTER_ROOT_USER
+              value: "root"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mysql.secretName" . }}
+                  key: mysql-root-password
+
+          volumeMounts:
+            - name: router-volume
+              mountPath: /opt/drycc/mysql/conf
+
+          ports:
+            - name: router
+              containerPort: 6446
+          {{- if not .Values.diagnosticMode.enabled }}
+          {{- if .Values.router.customLivenessProbe }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.router.customLivenessProbe "context" $) | nindent 12 }}
+          {{- else if .Values.router.livenessProbe.enabled }}
+          livenessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.router.livenessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
+                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
+                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
+                  fi
+                  mysqladmin status -uroot -h127.0.0.1 -P6446 -p"${password_aux}"
+          {{- end }}
+          {{- if .Values.router.customReadinessProbe }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.router.customReadinessProbe "context" $) | nindent 12 }}
+          {{- else if .Values.router.readinessProbe.enabled }}
+          readinessProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.router.readinessProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
+                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
+                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
+                  fi
+                  mysqladmin status -uroot -h127.0.0.1 -P6446 -p"${password_aux}"
+          {{- end }}
+          {{- if .Values.router.customStartupProbe }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.router.customStartupProbe "context" $) | nindent 12 }}
+          {{- else if .Values.router.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.router.startupProbe "enabled") "context" $) | nindent 12 }}
+            exec:
+              command:
+                - /bin/bash
+                - -ec
+                - |
+                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
+                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
+                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
+                  fi
+                  mysqladmin status -uroot -h127.0.0.1 -P6446 -p"${password_aux}"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.router.resources }}
+          resources: {{ toYaml .Values.router.resources | nindent 12 }}
+          {{- end }}
+
+      volumes:
+        - name: router-volume
+          emptyDir: {}

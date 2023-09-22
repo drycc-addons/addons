@@ -3,8 +3,6 @@ entries:
   mysql-cluster:
     - version: 8.0
       description: " The world's most popular open source database cluster."
-    - version: 5.7
-      description: " The world's most popular open source database cluster."
   minio:
     - version: 2023
       description: "MinIO offers high-performance, S3 compatible object storage."
