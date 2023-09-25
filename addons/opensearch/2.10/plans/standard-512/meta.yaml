@@ -1,0 +1,6 @@
+name: "standard-512"
+id: 3e45d201-2ec8-4e1a-81dc-b87c78750484
+description: "Opensearch standard-512 plan which limit resources memory size 512Mi."
+displayName: "standard-512"
+bindable: true
+maximum_polling_duration: 1800
