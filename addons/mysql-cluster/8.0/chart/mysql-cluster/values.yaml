@@ -1012,8 +1012,8 @@ volumePermissions:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc/os-shell
-    tag: debian-12
+    repository: drycc/base
+    tag: bookworm
     digest: ""
     pullPolicy: IfNotPresent 
     ## Optionally specify an array of imagePullSecrets.
