@@ -1,0 +1,20 @@
+name: prometheus
+version: 2023
+id: b8f70264-eafc-4b2f-848e-2ec0d059032b
+description: "prometheus."
+displayName: "prometheus"
+metadata:
+  displayName: "prometheus"
+  provider:
+    name: drycc
+    supportURL: https://prometheus.io
+  documentationURL: https://github.com/drycc-addons/drycc-docker-prometheus
+tags: prometheus
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false
