@@ -172,8 +172,10 @@ spec:
               mountPath: /opt/drycc/mysql/conf
 
           ports:
-            - name: router
+            - name: routerrw
               containerPort: 6446
+            - name: routerro
+              containerPort: 6447
           {{- if not .Values.diagnosticMode.enabled }}
           {{- if .Values.router.customLivenessProbe }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.router.customLivenessProbe "context" $) | nindent 12 }}
