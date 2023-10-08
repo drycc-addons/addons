@@ -1,0 +1,29 @@
+credential:
+  {{- if (eq .Values.router.service.type "LoadBalancer") }}
+  - name: host
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-router" (include "common.names.fullname" .) }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  - name: password
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-admin
+        jsonpath: '{ .data.GF_SECURITY_ADMIN_PASSWORD }' 
+  - name: username
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-admin
+        jsonpath: '{ .data.GF_SECURITY_ADMIN_USER }' 
+  - name: portrw
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.portrw }' 
+  - name: portro
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.portro }' 
+  {{- end }}
+
