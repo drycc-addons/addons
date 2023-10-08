@@ -1,0 +1,24 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+annotations:
+  category: Analytics
+  licenses: Apache-2.0
+apiVersion: v2
+appVersion: 2.10.0
+dependencies:
+  - name: common
+    repository: oci://registry.drycc.cc/charts
+    version: ~1.1.3
+description: OpenSearch is a scalable open-source solution for search, analytics, and observability. Features full-text queries, natural language processing, custom dictionaries, amongst others.
+home: https://bitnami.com
+icon: https://bitnami.com/assets/stacks/opensearch/img/opensearch-stack-220x234.png
+keywords:
+  - opensearch
+maintainers:
+  - name: VMware, Inc.
+    url: https://github.com/bitnami/charts
+name: opensearch
+sources:
+  - https://github.com/bitnami/charts/tree/main/bitnami/opensearch
+version: 0.2.2

@@ -1,0 +1,20 @@
+name: opensearch
+version: 3.9
+id: 5975094d-45cc-4e85-8573-f93937d026c7
+description: "opensearch."
+displayName: "opensearch"
+metadata:
+  displayName: "opensearch"
+  provider:
+    name: drycc
+    supportURL: https://opensearch.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/opensearch
+tags: opensearch
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false
