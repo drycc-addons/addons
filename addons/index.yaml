@@ -30,6 +30,6 @@ entries:
   prometheus:
     - version: 2
       description: "Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud."
-  granafa:
+  grafana:
     - version: 10
       description: "The open and composable observability and data visualization platform."
