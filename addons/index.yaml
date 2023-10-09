@@ -25,7 +25,7 @@ entries:
     - version: 3.4
       description: "Apache Spark is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters."
   opensearch:
-    - version: 2.10
+    - version: "2.10"
       description: "OpenSearch is a scalable, flexible, and extensible open-source software suite for search, analytics, and observability applications licensed under Apache 2.0."
   prometheus:
     - version: 2
