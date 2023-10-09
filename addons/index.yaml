@@ -2,7 +2,7 @@ apiVersion: v1
 entries:
   mysql-cluster:
     - version: 8.0
-      description: " The world's most popular open source database cluster."
+      description: "The world's most popular open source database cluster."
   minio:
     - version: 2023
       description: "MinIO offers high-performance, S3 compatible object storage."
@@ -27,3 +27,9 @@ entries:
   opensearch:
     - version: 2.10
       description: "OpenSearch is a scalable, flexible, and extensible open-source software suite for search, analytics, and observability applications licensed under Apache 2.0."
+  prometheus:
+    - version: 2
+      description: "Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud."
+  grafana:
+    - version: 10
+      description: "The open and composable observability and data visualization platform."
