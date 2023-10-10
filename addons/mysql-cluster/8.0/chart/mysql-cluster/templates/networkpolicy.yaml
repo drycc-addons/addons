@@ -23,23 +23,24 @@ spec:
   ingress:
     # Allow inbound connections
     - ports:
-        - port: {{ .Values.primary.service.ports.mysql }}
-      {{- if not .Values.networkPolicy.allowExternal }}
+      - port: {{ .Values.router.service.portrw }}
+      - port: {{ .Values.router.service.portro }}
+      {{- if and .Values.metrics.enabled }}
+      - port: {{ .Values.metrics.service.port }}
+      {{ end }} 
+      {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
       from:
-        - podSelector:
+      {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
             matchLabels:
-              {{ template "common.names.fullname" . }}-client: "true"
-          {{- if .Values.networkPolicy.explicitNamespacesSelector }}
-          namespaceSelector:
-{{ toYaml .Values.networkPolicy.explicitNamespacesSelector | indent 12 }}
-          {{- end }}
-        - podSelector:
-            matchLabels:
-            {{- include "common.labels.matchLabels" . | nindent 14 }}
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
       {{- end }}
-    {{- if .Values.metrics.enabled }}
-    # Allow prometheus scrapes
-    - ports:
-        - port: 9104
-    {{- end }}
+      {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+      {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+      {{- end }}
+      {{- end }}
+  {{- end }}
 {{- end }}
