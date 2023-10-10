@@ -1,0 +1,6 @@
+name: "standard-32768"
+id: 7e94a5c9-fa72-4b97-b6d1-e2bfaab9d489
+description: "Redis cluster standard-32768 plan which limit resources memory size 32768Mi."
+displayName: "standard-32768"
+bindable: true
+maximum_polling_duration: 1800

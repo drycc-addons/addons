@@ -1,0 +1,33 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: "hb-redis-cluster-standard-512"
+
+## Enable persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  ## @param persistence.path Path to mount the volume at, to use other images Redis&reg; images.
+  ##
+  path: /drycc/redis/data
+  accessModes:
+    - ReadWriteOnce
+  ## @param persistence.size Size of data volume
+  ##
+  size: 1Gi
+
+## @section Redis&reg; statefulset parameters
+##
+
+redis:
+  ## Redis&reg; resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param redis.resources.limits The resources limits for the container
+  ## @param redis.resources.requests The requested resources for the container
+  ##
+  resources:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 10m
+      memory: 256Mi

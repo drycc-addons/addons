@@ -1,0 +1,6 @@
+name: "standard-16384"
+id: ad5e239d-ba4e-4eca-b432-079b5b0a207c
+description: "Redis cluster standard-16384 plan which limit resources memory size 16384Mi."
+displayName: "standard-16384"
+bindable: true
+maximum_polling_duration: 1800

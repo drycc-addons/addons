@@ -1,0 +1,6 @@
+name: "standard-8192"
+id: b659d306-5156-4958-9687-6e6b6695c1b9
+description: "Redis cluster standard-8192 plan which limit resources memory size 8192Mi."
+displayName: "standard-8192"
+bindable: true
+maximum_polling_duration: 1800

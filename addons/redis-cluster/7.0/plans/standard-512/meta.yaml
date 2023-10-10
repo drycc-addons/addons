@@ -1,0 +1,6 @@
+name: "standard-512"
+id: 3bb6b16f-5336-4b1f-8b9e-95fe8a4ff6f7
+description: "Redis cluster standard-512 plan which limit resources memory size 512Mi."
+displayName: "standard-512"
+bindable: true
+maximum_polling_duration: 1800

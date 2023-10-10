@@ -1,0 +1,6 @@
+name: "standard-256"
+id: a98f2e0c-91f1-4d12-9939-f3fa9f2d9dda
+description: "Redis cluster standard-256 plan which limit resources memory size 256Mi."
+displayName: "standard-256"
+bindable: true
+maximum_polling_duration: 1800

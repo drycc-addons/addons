@@ -1,0 +1,6 @@
+name: "standard-1024"
+id: 02f33c73-1ccb-4911-a6e6-287aef0085e0
+description: "Redis cluster standard-1024 plan which limit resources memory size 1024Mi."
+displayName: "standard-1024"
+bindable: true
+maximum_polling_duration: 1800

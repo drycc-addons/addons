@@ -1,6 +1,6 @@
 name: "standard-128"
 id: c3bf5ca6-76d1-49ad-ad3c-887f1250f0ba
-description: "Redis standard-128 plan which limit resources memory size 128Mi."
+description: "Redis cluster standard-128 plan which limit resources memory size 128Mi."
 displayName: "standard-128"
 bindable: true
 maximum_polling_duration: 1800
