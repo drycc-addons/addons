@@ -1,0 +1,6 @@
+name: "standard-4c8g"
+id: 19b720e9-1534-4f90-9108-045846b54f7e
+description: "ZooKeeper standard-4c8g plan which limit resources 4 cores 8G memory."
+displayName: "standard-4c8g"
+bindable: true
+maximum_polling_duration: 1800
