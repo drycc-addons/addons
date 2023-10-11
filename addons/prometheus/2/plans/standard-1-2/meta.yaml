@@ -1,6 +1,6 @@
 name: "standard-10"
-id: 2b455154-8725-482a-95b2-a193c180d9b5
-description: "Mysql Cluster standard-10 plan which limit 1c1g ,default persistence size 10Gi."
-displayName: "1C2G"
+id: c0a84136-5799-4267-b7bd-7b4398bcff72
+description: "Prometheus Cluster standard-10 plan persistence size 10Gi."
+displayName: "10Gi"
 bindable: true
 maximum_polling_duration: 1800
