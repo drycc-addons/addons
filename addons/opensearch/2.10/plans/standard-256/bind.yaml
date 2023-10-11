@@ -1,0 +1,52 @@
+credential:
+  - name: OPENSEARCH_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "opensearch.service.name" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: OPENSEARCH_TCP_REST_API_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "opensearch.service.name" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-rest-api")].port }'
+
+  - name: OPENSEARCH_TCP_TRANSPORT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "opensearch.service.name" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-transport")].port }'
+
+  {{- if .Values.dashboards.enabled }}
+  - name: OPENSEARCH_DASHBOARDS_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "opensearch.dashboards.servicename" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: OPENSEARCH_DASHBOARDS_HTTP_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "opensearch.dashboards.servicename" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="http")].port }'
+  {{- end }}
+
+  {{- if .Values.security.enabled }}
+  - name: OPENSEARCH_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.opensearch-password }'
+
+  - name: OPENSEARCH_DASHBOARDS_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.opensearch-dashboards-password }'
+
+  - name: LOGSTASH_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.logstash-password }'
+  {{- end }}
