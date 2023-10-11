@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override rabbitmq.fullname template
 ##
-fullnameOverride: hb-rabbitmq-standard-1024
+fullnameOverride: hb-rabbitmq-standard-4c8g
 
 ## RabbitMQ containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -13,11 +13,11 @@ fullnameOverride: hb-rabbitmq-standard-1024
 ##
 resources:
   limits:
-    cpu: 1000m
-    memory: 1024Mi
+    cpu: 4000m
+    memory: 8Gi
   requests:
-    cpu: 500m
-    memory: 512Mi
+    cpu: 400m
+    memory: 4Gi
 
 ## @param replicaCount Number of RabbitMQ replicas to deploy
 ##
@@ -45,4 +45,4 @@ persistence:
   ## @param persistence.size PVC Storage Request for RabbitMQ data volume
   ## If you change this value, you might have to adjust `rabbitmq.diskFreeLimit` as well
   ##
-  size: 512Mi
+  size: 16Gi

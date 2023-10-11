@@ -1,0 +1,94 @@
+credential:
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  
+  {{- if not .Values.service.disableBaseClientPort }}
+  - name: TCP_CLIENT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+  {{- end }}
+
+  {{- if .Values.tls.client.enabled }}
+  - name: TCP_CLIENTT_TLS_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client-tls")].port }'
+  {{- end }}
+
+  {{- if .Values.auth.client.enabled }}
+  - name: ZOO_CLIENT_USER
+    value: {{ .Values.auth.client.clientUser | quote }}
+
+  - name: ZOO_SERVER_USERS
+    value: {{ .Values.auth.client.serverUsers | quote }}
+  {{- end }}
+
+  {{- if (include "zookeeper.client.createSecret" .) }}
+  - name: CLIENT_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ printf "%s-client-auth" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.client-password }'
+
+  - name: SERVER_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ printf "%s-client-auth" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.server-password }'
+  {{- end }}
+
+  {{- if .Values.auth.quorum.enabled }}
+  - name: QUORUM_LEARNER_USER
+    value: {{ .Values.auth.quorum.learnerUser | quote }}
+
+  - name: QUORUM_SERVER_USER
+    value: {{ .Values.auth.quorum.serverUsers | quote }}
+  {{- end }}
+
+  {{- if (include "zookeeper.quorum.createSecret" .) }}
+  - name: QUORUM_LEARNER_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ printf "%s-quorum-auth" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.quorum-learner-password }'
+
+  - name: QUORUM_SERVER_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ printf "%s-quorum-auth" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.quorum-server-password }'
+  {{- end }}
+
+  {{- if (include "zookeeper.client.createTlsPasswordsSecret" .) }}
+  - name: CLIENT_KEYSTORE_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ template "common.names.fullname" . }}-client-tls-pass
+        jsonpath: '{ .data.keystore-password }'
+
+  - name: CLIENT_TRUSTSTORE_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ template "common.names.fullname" . }}-client-tls-pass
+        jsonpath: '{ .data.truststore-password }'
+  {{- end }}
+
+  {{- if (include "zookeeper.quorum.createTlsPasswordsSecret" .) }}
+  - name: QUORUM_KEYSTORE_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ template "common.names.fullname" . }}-quorum-tls-pass
+        jsonpath: '{ .data.keystore-password }'
+
+  - name: QUORUM_TRUSTSTORE_PASSWORD
+    valueFrom:
+      secretRef:
+        name: {{ template "common.names.fullname" . }}-quorum-tls-pass
+        jsonpath: '{ .data.truststore-password }'
+  {{- end }}

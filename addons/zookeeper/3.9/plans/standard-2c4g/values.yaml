@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: "hb-zookeeper-standard-512"
+fullnameOverride: "hb-zookeeper-standard-2c4g"
 
 ## @param replicaCount Number of ZooKeeper nodes
 ##
@@ -14,11 +14,11 @@ replicaCount: 3
 ##
 resources:
   limits: 
-    memory: 512Mi
-    cpu: 250m
+    memory: 4Gi
+    cpu: 2000m
   requests:
-    memory: 256Mi
-    cpu: 125m
+    memory: 2Gi
+    cpu: 200m
 ## @section Persistence parameters
 
 ## Enable persistence using Persistent Volume Claims
@@ -45,4 +45,4 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for ZooKeeper data volume
   ##
-  size: 512Mi
+  size: 8Gi

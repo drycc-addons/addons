@@ -1,4 +1,4 @@
-{{- if and .Values.networkPolicy.enabled (eq .Values.architecture "replication") .Values.networkPolicy.ingressRules.readReplicasAccessOnlyFrom.enabled }}
+{{- if and .Values.networkPolicy.enabled (eq .Values.architecture "replication") (or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces .Values.networkPolicy.ingressRules.readReplicasAccessOnlyFrom.enabled) }}
 apiVersion: {{ include "common.capabilities.networkPolicy.apiVersion" . }}
 kind: NetworkPolicy
 metadata:

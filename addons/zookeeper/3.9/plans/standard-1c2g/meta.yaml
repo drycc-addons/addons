@@ -1,0 +1,6 @@
+name: "standard-1c2g"
+id: e6b09cde-467f-4f86-9f74-f509464a77cd
+description: "ZooKeeper standard-1c2g plan which limit resources 1 core 2G memory."
+displayName: "standard-1c2g"
+bindable: true
+maximum_polling_duration: 1800
