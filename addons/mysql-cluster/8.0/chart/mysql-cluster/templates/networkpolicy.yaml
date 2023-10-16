@@ -25,6 +25,7 @@ spec:
     - ports:
       - port: {{ .Values.router.service.portrw }}
       - port: {{ .Values.router.service.portro }}
+      - port: 24901
       {{- if and .Values.metrics.enabled }}
       - port: {{ .Values.metrics.service.port }}
       {{ end }} 
