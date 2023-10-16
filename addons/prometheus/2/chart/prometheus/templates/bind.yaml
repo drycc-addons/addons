@@ -1,5 +1,5 @@
 credential:
-  {{- if (eq .Values.service.type "LoadBalancer") }}
+  {{- if (eq .Values.server.service.type "LoadBalancer") }}
   - name: host
     valueFrom:
       serviceRef:

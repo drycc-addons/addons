@@ -360,7 +360,7 @@ alertmanager:
   ingress:
     ## @param alertmanager.ingress.enabled Enable ingress record generation for Alertmanager
     ##
-    enabled: false
+    enabled: true
     ## @param alertmanager.ingress.pathType Ingress path type
     ##
     pathType: ImplementationSpecific
@@ -1225,7 +1225,7 @@ server:
   ingress:
     ## @param server.ingress.enabled Enable ingress record generation for Prometheus
     ##
-    enabled: false
+    enabled: true
     ## @param server.ingress.pathType Ingress path type
     ##
     pathType: ImplementationSpecific
@@ -1460,6 +1460,20 @@ server:
     ##
     rules: []
 
+## Prometheus Nework Policy configuration
+##
+networkPolicy:
+  ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
+  ##
+  enabled: true
+  ## @param networkPolicy.allowExternal The Policy model to apply.
+  ## When set to false, only pods with the correct
+  ## client label will have network access to the port MySQL is listening
+  ## on. When true, MySQL will accept connections from any source
+  ## (with the correct destination port).
+  ##
+  allowCurrentNamespace: true
+  allowNamespaces: []
 ## @section Init Container Parameters
 ##
 
