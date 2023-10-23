@@ -10,10 +10,6 @@ check:
 prepare-assets:
 	./scripts/prepare-release-assets.sh
 
-.PHONY: generate-changelog
-generate-changelog:
-	./scripts/generate_changelog.sh $(GIT_TAG) $(GIT_REPO)
-
 .PHONY: latest-release
 latest-release:
 	./scripts/create_latest_tag_step.sh $(GIT_REPO)
@@ -36,5 +32,5 @@ ci-pr: check prepare-assets
 ci-master: check prepare-assets
 
 .PHONY: ci-release
-ci-release: check generate-changelog prepare-assets push-release release-branch
+ci-release: check prepare-assets push-release release-branch
 
