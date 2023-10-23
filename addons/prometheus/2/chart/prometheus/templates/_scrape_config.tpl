@@ -12,6 +12,7 @@ Usage:
 kubernetes_sd_configs:
   - role: endpoints
     namespaces:
+      own_namespace: true
       names:
       - {{ include "common.names.namespace" .context }}
 metrics_path: /metrics

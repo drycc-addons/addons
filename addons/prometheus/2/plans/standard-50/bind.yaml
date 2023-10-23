@@ -1,9 +1,9 @@
 credential:
-  {{- if (eq .Values.router.service.type "LoadBalancer") }}
+  {{- if (eq .Values.service.type "LoadBalancer") }}
   - name: host
     valueFrom:
       serviceRef:
-        name: {{ printf "%s-router" (include "common.names.fullname" .) }}
+        name: {{ printf "%s" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   - name: database
     valueFrom:

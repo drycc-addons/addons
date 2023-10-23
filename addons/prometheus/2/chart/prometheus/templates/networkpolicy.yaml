@@ -23,12 +23,12 @@ spec:
   ingress:
     # Allow inbound connections
     - ports:
-      - port: {{ .Values.router.service.portrw }}
-      - port: {{ .Values.router.service.portro }}
-      - port: 24901
-      {{- if and .Values.metrics.enabled }}
-      - port: {{ .Values.metrics.service.port }}
-      {{ end }} 
+      - port: {{ .Values.alertmanager.service.ports.http }} 
+      - port: {{ .Values.alertmanager.service.ports.cluster }} 
+      - port: {{ .Values.alertmanager.containerPorts.http }} 
+      - port: {{ .Values.alertmanager.containerPorts.cluster }} 
+      - port: {{ .Values.server.containerPorts.http }}
+      - port: {{ .Values.server.service.ports.http }}
       {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
       from:
       {{- if .Values.networkPolicy.allowCurrentNamespace }}
