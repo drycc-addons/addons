@@ -182,7 +182,7 @@ initdbScripts:
 
     echo plugin_load_add='group_replication.so' >> $base_conf_file
       
-    echo max_connections=$MAX_CONNECTION_LIMIT
+    echo max_connections=$MAX_CONNECTION_LIMIT >> $base_conf_file
 
 ## @param initdbScriptsConfigMap ConfigMap with the initdb scripts (Note: Overrides `initdbScripts`)
 ##
