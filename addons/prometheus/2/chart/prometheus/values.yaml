@@ -1533,4 +1533,4 @@ volumePermissions:
     runAsUser: 0
 
 scrapeAddons:
-  enable: true
+  enabled: true
