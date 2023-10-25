@@ -156,6 +156,10 @@ spec:
             - name: MYSQL_DATABASE
               value: {{ .Values.auth.database | quote }}
             {{- end }}
+            {{- if and .Values.auth.createDatabase .Values.auth.database }}
+            - name: MAX_CONNECTION_LIMIT
+              value: {{ .Values.maxConnectionLimit | quote }}
+            {{- end }}
             {{- if or (eq .Values.architecture "replication") (eq .Values.architecture "mgr") }}
             - name: MYSQL_REPLICATION_MODE
               value: "master"

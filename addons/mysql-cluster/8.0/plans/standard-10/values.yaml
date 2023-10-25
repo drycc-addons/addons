@@ -11,13 +11,15 @@ fullnameOverride: hb-mysql-cluster-standard-10
 ## @param resources.limits The resources limits for the MinIO&reg; container
 ## @param resources.requests The requested resources for the MinIO&reg; container
 ##
-resources:
-  limits:
-    cpu: 1000m
-    memory: 1024Mi
-  requests:
-    cpu: 100m
-    memory: 512Mi
+primary: 
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+      
 
 ## @section Persistence parameters
 
