@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: hb-mysql-cluster-standard-10
+fullnameOverride: hb-mysql-cluster-standard-20
 
 ## MinIO&reg; containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -12,14 +12,14 @@ fullnameOverride: hb-mysql-cluster-standard-10
 ## @param resources.requests The requested resources for the MinIO&reg; container
 ##
 primary: 
-  maxConnectionLimit: 600
+  maxConnectionLimit: 1000
   resources:
     limits:
-      cpu: 1000m
-      memory: 1024Mi
+      cpu: 2000m
+      memory: 4Gi
     requests:
-      cpu: 1000m
-      memory: 1024Mi
+      cpu: 2000m
+      memory: 4Gi
   
 
 ## @section Persistence parameters
@@ -52,7 +52,7 @@ primary:
       - ReadWriteOnce
     ## @param primary.persistence.size MySQL primary persistent volume size
     ##
-    size: 10Gi
+    size: 20Gi
     ## @param primary.persistence.selector Selector to match an existing Persistent Volume
     ## selector:
     ##   matchLabels:
