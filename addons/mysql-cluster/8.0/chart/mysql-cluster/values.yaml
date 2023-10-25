@@ -149,7 +149,7 @@ auth:
 ## initdbScripts:
 ##   my_init_script.sh: |
 ##      #!/bin/bash
-##      echo "Do something."
+##      echo "Do something." 
 ##
 initdbScripts: 
   int-mysql.sh: |
@@ -181,6 +181,8 @@ initdbScripts:
     echo loose-group_replication_group_seeds="$svc_mgr_host-0.$svc_mgr_host:24901,$svc_mgr_host-1.$svc_mgr_host:24901,$svc_mgr_host-2.$svc_mgr_host:24901" >> $base_conf_file 
 
     echo plugin_load_add='group_replication.so' >> $base_conf_file
+      
+    echo max_connections=$MAX_CONNECTION_LIMIT >> $base_conf_file
 
 ## @param initdbScriptsConfigMap ConfigMap with the initdb scripts (Note: Overrides `initdbScripts`)
 ##
@@ -211,10 +213,12 @@ primary:
   ## @param primary.configuration [string] Configure MySQL Primary with a custom my.cnf file
   ## ref: https://mysql.com/kb/en/mysql/configuring-mysql-with-mycnf/#example-of-configuration-file
   ##
+  maxConnectionLimit: 2000
+  
   configuration: |-
     [mysqld]
     # server
-    max_connections=500
+    max_connections=10000
     default_authentication_plugin=caching_sha2_password
     skip-name-resolve
     relay-log=relay-log

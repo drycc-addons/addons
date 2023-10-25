@@ -156,6 +156,10 @@ spec:
             - name: MYSQL_DATABASE
               value: {{ .Values.auth.database | quote }}
             {{- end }}
+            {{- if .Values.primary.maxConnectionLimit }}
+            - name: MAX_CONNECTION_LIMIT
+              value: {{ .Values.primary.maxConnectionLimit | quote }}
+            {{- end }}
             {{- if or (eq .Values.architecture "replication") (eq .Values.architecture "mgr") }}
             - name: MYSQL_REPLICATION_MODE
               value: "master"
@@ -393,3 +397,4 @@ spec:
         selector: {{- include "common.tplvalues.render" (dict "value" .Values.primary.persistence.selector "context" $) | nindent 10 }}
         {{- end -}}
   {{- end }}
+
