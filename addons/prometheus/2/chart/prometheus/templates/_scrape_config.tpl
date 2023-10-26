@@ -85,3 +85,47 @@ relabel_configs:
     regex: 0
     action: keep
 {{- end -}}
+
+{{- define "addons.ds_scrape_config" -}}
+honor_labels: true
+kubernetes_sd_configs:
+  - role: endpoints
+    namespaces:
+      own_namespace: true
+      names:
+      - {{ include "common.names.namespace" .context }}
+relabel_configs:
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+    action: keep
+    regex: true
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
+    action: drop
+    regex: true
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
+    action: replace
+    target_label: __scheme__
+    regex: (https?)
+  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
+    action: replace
+    target_label: __metrics_path__
+    regex: (.+)
+  - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
+    action: replace
+    target_label: __address__
+    regex: (.+?)(?::\d+)?;(\d+)
+    replacement: $1:$2
+  - action: labelmap
+    regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
+    replacement: __param_$1
+  - action: labelmap
+    regex: __meta_kubernetes_service_label_(.+)
+  - source_labels: [__meta_kubernetes_namespace]
+    action: replace
+    target_label: namespace
+  - source_labels: [__meta_kubernetes_service_name]
+    action: replace
+    target_label: service
+  - source_labels: [__meta_kubernetes_pod_node_name]
+    action: replace
+    target_label: node
+{{- end -}}

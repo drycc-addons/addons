@@ -625,12 +625,16 @@ server:
       - job_name: alertmanager
         {{- include "prometheus.scrape_config" (dict "component" "alertmanager" "context" $) | nindent 4 }}
     {{- end }}
+    {{- if .Values.scrapeAddons.enabled }}
+      - job_name: addons
+        {{- include "addons.ds_scrape_config"  (dict "context" $) | nindent 4 }}
+    {{- end }}  
     {{- if .Values.server.extraScrapeConfigs}}
     {{- include "common.tplvalues.render" (dict "value" .Values.server.extraScrapeConfigs "context" $) | nindent 2 }}
     {{- end }}
-    {{- if .Values.server.dsScrapeConfigs}}
-    {{- include "common.tplvalues.render" (dict "value" .Values.server.dsScrapeConfigs "context" $) | nindent 2 }}
-    {{- end }}
+    # {{- if .Values.server.dsScrapeConfigs}}
+    # {{- include "common.tplvalues.render" (dict "value" .Values.server.dsScrapeConfigs "context" $) | nindent 2 }}
+    # {{- end }}
     {{- if or .Values.alertmanager.enabled .Values.server.alertingEndpoints}}
     alerting:
       alertmanagers:
@@ -653,49 +657,7 @@ server:
   ## ref: <https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config>
   ##
   extraScrapeConfigs: [] 
-  dsScrapeConfigs: 
-      - job_name: 'service-endpoints'
-        honor_labels: true
-        kubernetes_sd_configs:
-          - role: endpoints
-            namespaces:
-              own_namespace: true
-              names:
-                - default
-        relabel_configs:
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
-            action: keep
-            regex: true
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
-            action: drop
-            regex: true
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
-            action: replace
-            target_label: __scheme__
-            regex: (https?)
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
-            action: replace
-            target_label: __metrics_path__
-            regex: (.+)
-          - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
-            action: replace
-            target_label: __address__
-            regex: (.+?)(?::\d+)?;(\d+)
-            replacement: $1:$2
-          - action: labelmap
-            regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
-            replacement: __param_$1
-          - action: labelmap
-            regex: __meta_kubernetes_service_label_(.+)
-          - source_labels: [__meta_kubernetes_namespace]
-            action: replace
-            target_label: namespace
-          - source_labels: [__meta_kubernetes_service_name]
-            action: replace
-            target_label: service
-          - source_labels: [__meta_kubernetes_pod_node_name]
-            action: replace
-            target_label: node
+ 
   ## @param server.replicaCount Number of Prometheus replicas to deploy
   ##
   replicaCount: 1
@@ -1569,3 +1531,6 @@ volumePermissions:
   ##
   containerSecurityContext:
     runAsUser: 0
+
+scrapeAddons:
+  enabled: true
