@@ -1,0 +1,11 @@
+# headless service to avoid deletion of patronidemo-config endpoint
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "patroni.fullname" . }}-config
+  labels:
+    app: {{ template "patroni.fullname" . }}
+    release: {{ .Release.Name }}
+    cluster-name: {{ template "patroni.fullname" . }}
+spec:
+  clusterIP: None

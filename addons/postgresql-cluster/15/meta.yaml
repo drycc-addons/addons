@@ -1,0 +1,20 @@
+name: postgresql-cluster
+version: 15.0
+id: 5cfb0abf-276c-445b-9060-9aa964ede87d
+description: "postgresql-cluster"
+displayName: "postgresql-cluster-15.0"
+metadata:
+  displayName: "postgresql-cluster-15.0"
+  provider:
+    name: drycc
+    supportURL: https://www.postgresql.org/
+  documentationURL: https://github.com/drycc-addons/drycc-docker-postgresql-cluster
+tags: postgresql-cluster
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false
