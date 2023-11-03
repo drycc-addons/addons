@@ -5,6 +5,7 @@ image:
   # https://github.com/zalando/spilo/tree/master/postgres-appliance
   repository: registry.drycc.cc/drycc-addons/patroni
   tag: 3.2
+  # IfNotPresent , Always
   pullPolicy: 'IfNotPresent'
 
 # Credentials used by Patroni
@@ -18,29 +19,10 @@ credentials:
 # Distribution Configuration stores
 # Please note that only one of the following stores should be enabled.
 kubernetes:
-  dcs:
+  endpoints:
     enable: true
   configmaps:
     enable: false
-etcd:
-  enable: false
-  deployChart: false
-  # If not deploying etcd chart, fill-in value for etcd service
-  # <service>.<namespace>.svc.cluster.local
-  host:
-  # Leave blank to use vendored etcd chart
-  discovery:
-zookeeper:
-  enable: false
-  deployChart: false
-  # If not deploying etcd chart, fill-in list of ZooKeeper members in format:
-  # 'host1:port1','host2:port2','etc...'
-  hosts:
-consul:
-  enable: false
-  deployChart: false
-  # Leave blank to use vendored consul chart
-  hosts:
 
 # Extra custom environment variables.
 env: {}
@@ -136,7 +118,7 @@ metrics:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: false 
+  enabled: true 
   ## @param networkPolicy.allowExternal The Policy model to apply.
   ## When set to false, only pods with the correct
   ## client label will have network access to the port MySQL is listening
