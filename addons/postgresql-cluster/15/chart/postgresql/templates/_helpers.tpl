@@ -43,6 +43,16 @@ Create the name of the service account to use.
 {{- end -}}
 
 {{/*
+Return true if a configmap object should be created for MySQL Secondary
+*/}}
+{{- define "patroni.createConfigmap" -}}
+{{- if and .Values.configuration }}
+    {{- true -}}
+{{- else -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create patroni envs.
 */}}
 {{- define "patroni.envs" }}
