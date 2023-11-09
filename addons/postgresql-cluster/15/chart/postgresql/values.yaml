@@ -3,18 +3,23 @@ replicaCount: 3
 image:
   # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
   # https://github.com/zalando/spilo/tree/master/postgres-appliance
-  repository: registry.drycc.cc/drycc-addons/patroni
-  tag: 3.2
+  repository: registry.drycc.cc/drycc-addons/postgresql-patroni
+  tag: 15
   # IfNotPresent , Always
   pullPolicy: 'IfNotPresent'
 
-# Credentials used by Patroni
+# Credentials used by Patroni , passwd
 # https://github.com/zalando/patroni/blob/master/docs/SETTINGS.rst#postgresql
 # https://github.com/zalando/spilo/blob/master/ENVIRONMENT.rst
 credentials:
   superuser: tea
-  admin: cola
-  standby: reppasswd
+  rewind: cola
+  replication: reppasswd
+
+dataname:
+  dbname: db1
+  username: us1
+  password: 111w
 
 # Distribution Configuration stores
 # Please note that only one of the following stores should be enabled.
@@ -30,8 +35,8 @@ env: {}
 #
 #custom patroni.yaml used by patroni boot
 # configuration: {}
-configuration: |
-  cat > /home/postgres/patroni.yml <<__EOF__
+preInitScript: |
+  cat > /opt/drycc/postgresql/patroni.yml <<__EOF__
   log:
     level: DEBUG
   bootstrap:
@@ -40,12 +45,13 @@ configuration: |
         use_pg_rewind: true
         use_slots: true
         pg_hba:
+        - local all all  peer
         - host all all 0.0.0.0/0 scram-sha-256
         - host replication ${PATRONI_REPLICATION_USERNAME} 0.0.0.0/0 scram-sha-256
         parameters:
           wal_level: hot_standby
           hot_standby: "on"
-          max_connections: 1000
+          max_connections: 1005
           max_worker_processes: 8
           wal_keep_segments: 8
           max_wal_senders: 10
@@ -56,22 +62,51 @@ configuration: |
           track_commit_timestamp: "off"
           archive_mode: "on"
           archive_timeout: 1800s
+          archive_command: /bin/true
+          # timescaledb.license: 'timescale'
+          shared_preload_libraries: 'auto_explain,pg_stat_statements'
     initdb:
-    - auth-host: scram-sha-256
-    - auth-local: trust
-    - encoding: UTF8
-    - locale: en_US.UTF-8
-    - data-checksums
+      - auth-host: scram-sha-256
+      - auth-local: trust
+      - encoding: UTF8
+      - locale: en_US.UTF-8
+      - data-checksums
+    post_bootstrap: sh /opt/drycc/postgresql/scripts/post_init.sh
   restapi:
     connect_address: '${PATRONI_KUBERNETES_POD_IP}:8008'
   postgresql:
     connect_address: '${PATRONI_KUBERNETES_POD_IP}:5432'
     authentication:
       superuser:
+        username: postgres
         password: '${PATRONI_SUPERUSER_PASSWORD}'
       replication:
+        username: standby
         password: '${PATRONI_REPLICATION_PASSWORD}'
+      rewind:  # Has no effect on postgres 10 and lower
+        username: rewinder
+        password: '${PATRONI_REWIND_USERNAME}'
+  watchdog:
+    mode: off
   __EOF__
+
+postInitScript: |
+  #!/bin/bash
+  set -Eeu
+  # Create monitor user
+  psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor"
+  # Create init database & user 
+  if [[( -n "$DATABASE_USER") &&  ( -n "$DATABASE_PASSWORD") && ( -n "$DATABASE_NAME")]]; then
+    echo "Creating user ${DATABASE_USER}"
+    psql -w -c "create user ${DATABASE_USER} WITH LOGIN ENCRYPTED PASSWORD '${DATABASE_PASSWORD}'"
+    echo "Creating database ${DATABASE_NAME} "
+    psql -w -c "CREATE DATABASE ${DATABASE_NAME} OWNER ${DATABASE_USER} CONNECTION LIMIT 1000"
+    psql -w -d ${DATABASE_NAME} -c "create extension postgis"
+    psql -w -c  "CHECKPOINT;CHECKPOINT;"
+  else
+    echo "Skipping user creation"
+    echo "Skipping database creation"
+  fi
 
 walE:
   # Specifies whether Wal-E should be enabled

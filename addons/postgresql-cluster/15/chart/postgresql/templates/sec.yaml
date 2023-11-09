@@ -12,5 +12,8 @@ metadata:
 type: Opaque
 data:
   password-superuser: {{ .Values.credentials.superuser | b64enc }}
-  password-admin: {{ .Values.credentials.admin | b64enc }}
-  password-replication: {{ .Values.credentials.standby | b64enc }}
+  password-rewind: {{ .Values.credentials.rewind | b64enc }}
+  password-replication: {{ .Values.credentials.replication | b64enc }} 
+  data-user: {{ .Values.dataname.username | b64enc }}
+  data-name: {{ .Values.dataname.dbname | b64enc }}
+  data-password: {{ .Values.dataname.password | b64enc }}

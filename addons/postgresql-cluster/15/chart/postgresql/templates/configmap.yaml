@@ -13,7 +13,8 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  patroni.sh: |-
-    {{- include "common.tplvalues.render" ( dict "value" .Values.configuration "context" $ ) | nindent 4 }}
+  pre_init.sh: |-
+    {{- include "common.tplvalues.render" ( dict "value" .Values.preInitScript "context" $ ) | nindent 4 }}
+  post_init.sh: |- 
+    {{- include "common.tplvalues.render" ( dict "value" .Values.postInitScript "context" $ ) | nindent 4 }}
 {{- end -}}
-

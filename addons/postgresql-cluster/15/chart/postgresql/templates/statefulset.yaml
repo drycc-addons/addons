@@ -85,7 +85,7 @@ spec:
         volumeMounts:
         - name: storage-volume
           mountPath: "{{ .Values.persistentVolume.mountPath }}"
-        - mountPath: "/opt/drycc/scripts/patroni/"
+        - mountPath: "/opt/drycc/postgresql/scripts/"
           name: patroni-config
           # readOnly: true
         {{- if .Values.walE.enable }}

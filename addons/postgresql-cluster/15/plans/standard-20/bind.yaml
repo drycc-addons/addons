@@ -1,0 +1,34 @@
+credential:
+  {{- if (eq .Values.router.service.type "LoadBalancer") }}
+  - name: host
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.host }' 
+  - name: database
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.database }' 
+  - name: password
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.username }' 
+  - name: username
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.username }' 
+  - name: portro
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.portro }'
+  - name: portrw
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        jsonpath: '{ .data.portrw }' 
+  {{- end }}
+

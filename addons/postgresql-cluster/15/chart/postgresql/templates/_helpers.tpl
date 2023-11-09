@@ -43,10 +43,10 @@ Create the name of the service account to use.
 {{- end -}}
 
 {{/*
-Return true if a configmap object should be created for MySQL Secondary
+Return true if a configmap object should be created for Postgresql HA patroni
 */}}
 {{- define "patroni.createConfigmap" -}}
-{{- if and .Values.configuration }}
+{{- if and .Values.preInitScript }}
     {{- true -}}
 {{- else -}}
 {{- end -}}
@@ -90,6 +90,13 @@ Create patroni envs.
     secretKeyRef:
       name: {{ template "patroni.fullname" . }}
       key: password-replication
+- name: PATRONI_REWIND_USERNAME
+  value: rewinder
+- name: PATRONI_REWIND_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: password-rewind
 - name: PATRONI_SCOPE
   value: {{ template "patroni.fullname" . }}
 - name: PATRONI_NAME
@@ -104,6 +111,23 @@ Create patroni envs.
   value: '0.0.0.0:5432'
 - name: PATRONI_RESTAPI_LISTEN
   value: '0.0.0.0:8008'
+
+- name: DATABASE_NAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: data-name
+- name: DATABASE_USER
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: data-user
+- name: DATABASE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: data-password
+
 {{- end -}}
 
 {{/*
