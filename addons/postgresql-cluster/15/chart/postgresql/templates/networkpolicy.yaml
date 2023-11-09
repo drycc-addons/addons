@@ -21,7 +21,7 @@ spec:
     - ports:
       - port: 5432
       {{- if and .Values.metrics.enabled }}
-      - port: {{ .Values.metrics.service.port }}
+      - port: {{ .Values.metrics.containerPort }}
       {{ end }} 
       {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
       from:

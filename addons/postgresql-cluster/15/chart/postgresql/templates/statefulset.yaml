@@ -97,6 +97,55 @@ spec:
         {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
+      {{- if .Values.metrics.enabled }}
+      - name: metrics
+        image: "{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag }}"
+        imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
+        {{- if .Values.metrics.containerSecurityContext.enabled }}
+        securityContext: {{- omit .Values.metrics.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+        {{- end }}
+        {{- if .Values.diagnosticMode.enabled }}
+        command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
+        args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
+        {{- else if .Values.metrics.customMetrics }}
+        args: ["--extend.query-path", "/conf/custom-metrics.yaml"]
+        {{- end }}
+        env:
+          - name: DATA_SOURCE_NAME
+            value: {{ printf "postgresql://tea_mon:password@127.0.0.1:5432/%s?sslmode=disable" $.Values.dataname.dbname }}       
+        ports:
+          - name: http-metrics
+            containerPort: {{ .Values.metrics.containerPort }}
+        startupProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+              port: http-metrics
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 15
+          successThreshold: 1
+        livenessProbe:
+          initialDelaySeconds: 5
+          httpGet:
+            path: /
+            port: http-metrics
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          initialDelaySeconds: 5
+          httpGet:
+            path: /
+            port: http-metrics
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+          successThreshold: 1
+        {{- if .Values.metrics.resources }}
+        resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
+        {{- end }}
+      {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}

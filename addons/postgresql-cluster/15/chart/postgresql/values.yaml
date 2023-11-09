@@ -1,4 +1,6 @@
 replicaCount: 3
+diagnosticMode: 
+  enable: false
 
 image:
   # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
@@ -46,6 +48,7 @@ preInitScript: |
         use_slots: true
         pg_hba:
         - local all all  peer
+        - host all tea_mon 127.0.0.1/32  trust
         - host all all 0.0.0.0/0 scram-sha-256
         - host replication ${PATRONI_REPLICATION_USERNAME} 0.0.0.0/0 scram-sha-256
         parameters:
@@ -108,6 +111,39 @@ postInitScript: |
     echo "Skipping database creation"
   fi
 
+## Postgresql Prometheus exporter parameters
+##
+metrics:
+  enabled: true 
+  image:
+    repository: registry.drycc.cc/drycc-addons/postgres-exporter
+    tag: "0"
+    # IfNotPresent , Always
+    pullPolicy: 'IfNotPresent'
+  ## @param metrics.customMetrics Define additional custom metrics
+  ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
+  ## customMetrics:
+  ##   pg_database:
+  ##     query: "SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size_bytes FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')"
+  ##     metrics:
+  ##       - name:
+  ##           usage: "LABEL"
+  ##           description: "Name of the database"
+  ##       - size_bytes:
+  ##           usage: "GAUGE"
+  ##           description: "Size of the database in bytes"
+  ##
+  customMetrics: {} 
+  containerPort: 9187
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: true
+  customLivenessProbe: {}
+  customReadinessProbe:
+    enabled: true 
+  service: port
+  resources: {}
 walE:
   # Specifies whether Wal-E should be enabled
   enable: false
@@ -189,11 +225,6 @@ serviceAccount:
   # The name of the ServiceAccount to use.
   # If not set and create is true, a name is generated using the fullname template
   name:
-
-## Postgresql Prometheus exporter parameters
-##
-metrics:
-  enabled: false
 ## Postgresql Nework Policy configuration
 ##
 networkPolicy:
