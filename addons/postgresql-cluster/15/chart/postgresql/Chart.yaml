@@ -17,6 +17,7 @@ keywords:
   - sql
   - replication
   - cluster
+  - patroni
 maintainers:
   - email: zhang.eamon@hotmail.com
     name: zhangeamon
@@ -24,4 +25,4 @@ name: postgresql
 sources:
   - https://github.com/drycc-addons/
   - https://www.postgresql.org/
-version: 15.4.1
+version: 15.3.1

@@ -3,7 +3,8 @@ kind: StatefulSet
 metadata:
   name: {{ template "patroni.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
-  labels:
+  labels:  {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: patroni
     app: {{ template "patroni.fullname" . }}
     chart: {{ template "patroni.chart" . }}
     release: {{ .Release.Name }}
@@ -13,14 +14,16 @@ spec:
   serviceName: {{ template "patroni.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
-    matchLabels:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: patroni
       app: {{ template "patroni.fullname" . }}
       release: {{ .Release.Name }}
       cluster-name: {{ template "patroni.fullname" . }}
   template:
     metadata:
       name: {{ template "patroni.fullname" . }}
-      labels:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: patroni
         app: {{ template "patroni.fullname" . }}
         release: {{ .Release.Name }}
         cluster-name: {{ template "patroni.fullname" . }}
