@@ -1,0 +1,58 @@
+{{- /*
+Copyright VMware, Inc.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+{{- if (include "patroni.createCronJob" .) }}
+apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
+kind: CronJob
+metadata:
+  name: {{ include "patroni.fullname" . }}-backup
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+    application: {{ template "patroni.fullname" . }}
+    cluster-name: {{ template "patroni.fullname" . }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+
+spec:
+  schedule: "*/1 * * * *"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure              
+          containers:         
+          - name: {{ .Chart.Name }}-backup
+            image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+            imagePullPolicy: Always
+            #imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+            command:  
+              - /usr/bin/env
+              - bash
+              - -c
+              - |
+                echo "sleeping ...."
+                sleep 10000
+                echo "Successfull"
+                init-stack  /opt/drycc/wal-g/bin/wal-g backup-push
+                init-stack  /opt/drycc/wal-g/bin/wal-g delete 
+            env:
+              {{- include "walg.envs" . | indent 14 }}
+              - name: PGHOST
+                value: {{ include "patroni.fullname" . }}-repl
+              - name: PGPASSWORD
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ template "patroni.fullname" . }}
+                    key: password-replication
+              - name: PGUSER
+                value: standby
+              - name: PGPORT
+                value: "5432"
+{{- end -}}

@@ -43,6 +43,16 @@ Create the name of the service account to use.
 {{- end -}}
 
 {{/*
+Return true if a cronjob object should be created for Postgresql HA patroni
+*/}}
+{{- define "patroni.createCronJob" -}}
+{{- if and .Values.walG.enable }}
+    {{- true -}}
+{{- else -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return true if a configmap object should be created for Postgresql HA patroni
 */}}
 {{- define "patroni.createConfigmap" -}}
@@ -75,7 +85,7 @@ Create patroni envs.
 - name: PATRONI_KUBERNETES_BYPASS_API_SERVICE
   value: 'true'
 - name: PATRONI_KUBERNETES_LABELS
-  value: '{app: {{ template "patroni.fullname" . }},release: {{ .Release.Name }},cluster-name: {{ template "patroni.fullname" . }}}'
+  value: '{application: {{ template "patroni.fullname" . }},release: {{ .Release.Name }},cluster-name: {{ template "patroni.fullname" . }}}'
 - name: PATRONI_SUPERUSER_USERNAME
   value: postgres
 - name: PATRONI_SUPERUSER_PASSWORD
@@ -131,42 +141,44 @@ Create patroni envs.
 {{- end -}}
 
 {{/*
-Create wale envs.
+Create walg envs.
 */}}
-{{- define "wale.envs" }}
-{{- if .Values.walE.enable }}
-- name: USE_WALE
-  value: {{ .Values.walE.enable | quote }}
-{{- if .Values.walE.scheduleCronJob }}
+{{- define "walg.envs" }}
+{{- if .Values.walG.enable }}
+- name: USE_WALG
+  value: {{ .Values.walG.enable | quote }}
+{{- if .Values.walG.scheduleCronJob }}
 - name: BACKUP_SCHEDULE
-  value: {{ .Values.walE.scheduleCronJob | quote}}
+  value: {{ .Values.walG.scheduleCronJob | quote}}
 {{- end }}
-{{- if .Values.walE.retainBackups }}
+{{- if .Values.walG.retainBackups }}
 - name: BACKUP_NUM_TO_RETAIN
-  value: {{ .Values.walE.retainBackups | quote}}
+  value: {{ .Values.walG.retainBackups | quote}}
 {{- end }}
-{{- if .Values.walE.s3Bucket }}
-- name: WAL_S3_BUCKET
-  value: {{ .Values.walE.s3Bucket | quote }}
-{{else if .Values.walE.gcsBucket }}
-- name: WAL_GCS_BUCKET
-  value: {{ .Values.walE.gcsBucket | quote }}
-{{- if .Values.walE.kubernetesSecret }}
-- name: GOOGLE_APPLICATION_CREDENTIALS
-  value: "/etc/credentials/{{.Values.walE.kubernetesSecret}}.json"
+{{- if .Values.walG.backupThresholdMegabytes }}
+- name: WALG_BACKUP_THRESHOLD_MEGABYTES
+  value: {{ .Values.walG.backupThresholdMegabytes | quote }}
 {{- end }}
-
-{{- if .Values.walE.backupThresholdMegabytes }}
-- name: WALE_BACKUP_THRESHOLD_MEGABYTES
-  value: {{ .Values.walE.backupThresholdMegabytes | quote }}
-{{- end }}
-{{- if .Values.walE.backupThresholdPercentage }}
+{{- if .Values.walG.backupThresholdPercentage }}
 - name: WALE_BACKUP_THRESHOLD_PERCENTAGE
-  value: {{ .Values.walE.backupThresholdPercentage | quote }}
+  value: {{ .Values.walG.backupThresholdPercentage | quote }}
+{{- end }}
+{{- if .Values.walG.s3.used }}
+- name: AWS_ACCESS_KEY_ID
+  value: {{ .Values.walG.s3.awsAccessKeyId | quote }}
+- name: AWS_SECRET_ACCESS_KEY
+  value: {{ .Values.walG.s3.awsSecretAccessKey | quote }}
+- name: WALG_S3_PREFIX
+  value: {{ .Values.walG.s3.walGS3Prefix | quote }}
+- name: AWS_ENDPOINT
+  value: {{ .Values.walG.s3.awsEndpoint | quote }}
+- name: AWS_S3_FORCE_PATH_STYLE
+  value: {{ .Values.walG.s3.awsS3ForcePathStyle | quote }}
+- name: AWS_REGION
+  value: {{ .Values.walG.s3.awsRegion | quote }}
 {{- end }}
 {{- else }}
-- name: USE_WALE
+- name: USE_WALG
   value: ""
 {{- end }}
 {{- end }}
-{{- end -}}

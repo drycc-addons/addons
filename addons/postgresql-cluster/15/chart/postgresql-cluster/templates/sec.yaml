@@ -4,7 +4,7 @@ metadata:
   name: {{ template "patroni.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:
-    app: {{ template "patroni.fullname" . }}
+    application: {{ template "patroni.fullname" . }}
     chart: {{ template "patroni.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

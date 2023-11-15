@@ -4,7 +4,7 @@ kind: Service
 metadata:
   name: {{ template "patroni.fullname" . }}-config
   labels:
-    app: {{ template "patroni.fullname" . }}
+    application: {{ template "patroni.fullname" . }}
     release: {{ .Release.Name }}
     cluster-name: {{ template "patroni.fullname" . }}
 spec:

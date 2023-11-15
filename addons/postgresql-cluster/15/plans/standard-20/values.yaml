@@ -56,6 +56,6 @@ primary:
     ## @param primary.persistence.selector Selector to match an existing Persistent Volume
     ## selector:
     ##   matchLabels:
-    ##     app: my-app
+    ##     application: my-app
     ##
     selector: {}

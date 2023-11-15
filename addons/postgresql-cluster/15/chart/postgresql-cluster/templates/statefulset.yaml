@@ -5,7 +5,7 @@ metadata:
   namespace: {{ include "common.names.namespace" . | quote }}
   labels:  {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: patroni
-    app: {{ template "patroni.fullname" . }}
+    application: {{ template "patroni.fullname" . }}
     chart: {{ template "patroni.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -16,16 +16,20 @@ spec:
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: patroni
-      app: {{ template "patroni.fullname" . }}
+      application: {{ template "patroni.fullname" . }}
+      chart: {{ template "patroni.chart" . }}
       release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
       cluster-name: {{ template "patroni.fullname" . }}
   template:
     metadata:
       name: {{ template "patroni.fullname" . }}
       labels: {{- include "common.labels.standard" . | nindent 8 }}
         app.kubernetes.io/component: patroni
-        app: {{ template "patroni.fullname" . }}
+        application: {{ template "patroni.fullname" . }}
+        chart: {{ template "patroni.chart" . }}
         release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
         cluster-name: {{ template "patroni.fullname" . }}
     spec:
       serviceAccountName: {{ template "patroni.serviceAccountName" . }}
@@ -91,13 +95,6 @@ spec:
         - mountPath: "/opt/drycc/postgresql/scripts/"
           name: patroni-config
           # readOnly: true
-        {{- if .Values.walE.enable }}
-        {{- if .Values.walE.kubernetesSecret }}
-        - name: {{ .Values.walE.kubernetesSecret }}
-          mountPath: /etc/credentials
-          readOnly: true
-        {{- end }}
-        {{- end }}
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       {{- if .Values.metrics.enabled }}
@@ -171,13 +168,6 @@ spec:
       - name: patroni-config
         configMap:
           name: {{ template "common.names.fullname" . }}-cm
-      {{- if .Values.walE.enable }}
-      {{- if .Values.walE.kubernetesSecret }}
-      - name: {{ .Values.walE.kubernetesSecret }}
-        secret:
-          secretName: {{ .Values.walE.kubernetesSecret }}
-      {{- end }}
-      {{- end }}
       {{- if not .Values.persistentVolume.enabled }}
       - name: storage-volume
         emptyDir: {}
@@ -191,7 +181,7 @@ spec:
 {{ toYaml .Values.persistentVolume.annotations | indent 8 }}
         {{- end }}
         labels:
-          app: {{ template "patroni.fullname" . }}
+          application: {{ template "patroni.fullname" . }}
           release: {{ .Release.Name }}
           heritage: {{ .Release.Service }}
       spec:

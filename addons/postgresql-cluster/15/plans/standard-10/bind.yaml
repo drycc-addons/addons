@@ -1,5 +1,5 @@
 credential:
-  {{- if (eq .Values.router.service.type "LoadBalancer") }}
+  {{- if (eq .Values.service.type "LoadBalancer") }}
   - name: host
     valueFrom:
       secretKeyRef:

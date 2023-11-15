@@ -1,6 +1,9 @@
-replicaCount: 3
+replicaCount: 1
 diagnosticMode: 
   enable: false
+
+service:
+ type: LoadBalancer
 
 image:
   # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
@@ -104,7 +107,7 @@ postInitScript: |
     psql -w -c "create user ${DATABASE_USER} WITH LOGIN ENCRYPTED PASSWORD '${DATABASE_PASSWORD}'"
     echo "Creating database ${DATABASE_NAME} "
     psql -w -c "CREATE DATABASE ${DATABASE_NAME} OWNER ${DATABASE_USER} CONNECTION LIMIT 1000"
-    psql -w -d ${DATABASE_NAME} -c "create extension postgis"
+    psql -w -d ${DATABASE_NAME} -c "create extension postgis ; create extension pg_stat_statements ; create extension pg_buffercache ;"
     psql -w -c  "CHECKPOINT;CHECKPOINT;"
   else
     echo "Skipping user creation"
@@ -114,7 +117,7 @@ postInitScript: |
 ## Postgresql Prometheus exporter parameters
 ##
 metrics:
-  enabled: true 
+  enabled: false 
   image:
     repository: registry.drycc.cc/drycc-addons/postgres-exporter
     tag: "0"
@@ -157,17 +160,21 @@ metrics:
   customLivenessProbe: {}
   customReadinessProbe:
     enabled: true 
-  resources: {}
-walE:
+  resources: 
+    limits:
+      cpu: 100m
+      memory: 512Mi
+      # hugepages-2Mi: 4Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+walG:
   # Specifies whether Wal-E should be enabled
   enable: false
   # Cron schedule for doing base backups
   scheduleCronJob: 00 01 * * *
   # Amount of base backups to retain
   retainBackups: 2
-  # Path to the S3 or GCS bucket used for WAL-E base backups
-  s3Bucket:
-  gcsBucket:
   # Name of the secret that holds the credentials to the bucket
   kubernetesSecret:
   # Maximum size of the WAL segments accumulated after the base backup to
@@ -176,6 +183,13 @@ walE:
   # Maximum ratio (in percents) of the accumulated WAL files to the base backup
   # to consider WAL-E restore instead of pg_basebackup
   backupThresholdPercentage: 30
+  s3:
+    awsAccessKeyID: "xxx"
+    awsSecretAccessKey: "xx"
+    walGS3Prefix: "xxx"
+    awsEndpoint: "xxx"
+    awsS3ForcePathStyle: "true"
+    awsRegion: dx-1
 
 persistentVolume:
   enabled: false
@@ -198,12 +212,12 @@ resources:
   # If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 1000m
-    memory: 1Gi
+    cpu: 100m
+    memory: 512Mi
     # hugepages-2Mi: 4Mi
   requests:
-    cpu: 1000m
-    memory: 1Gi
+    cpu: 100m
+    memory: 512Mi
 
 # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 nodeSelector: {}
@@ -220,7 +234,7 @@ affinityTemplate: |
         topologyKey: "kubernetes.io/hostname"
         labelSelector:
           matchLabels:
-            app:  {{ template "patroni.name" . }}
+            application:  {{ template "patroni.name" . }}
             release: {{ .Release.Name | quote }}
 affinity: {}
 
@@ -244,7 +258,7 @@ serviceAccount:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: true 
+  enabled: false 
   ## @param networkPolicy.allowExternal The Policy model to apply.
   ## When set to false, only pods with the correct
   ## client label will have network access to the port MySQL is listening

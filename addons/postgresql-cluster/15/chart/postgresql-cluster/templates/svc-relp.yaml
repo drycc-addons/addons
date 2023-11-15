@@ -3,17 +3,18 @@ kind: Service
 metadata:
   name: {{ template "patroni.fullname" . }}-repl
   namespace: {{ include "common.names.namespace" . | quote }}
-  labels:
-    app: {{ template "patroni.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: patroni
+    application: {{ template "patroni.fullname" . }}
     chart: {{ template "patroni.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     cluster-name: {{ template "patroni.fullname" . }}
     role: replica
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
-    app: {{ template "patroni.fullname" . }}
+    application: {{ template "patroni.fullname" . }}
     cluster-name: {{ template "patroni.fullname" . }}
     role: replica
   ports:
