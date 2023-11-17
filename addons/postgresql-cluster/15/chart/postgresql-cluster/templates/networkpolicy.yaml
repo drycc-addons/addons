@@ -23,7 +23,7 @@ spec:
       - port: 5432
       {{- if and .Values.metrics.enabled }}
       - port: {{ .Values.metrics.containerPort }}
-      {{ end }} 
+      {{ end }} ``
       {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
       from:
       {{- if .Values.networkPolicy.allowCurrentNamespace }}

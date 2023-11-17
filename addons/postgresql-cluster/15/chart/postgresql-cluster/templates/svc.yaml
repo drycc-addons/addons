@@ -10,15 +10,9 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     cluster-name: {{ template "patroni.fullname" . }}
-    role: master
 spec:
   type: LoadBalancer
-  selector:
-    application: {{ template "patroni.fullname" . }}
-    cluster-name: {{ template "patroni.fullname" . }}
-    role: master
   ports:
-  - name: postgresql
-    port: 5432
-    targetPort: 5432
-    protocol: TCP
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP

@@ -32,8 +32,18 @@ spec:
         heritage: {{ .Release.Service }}
         cluster-name: {{ template "patroni.fullname" . }}
     spec:
+      {{- if .Values.patroni.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.patroni.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.patroni.podAffinityPreset "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.patroni.podAntiAffinityPreset "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.patroni.nodeAffinityPreset.type "key" .Values.patroni.nodeAffinityPreset.key "values" .Values.patroni.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      {{- if .Values.patroni.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.patroni.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
       serviceAccountName: {{ template "patroni.serviceAccountName" . }}
-    
       # securityContext:
       #   runAsUser: postgres
       #   fsGroup: postgres
