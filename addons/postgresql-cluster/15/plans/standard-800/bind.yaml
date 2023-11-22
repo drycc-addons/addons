@@ -1,0 +1,30 @@
+credential:
+{{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: host
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}-master
+        jsonpath: '{.spec.clusterIPs[*]}'
+  - name: hostrepl
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}-repl
+        jsonpath: '{.spec.clusterIPs[*]}'
+  - name: database
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.data-name }' 
+  - name: password
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.data-password }' 
+  - name: username
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.data-user }' 
+  - name: port
+    value: 5432
+{{- end }}
