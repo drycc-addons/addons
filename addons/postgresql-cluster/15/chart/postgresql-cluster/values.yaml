@@ -56,6 +56,7 @@ preInitScript: |
         - host all tea_mon 127.0.0.1/32  trust
         - host all all 0.0.0.0/0 scram-sha-256
         - host replication ${PATRONI_REPLICATION_USERNAME} 0.0.0.0/0 scram-sha-256
+        - host replication postgres 0.0.0.0/0 scram-sha-256
         parameters:
           wal_level: hot_standby
           hot_standby: "on"
@@ -69,8 +70,8 @@ preInitScript: |
           wal_log_hints: "on"
           track_commit_timestamp: "off"
           archive_mode: "on"
-          archive_timeout: 1800s
-          archive_command: /bin/true
+          archive_timeout: 300s
+          archive_command: sh /opt/drycc/postgresql/walbackup.sh %f
           # timescaledb.license: 'timescale'
           shared_preload_libraries: 'auto_explain,pg_stat_statements'
           log_destination: 'csvlog'
@@ -222,9 +223,9 @@ metrics:
       memory: 512Mi
 walG:
   # Specifies whether Wal-E should be enabled
-  enable: false
+  enabled: true
   # Cron schedule for doing base backups
-  scheduleCronJob: 00 01 * * *
+  scheduleCronJob: "*/5 * * * *"
   # Amount of base backups to retain
   retainBackups: 2
   # Name of the secret that holds the credentials to the bucket
@@ -236,10 +237,11 @@ walG:
   # to consider WAL-E restore instead of pg_basebackup
   backupThresholdPercentage: 30
   s3:
-    awsAccessKeyID: "xxx"
-    awsSecretAccessKey: "xx"
-    walGS3Prefix: "xxx"
-    awsEndpoint: "xxx"
+    used: true
+    awsAccessKeyID: "minioadmin"
+    awsSecretAccessKey: "minioadmin"
+    walGS3Prefix: "s3://pg1"
+    awsEndpoint: "http://10.10.2.11:9000"
     awsS3ForcePathStyle: "true"
     awsRegion: dx-1
 

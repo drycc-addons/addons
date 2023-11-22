@@ -18,5 +18,9 @@ spec:
     cluster-name: {{ template "patroni.fullname" . }}
     role: replica
   ports:
-  - port: 5432
+  - name: postgresql
+    port: 5432
     targetPort: 5432
+  - name: pgbackup
+    port: 9000
+    targetPort: 9000

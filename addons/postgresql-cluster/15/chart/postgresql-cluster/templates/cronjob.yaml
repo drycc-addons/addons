@@ -19,7 +19,7 @@ metadata:
   {{- end }}
 
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "{{ .Values.walG.scheduleCronJob }}"
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 1
   jobTemplate:
@@ -30,29 +30,14 @@ spec:
           containers:         
           - name: {{ .Chart.Name }}-backup
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-            imagePullPolicy: Always
-            #imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+            imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
             command:  
               - /usr/bin/env
               - bash
               - -c
               - |
-                echo "sleeping ...."
-                sleep 10000
-                echo "Successfull"
-                init-stack  /opt/drycc/wal-g/bin/wal-g backup-push
-                init-stack  /opt/drycc/wal-g/bin/wal-g delete 
+                curl "http://${REPLHOST}:9000/pg_backup"
             env:
-              {{- include "walg.envs" . | indent 14 }}
-              - name: PGHOST
-                value: {{ include "patroni.fullname" . }}-repl
-              - name: PGPASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ template "patroni.fullname" . }}
-                    key: password-replication
-              - name: PGUSER
-                value: standby
-              - name: PGPORT
-                value: "5432"
+            - name: REPLHOST
+              value: {{ include "patroni.fullname" . }}-repl
 {{- end -}}

@@ -43,10 +43,10 @@ Create the name of the service account to use.
 {{- end -}}
 
 {{/*
-Return true if a cronjob object should be created for Postgresql HA patroni
+Return true if a cronjob object should be created for Postgresql HA patroni ## TODO feature
 */}}
 {{- define "patroni.createCronJob" -}}
-{{- if and .Values.walG.enable }}
+{{- if and .Values.walG.enabled }}
     {{- true -}}
 {{- else -}}
 {{- end -}}
@@ -115,13 +115,14 @@ Create patroni envs.
       fieldPath: metadata.name
 - name: PATRONI_POSTGRESQL_DATA_DIR
   value: "{{ .Values.persistentVolume.mountPath }}/data"
+- name: PGDATA
+  value: "{{ .Values.persistentVolume.mountPath }}/data"
 - name: PATRONI_POSTGRESQL_PGPASS
   value: /tmp/pgpass
 - name: PATRONI_POSTGRESQL_LISTEN
   value: '0.0.0.0:5432'
 - name: PATRONI_RESTAPI_LISTEN
   value: '0.0.0.0:8008'
-
 - name: DATABASE_NAME
   valueFrom:
     secretKeyRef:
@@ -137,20 +138,15 @@ Create patroni envs.
     secretKeyRef:
       name: {{ template "patroni.fullname" . }}
       key: data-password
-
 {{- end -}}
 
 {{/*
 Create walg envs.
 */}}
 {{- define "walg.envs" }}
-{{- if .Values.walG.enable }}
+{{- if .Values.walG.enabled }}
 - name: USE_WALG
-  value: {{ .Values.walG.enable | quote }}
-{{- if .Values.walG.scheduleCronJob }}
-- name: BACKUP_SCHEDULE
-  value: {{ .Values.walG.scheduleCronJob | quote}}
-{{- end }}
+  value: {{ .Values.walG.enabled | quote }}
 {{- if .Values.walG.retainBackups }}
 - name: BACKUP_NUM_TO_RETAIN
   value: {{ .Values.walG.retainBackups | quote}}
@@ -165,7 +161,7 @@ Create walg envs.
 {{- end }}
 {{- if .Values.walG.s3.used }}
 - name: AWS_ACCESS_KEY_ID
-  value: {{ .Values.walG.s3.awsAccessKeyId | quote }}
+  value: {{ .Values.walG.s3.awsAccessKeyID | quote }}
 - name: AWS_SECRET_ACCESS_KEY
   value: {{ .Values.walG.s3.awsSecretAccessKey | quote }}
 - name: WALG_S3_PREFIX
