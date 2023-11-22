@@ -1,19 +1,19 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: hb-postgresql-cluster-standard-10
+fullnameOverride: hb-postgresql-cluster-standard-100
 
 postgresql:
   config: |-
     # Connectivity
-    max_connections = 980
+    max_connections = 2000
     superuser_reserved_connections = 3
 
     # Memory Settings
-    shared_buffers = '256 MB'
+    shared_buffers = '4096 MB'
     work_mem = '32 MB'
     maintenance_work_mem = '320 MB'
     huge_pages = off
-    effective_cache_size = '1 GB'
+    effective_cache_size = '11 GB'
     effective_io_concurrency = 100 # concurrent IO only really activated if OS supports posix_fadvise function
     random_page_cost = 1.25 # speed of random disk access relative to sequential access (1.0)
 
@@ -38,6 +38,7 @@ postgresql:
     wal_writer_flush_after = 1MB
     wal_keep_size = '3650 MB'
 
+
     # Background writer
     bgwriter_delay = 200ms
     bgwriter_lru_maxpages = 100
@@ -45,10 +46,10 @@ postgresql:
     bgwriter_flush_after = 0
 
     # Parallel queries: 
-    max_worker_processes = 2
-    max_parallel_workers_per_gather = 1
-    max_parallel_maintenance_workers = 1
-    max_parallel_workers = 2
+    max_worker_processes = 4
+    max_parallel_workers_per_gather = 2
+    max_parallel_maintenance_workers = 2
+    max_parallel_workers = 4
     parallel_leader_participation = on
 
     # Advanced features 
@@ -63,14 +64,13 @@ resources:
   # If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 1000m
-    memory: 2Gi
+    cpu: 4000m
+    memory: 16Gi
     # hugepages-2Mi: 4Mi
   requests:
-    cpu: 1000m
-    memory: 2Gi
+    cpu: 4000m
+    memory: 16Gi
 
 persistentVolume:
   enabled: true
-  size: 10G
-
+  size: 100G

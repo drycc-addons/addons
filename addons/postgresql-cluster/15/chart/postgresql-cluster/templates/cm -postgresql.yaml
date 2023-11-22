@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "common.names.fullname" . }}-cm
+  name: {{ template "common.names.fullname" . }}-postgresql
   namespace: {{ include "common.names.namespace" . | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     {{- if .Values.commonLabels }}
@@ -13,8 +13,6 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  pre_init.sh: |-
-    {{- include "common.tplvalues.render" ( dict "value" .Values.preInitScript "context" $ ) | nindent 4 }}
-  post_init.sh: |- 
-    {{- include "common.tplvalues.render" ( dict "value" .Values.postInitScript "context" $ ) | nindent 4 }}
+  custom_conf.conf: |-
+    {{- include "common.tplvalues.render" ( dict "value" .Values.postgresql.config "context" $ ) | nindent 4 }}
 {{- end -}}

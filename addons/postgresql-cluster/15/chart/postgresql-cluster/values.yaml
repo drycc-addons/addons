@@ -41,13 +41,23 @@ env: {}
 #custom patroni.yaml used by patroni boot
 # configuration: {}
 preInitScript: |
-  mkdir /home/postgres/pgdata/log
+  mkdir -p /home/postgres/pgdata/log
   ln -sf /dev/stdout "/home/postgres/pgdata/log/postgresql.csv"
   cat > /opt/drycc/postgresql/patroni.yml <<__EOF__
   log:
     level: INFO
+  restapi:
+    listen: 0.0.0.0:8008
+    connect_address: 0.0.0.0:8008
+    authentication:
+      username: NzUwNjg3MTEtMDgzOS00YTNkLWEyNjAt
+      password: YjJjMDNjYjQtMDA0Ny00NTgwLTgwYjMt
   bootstrap:
     dcs:
+      ttl: 30
+      loop_wait: 10
+      retry_timeout: 10
+      maximum_lag_on_failover: 1048576
       postgresql:
         use_pg_rewind: true
         use_slots: true
@@ -57,12 +67,13 @@ preInitScript: |
         - host all all 0.0.0.0/0 scram-sha-256
         - host replication ${PATRONI_REPLICATION_USERNAME} 0.0.0.0/0 scram-sha-256
         - host replication postgres 0.0.0.0/0 scram-sha-256
+        custom_conf: '/opt/drycc/postgresql/config/custom_conf.conf'
         parameters:
           wal_level: hot_standby
           hot_standby: "on"
           max_connections: 1005
           max_worker_processes: 8
-          wal_keep_segments: 8
+          wal_keep_segments: 1024
           max_wal_senders: 10
           max_replication_slots: 10
           max_prepared_transactions: 0
@@ -71,7 +82,7 @@ preInitScript: |
           track_commit_timestamp: "off"
           archive_mode: "on"
           archive_timeout: 300s
-          archive_command: sh /opt/drycc/postgresql/walbackup.sh %f
+          archive_command: sh /opt/drycc/postgresql/walbackup.sh %p
           # timescaledb.license: 'timescale'
           shared_preload_libraries: 'auto_explain,pg_stat_statements'
           log_destination: 'csvlog'
@@ -124,6 +135,17 @@ postInitScript: |
     echo "Skipping user creation"
     echo "Skipping database creation"
   fi
+postgresql: 
+  config: |-
+    log_min_duration_statement = 1008
+    max_wal_size = 4GB
+    min_wal_size = 4GB
+    max_connections = 1005
+    max_worker_processes = 8
+    max_wal_senders = 10
+    max_replication_slots = 10
+    max_prepared_transactions = 0
+    max_locks_per_transaction = 64
 
 patroni:
   ## @param patroni.podAnnotations Additional pod annotations for Postgresql patroni pods

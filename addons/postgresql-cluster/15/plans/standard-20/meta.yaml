@@ -1,5 +1,5 @@
 name: "standard-20"
-id: 95fd7cf2-f2fb-46c9-b3fc-9e7f48899dcc
+id: edf8bdfe-b1dc-4f41-b042-801153794df7
 description: "Mysql Cluster standard-20 plan: Disk 20Gi ,vCPUs 2 , RAM 4G , DB MAX Connection 1000"
 displayName: "standard-20"
 bindable: true
