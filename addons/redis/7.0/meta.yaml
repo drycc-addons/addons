@@ -13,8 +13,16 @@ tags: redis
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: true
+plan_updateable: false
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
   description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "master.service.type"
+  description: "master service type config for values.yaml"
+- name: "replica.service.type"
+  description: "replica service type config for values.yaml"
+- name: "sentinel.service.type"
+  description: "sentinel service type config for values.yaml"
+- name: "metrics.enable"
+  description: "metrics enable or not config for values.yaml"
 archive: false

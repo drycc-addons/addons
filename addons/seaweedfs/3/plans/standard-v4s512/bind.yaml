@@ -1,14 +1,24 @@
 credential:
+  {{- if (eq .Values.filer.service.type "LoadBalancer") }}
   - name: S3_HOST
     valueFrom:
       serviceRef:
-        name: {{ template "seaweedfs.filer.fullname" . }}
+        name: {{ include "seaweedfs.filer.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.filer.service.type "ClusterIP") }}
+  - name: S3_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "seaweedfs.filer.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
+
   - name: S3_PORT
     valueFrom:
       serviceRef:
         name: {{ include "seaweedfs.configuration.configMap" . }}
         jsonpath: '{.spec.ports[?(@.name=="s3")].port}'
+
   - name: S3_CONFIG
     valueFrom:
       configMapRef:

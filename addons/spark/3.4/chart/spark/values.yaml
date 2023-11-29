@@ -788,7 +788,7 @@ networkPolicy:
 service:
   ## @param service.type Kubernetes Service type
   ##
-  type: LoadBalancer
+  type: ClusterIP
   ## @param service.ports.http Spark client port for HTTP
   ## @param service.ports.https Spark client port for HTTPS
   ## @param service.ports.cluster Spark cluster port

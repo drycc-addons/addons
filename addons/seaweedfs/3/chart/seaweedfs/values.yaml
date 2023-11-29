@@ -207,7 +207,7 @@ filer:
   service:
     ## @param filer.service.type Kubernetes Service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param filer.service.loadBalancerIP Load balancer IP if service type is `LoadBalancer`
     ## Set the LoadBalancer service type to internal only
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer

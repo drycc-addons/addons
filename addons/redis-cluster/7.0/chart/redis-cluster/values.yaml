@@ -254,7 +254,7 @@ service:
   ## Setting this to LoadBalancer may require corresponding service annotations for loadbalancer creation to succeed.
   ## Currently supported types are ClusterIP (default) and LoadBalancer
   ##
-  type: LoadBalancer
+  type: ClusterIP
   ## @param service.clusterIP Service Cluster IP
   ## e.g.:
   ## clusterIP: None
@@ -748,7 +748,7 @@ cluster:
       ## @param cluster.externalAccess.service.type Type for the services used to expose every Pod
       ## At this moment only LoadBalancer is supported
       ##
-      type: LoadBalancer
+      type: ClusterIP
       ## @param cluster.externalAccess.service.port Port for the services used to expose every Pod
       ##
       port: 6379

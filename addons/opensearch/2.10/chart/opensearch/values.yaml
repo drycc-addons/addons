@@ -305,7 +305,7 @@ security:
 service:
   ## @param service.type OpenSearch service type
   ##
-  type: LoadBalancer
+  type: ClusterIP
   ## @param service.ports.restAPI OpenSearch service REST API port
   ## @param service.ports.transport OpenSearch service transport port
   ##
@@ -2298,7 +2298,7 @@ dashboards:
   service:
     ## @param dashboards.service.type OpenSearch Dashboards service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param dashboards.service.ports.http OpenSearch Dashboards service web UI port
     ##
     ports:
