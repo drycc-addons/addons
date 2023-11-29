@@ -1,0 +1,28 @@
+# Copyright VMware, Inc.
+# SPDX-License-Identifier: APACHE-2.0
+
+annotations:
+  category: Infrastructure
+  licenses: Apache-2.0
+  images: |
+    - name: seaweedfs
+      image: registry.drycc.cc/drycc-addons/seaweedfs:3
+apiVersion: v2
+appVersion: "3"
+dependencies:
+  - name: common
+    repository: oci://registry.drycc.cc/charts
+    version: ~1.1.3
+description: SeaweedFS is a simple and highly scalable distributed file system.
+home: https://seaweedfs.github.io/
+icon: https://raw.githubusercontent.com/seaweedfs/seaweedfs/master/note/seaweedfs.png
+keywords:
+  - storage
+  - seaweedf
+maintainers:
+  - name: Drycc.
+    url: https://github.com/drycc-addons/addons
+name: seaweedfs
+sources:
+  - https://github.com/drycc-addons/addons/tree/main/addons/seaweedfs
+version: 11.7.6

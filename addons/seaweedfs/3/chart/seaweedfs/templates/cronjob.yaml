@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "seaweedfs.cronjob.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  timeZone: "{{ .Values.cronjob.timeZone }}"
+  schedule: "{{ .Values.cronjob.schedule }}"
+  concurrencyPolicy: "{{ .Values.cronjob.concurrencyPolicy }}"
+  successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            component:  {{ include "seaweedfs.fullname" . }}
+            app: {{ include "seaweedfs.cronjob.fullname" . }}
+        spec:
+          restartPolicy: OnFailure
+          serviceAccount: {{ include "seaweedfs.fullname" . }}
+          initContainers:
+          - name: {{ include "seaweedfs.cronjob.fullname" . }}-init
+            image: registry.drycc.cc/drycc/python-dev
+            imagePullPolicy: {{.Values.imagePullPolicy}}
+            args:
+            - netcat
+            - -v
+            - -a
+            - {{ include "seaweedfs.filer.url" . }},{{ include "seaweedfs.master.peers" . }}
+          containers:
+          - name: {{ include "seaweedfs.cronjob.fullname" . }}
+            image: {{ include "seaweedfs.image" . }}
+            imagePullPolicy: {{ include "seaweedfs.imagePullSecrets" . }}
+            args:
+            - /usr/bin/env
+            - bash
+            - -ec
+            - |
+              # run weed shell
+              echo -e "\n\\033[32m---> Start running audit cronjob <---\\033[0m\n"
+              cat << EOF | weed shell -master={{ include "seaweedfs.master.peers" . }} -filer={{ include "seaweedfs.filer.url" . }}
+              {{- (tpl .Values.cronjob.scripts $) | nindent 14 -}}
+              EOF
+              echo -e "\n\\033[32m---> Audit cronjob run completed <---\\033[0m\n"
+            env:
+            - name: TZ
+              value: UTC

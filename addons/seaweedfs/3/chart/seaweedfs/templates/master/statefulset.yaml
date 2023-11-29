@@ -1,0 +1,126 @@
+{{- $replicaCount := int .Values.master.replicas }}
+{{- $clusterDomain := .Values.global.clusterDomain }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "seaweedfs.master.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  serviceName: {{ include "seaweedfs.master.fullname" . }}
+  replicas: {{ $replicaCount }}
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      component:  {{ include "seaweedfs.fullname" . }}
+      app: {{ include "seaweedfs.master.fullname" . }}
+  template:
+    metadata:
+      labels:
+        component:  {{ include "seaweedfs.fullname" . }}
+        app: {{ include "seaweedfs.master.fullname" . }}
+    spec:
+      {{- if .Values.master.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.master.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAntiAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.master.nodeAffinityPreset.type "key" .Values.master.nodeAffinityPreset.key "values" .Values.master.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      serviceAccount: {{ include "seaweedfs.fullname" . }}
+      containers:
+      - name: {{ include "seaweedfs.master.fullname" . }}
+        image: {{ include "seaweedfs.image" . }}
+        imagePullPolicy: {{ include "seaweedfs.imagePullSecrets" . }}
+        args:
+        - weed
+        - master
+        - -mdir=/seaweedfs
+        - -ip=$(POD_NAME).{{ include "seaweedfs.master.fullname" . }}.$(NAMESPACE).svc.{{ $clusterDomain }}
+        - -port={{ .Values.master.ports.http }}
+        - -port.grpc={{ .Values.master.ports.grpc }}
+        - -peers={{ include "seaweedfs.master.peers" . }}
+        - -metricsPort={{ .Values.master.ports.metrics }}
+        - -garbageThreshold={{ .Values.master.garbageThreshold }}
+        - -defaultReplication={{ .Values.master.defaultReplication }}
+        env:
+        - name: TZ
+          value: UTC
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        ports:
+        - containerPort: {{ .Values.master.ports.http }}
+        - containerPort: {{ .Values.master.ports.grpc }}
+        - containerPort: {{ .Values.master.ports.metrics }}
+        startupProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.master.ports.metrics }}
+          initialDelaySeconds: 90
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        livenessProbe:
+          tcpSocket:
+            port: 9333
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: 9333
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        volumeMounts:
+        - name: {{ include "seaweedfs.configuration.configMap" . }}
+          mountPath: /etc/seaweedfs
+        {{- if .Values.master.persistence.enabled }}
+        - name: datadir
+          mountPath: /seaweedfs
+        {{- end }}
+      volumes:
+      - name: {{ include "seaweedfs.configuration.configMap" . }}
+        configMap:
+          name: {{ include "seaweedfs.configuration.configMap" . }}
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
+        runAsUser: 1001
+  {{- if .Values.master.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.master.persistence.storageClass }}
+      {{- if (eq "-" .Values.master.persistence.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.master.persistence.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.master.persistence.size | quote }}
+  {{- end }}

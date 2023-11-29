@@ -1,0 +1,6 @@
+credential:
+  - name: S3_CONFIG
+    valueFrom:
+      serviceRef:
+        name: {{ include "seaweedfs.configuration.configMap" . }}
+        jsonpath: '{.data.s3\.json}'

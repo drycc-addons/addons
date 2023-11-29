@@ -1,0 +1,138 @@
+{{- $replicaCount := int .Values.filer.replicas }}
+{{- $clusterDomain := .Values.global.clusterDomain }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "seaweedfs.filer.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  serviceName: {{ include "seaweedfs.filer.fullname" . }}
+  replicas: {{ $replicaCount }}
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      component:  {{ include "seaweedfs.fullname" . }}
+      app: {{ include "seaweedfs.filer.fullname" . }}
+  template:
+    metadata:
+      labels:
+        component:  {{ include "seaweedfs.fullname" . }}
+        app: {{ include "seaweedfs.filer.fullname" . }}
+    spec:
+      {{- if .Values.filer.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.filer.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.filer.podAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.filer.podAntiAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.filer.nodeAffinityPreset.type "key" .Values.filer.nodeAffinityPreset.key "values" .Values.filer.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      serviceAccount: {{ include "seaweedfs.fullname" . }}
+      initContainers:
+      - name: {{ include "seaweedfs.cronjob.fullname" . }}-init
+        image: registry.drycc.cc/drycc/python-dev
+        imagePullPolicy: {{.Values.imagePullPolicy}}
+        args:
+        - netcat
+        - -v
+        - -a
+        - {{ include "seaweedfs.master.peers" . }}
+      containers:
+      - name: {{ include "seaweedfs.filer.fullname" . }}
+        image: {{ include "seaweedfs.image" . }}
+        imagePullPolicy: {{ include "seaweedfs.imagePullSecrets" . }}
+        args:
+        - weed
+        - filer
+        - -port={{ .Values.filer.ports.http }}
+        - -port.grpc={{ .Values.filer.ports.grpc }}
+        - -port.readonly={{ .Values.filer.ports.readonly }}
+        - -master={{ include "seaweedfs.master.peers" . }}
+        - -s3
+        - -s3.port={{ .Values.filer.ports.s3 }}
+        - -s3.config=/etc/seaweedfs/s3.json
+        - -defaultStoreDir=/seaweedfs
+        - -metricsPort={{ .Values.filer.ports.metrics }}
+        env:
+        - name: TZ
+          value: UTC
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        ports:
+        - containerPort: {{ .Values.filer.ports.s3 }}
+        - containerPort: {{ .Values.filer.ports.http }}
+        - containerPort: {{ .Values.filer.ports.grpc }}
+        - containerPort: {{ .Values.filer.ports.metrics }}
+        - containerPort: {{ .Values.filer.ports.readonly }}
+        startupProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.filer.ports.metrics }}
+          initialDelaySeconds: 90
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.filer.ports.s3 }}
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.filer.ports.s3 }}
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        volumeMounts:
+        - name: {{ include "seaweedfs.configuration.configMap" . }}
+          mountPath: /etc/seaweedfs
+        {{- if .Values.filer.persistence.enabled }}
+        - name: datadir
+          mountPath: /seaweedfs
+        {{- end }}
+      volumes:
+      - name: {{ include "seaweedfs.configuration.configMap" . }}
+        configMap:
+          name: {{ include "seaweedfs.configuration.configMap" . }}
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
+        runAsUser: 1001
+  {{- if .Values.filer.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: datadir
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.filer.persistence.storageClass }}
+      {{- if (eq "-" .Values.filer.persistence.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.filer.persistence.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.filer.persistence.size | quote }}
+  {{- end }}

@@ -1,0 +1,20 @@
+name: seaweedfs
+version: 3
+id: 2e6877df-86e7-4bcc-a869-2a9b6847a465
+description: "SeaweedFS is a simple and highly scalable distributed file system."
+displayName: "seaweedfs"
+metadata:
+  displayName: "seaweedfs"
+  provider:
+    name: drycc
+    supportURL: https://seaweedfs.github.io/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/seaweedfs
+tags: seaweedfs
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false

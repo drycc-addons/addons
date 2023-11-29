@@ -1,0 +1,16 @@
+credential:
+  - name: S3_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "seaweedfs.filer.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  - name: S3_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "seaweedfs.configuration.configMap" . }}
+        jsonpath: '{.spec.ports[?(@.name=="s3")].port}'
+  - name: S3_CONFIG
+    valueFrom:
+      configMapRef:
+        name: {{ include "seaweedfs.configuration.configMap" . }}
+        jsonpath: '{.data.s3\.json}'

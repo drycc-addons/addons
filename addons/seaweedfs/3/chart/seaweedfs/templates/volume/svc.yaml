@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "seaweedfs.volume.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.volume.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.volume.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.volume.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if and .Values.volume.service.loadBalancerIP (eq .Values.volume.service.type "LoadBalancer") }}
+  loadBalancerIP: {{ .Values.volume.service.loadBalancerIP }}
+  externalTrafficPolicy: {{ .Values.volume.service.externalTrafficPolicy | quote }}
+  {{- end }}
+  {{- if and (eq .Values.volume.service.type "LoadBalancer") .Values.volume.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- include "common.tplvalues.render" (dict "value" .Values.volume.service.loadBalancerSourceRanges "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if and (eq .Values.volume.service.type "ClusterIP") .Values.volume.service.clusterIP }}
+  clusterIP: {{ .Values.volume.service.clusterIP }}
+  {{- end }}
+  publishNotReadyAddresses: true
+  selector:
+    component:  {{ include "seaweedfs.fullname" . }}
+    app: {{ include "seaweedfs.volume.fullname" . }}
+  ports:
+  - name: http
+    port: {{ .Values.volume.ports.http }}
+    targetPort: {{ .Values.volume.ports.http }}
+    protocol: TCP
+  - name: grpc
+    port: {{ .Values.volume.ports.grpc }}
+    targetPort: {{ .Values.volume.ports.grpc }}
+    protocol: TCP
+  - name: metrics
+    port: {{ .Values.volume.ports.metrics }}
+    targetPort: {{ .Values.volume.ports.metrics }}
+    protocol: TCP

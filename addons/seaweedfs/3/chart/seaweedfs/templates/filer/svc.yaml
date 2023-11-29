@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "seaweedfs.filer.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.filer.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.filer.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.filer.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.filer.service.type }}
+  {{- if and .Values.filer.service.loadBalancerIP (eq .Values.filer.service.type "LoadBalancer") }}
+  loadBalancerIP: {{ .Values.filer.service.loadBalancerIP }}
+  externalTrafficPolicy: {{ .Values.filer.service.externalTrafficPolicy | quote }}
+  {{- end }}
+  {{- if and (eq .Values.filer.service.type "LoadBalancer") .Values.filer.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- include "common.tplvalues.render" (dict "value" .Values.filer.service.loadBalancerSourceRanges "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if and (eq .Values.filer.service.type "ClusterIP") .Values.filer.service.clusterIP }}
+  clusterIP: {{ .Values.filer.service.clusterIP }}
+  {{- end }}
+  publishNotReadyAddresses: true
+  selector:
+    component:  {{ include "seaweedfs.fullname" . }}
+    app: {{ include "seaweedfs.filer.fullname" . }}
+  ports:
+  - name: s3
+    port: {{ .Values.filer.ports.s3 }}
+    targetPort: {{ .Values.filer.ports.s3 }}
+    protocol: TCP
+  - name: http
+    port: {{ .Values.filer.ports.http }}
+    targetPort: {{ .Values.filer.ports.http }}
+    protocol: TCP
+  - name: grpc
+    port: {{ .Values.filer.ports.grpc }}
+    targetPort: {{ .Values.filer.ports.grpc }}
+    protocol: TCP
+  - name: readonly
+    port: {{ .Values.filer.ports.readonly }}
+    targetPort: {{ .Values.filer.ports.readonly }}
+    protocol: TCP
+  - name: metrics
+    port: {{ .Values.filer.ports.metrics }}
+    targetPort: {{ .Values.filer.ports.metrics }}
+    protocol: TCP

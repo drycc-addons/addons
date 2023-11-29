@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "seaweedfs.master.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.master.service.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.master.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.master.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if and .Values.master.service.loadBalancerIP (eq .Values.master.service.type "LoadBalancer") }}
+  loadBalancerIP: {{ .Values.master.service.loadBalancerIP }}
+  externalTrafficPolicy: {{ .Values.master.service.externalTrafficPolicy | quote }}
+  {{- end }}
+  {{- if and (eq .Values.master.service.type "LoadBalancer") .Values.master.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- include "common.tplvalues.render" (dict "value" .Values.master.service.loadBalancerSourceRanges "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if and (eq .Values.master.service.type "ClusterIP") .Values.master.service.clusterIP }}
+  clusterIP: {{ .Values.master.service.clusterIP }}
+  {{- end }}
+  publishNotReadyAddresses: true
+  selector:
+    component:  {{ include "seaweedfs.fullname" . }}
+    app: {{ include "seaweedfs.master.fullname" . }}
+  ports:
+  - name: http
+    port: {{ .Values.master.ports.http }}
+    targetPort: {{ .Values.master.ports.http }}
+    protocol: TCP
+  - name: grpc
+    port: {{ .Values.master.ports.grpc }}
+    targetPort: {{ .Values.master.ports.grpc }}
+    protocol: TCP
+  - name: metrics
+    port: {{ .Values.master.ports.metrics }}
+    targetPort: {{ .Values.master.ports.metrics }}
+    protocol: TCP
