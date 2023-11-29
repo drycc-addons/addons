@@ -1,6 +1,0 @@
-name: standard-16
-id: f3bb63f9-5cc3-499a-b2b7-8ec9ef8fd516
-description: "postgresql standard-16 plan which limit persistence size 16Gi."
-displayName: standard-16
-bindable: true
-maximum_polling_duration: 1800

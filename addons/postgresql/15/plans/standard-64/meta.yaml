@@ -1,6 +1,0 @@
-name: standard-64
-id: b6338b74-c8e9-448e-b008-a499ad27ecf2
-description: "postgresql standard-64 plan which limit persistence size 64Gi."
-displayName: standard-64
-bindable: true
-maximum_polling_duration: 1800
