@@ -168,6 +168,26 @@ master:
     type: ""
     key: ""
     values: []
+  ## Seaweedfs master container's resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param master.resources.limits The resources limits for Seaweedfs master containers
+  ## @param master.resources.requests The requested resources for Seaweedfs master containers
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 250m
+    ##    memory: 256Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 250m
+    ##    memory: 256Mi
+    requests: {}
   # persistence config
   persistence:
     enabled: false
@@ -225,6 +245,26 @@ filer:
     type: ""
     key: ""
     values: []
+  ## Seaweedfs filer container's resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param filer.resources.limits The resources limits for Seaweedfs filer containers
+  ## @param filer.resources.requests The requested resources for Seaweedfs filer containers
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 250m
+    ##    memory: 256Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 250m
+    ##    memory: 256Mi
+    requests: {}
   # persistence config
   persistence:
     enabled: false
@@ -278,6 +318,26 @@ volume:
     type: ""
     key: ""
     values: []
+  ## Seaweedfs volume container's resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param volume.resources.limits The resources limits for Seaweedfs volume containers
+  ## @param volume.resources.requests The requested resources for Seaweedfs volume containers
+  ##
+  resources:
+    ## Example:
+    ## limits:
+    ##    cpu: 250m
+    ##    memory: 256Mi
+    limits: {}
+    ## Examples:
+    ## requests:
+    ##    cpu: 250m
+    ##    memory: 256Mi
+    requests: {}
   # persistence config
   persistence:
     meta:

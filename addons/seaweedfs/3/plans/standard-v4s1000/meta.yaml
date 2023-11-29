@@ -1,6 +1,0 @@
-name: "standard-v4s500"
-id: 3e0da1bf-21fd-4ac4-a655-2c7a3e6e1428
-description: "Seaweedfs standard-v4s500 plan which limit 4 volumes, each size 500G."
-displayName: "standard-v4s500"
-bindable: true
-maximum_polling_duration: 1800

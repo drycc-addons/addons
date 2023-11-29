@@ -1,0 +1,45 @@
+master:
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 100m
+      memory: 1024Mi
+  persistence:
+    enabled: true
+    size: 1Gi
+    storageClass: ""
+
+filer:
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 100m
+      memory: 1024Mi
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClass: ""
+
+volume:
+  replicas: 4
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 2048Mi
+    requests:
+      cpu: 100m
+      memory: 1024Mi
+  persistence:
+    meta:
+      enabled: true
+      size: 16Gi
+      storageClass: ""
+    data:
+      enabled: true
+      size: 128Gi
+      storageClass: ""
+  compactionMBps: 10

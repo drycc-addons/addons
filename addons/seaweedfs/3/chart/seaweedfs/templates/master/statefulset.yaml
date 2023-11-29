@@ -92,6 +92,7 @@ spec:
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 5
+        resources: {{ toYaml .Values.master.resources | nindent 8 }}
         volumeMounts:
         - name: {{ include "seaweedfs.configuration.configMap" . }}
           mountPath: /etc/seaweedfs
