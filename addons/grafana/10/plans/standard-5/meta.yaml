@@ -1,6 +1,6 @@
-name: "standard-10"
+name: "standard-5"
 id: 2b455154-8725-482a-95b2-a193c180d9b5
-description: "grafana plan which limit 1c1g ,default persistence size 10Gi."
+description: "grafana plan which limit 1c1g ,default persistence size 5Gi."
 displayName: "1C2G"
 bindable: true
 maximum_polling_duration: 1800

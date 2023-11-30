@@ -1,7 +1,0 @@
-## @param fullnameOverride String to fully override common.names.fullname template
-##
-fullnameOverride: hb-grafana-standard-10
-
-server:
-  persistence:
-    size: 10Gi

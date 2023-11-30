@@ -1,13 +1,13 @@
-name: cloudbeaver
-version: 23
-id: b7cb26a4-b258-445c-860b-a664239a67f8
-description: "cloudbeaver"
-displayName: "cloudbeaver"
+name: Grafana
+version: 7.0
+id: fff5b6c7-ed85-429b-8265-493e40cc53c7
+description: "grafana"
+displayName: "grafana"
 metadata:
-  displayName: "cloudbeaver"
+  displayName: "grafana"
   provider:
     name: drycc
-    supportURL: http://cloudbeaver.io/
+    supportURL: http://grafana.io/
   documentationURL: https://github.com/drycc-addons/
 tags: cloudbeaver
 bindable: true

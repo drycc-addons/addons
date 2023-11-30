@@ -358,7 +358,7 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request
   ##
-  size: 1Gi
+  size: 10Gi
   ## @param persistence.annotations Annotations for the PVC
   ##
   annotations: {}
