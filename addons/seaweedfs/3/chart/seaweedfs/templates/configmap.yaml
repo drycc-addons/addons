@@ -1,0 +1,20 @@
+{{- /*
+Copyright Doopai LTD.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "seaweedfs.configuration.configMap" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/part-of: seaweedfs
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  s3.json: |
+    {{- (tpl .Values.config.s3 $) | nindent 4 }}
+  filer.toml: |
+    {{- (tpl .Values.config.filer $) | nindent 4 }}

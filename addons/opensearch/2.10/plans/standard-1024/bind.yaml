@@ -1,9 +1,17 @@
 credential:
+  {{- if (eq .Values.service.type "LoadBalancer") }}
   - name: OPENSEARCH_HOST
     valueFrom:
       serviceRef:
         name: {{ include "opensearch.service.name" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.service.type "ClusterIP") }}
+  - name: OPENSEARCH_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "opensearch.service.name" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
 
   - name: OPENSEARCH_TCP_REST_API_PORT
     valueFrom:
@@ -18,13 +26,21 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="tcp-transport")].port }'
 
   {{- if .Values.dashboards.enabled }}
+  {{- if (eq .Values.dashboards.service.type "LoadBalancer") }}
   - name: OPENSEARCH_DASHBOARDS_HOST
     valueFrom:
       serviceRef:
         name: {{ include "opensearch.dashboards.servicename" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.dashboards.service.type "ClusterIP") }}
+  - name: OPENSEARCH_DASHBOARDS_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "opensearch.dashboards.servicename" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
 
-  - name: OPENSEARCH_DASHBOARDS_HTTP_HOST
+  - name: OPENSEARCH_DASHBOARDS_PORT
     valueFrom:
       serviceRef:
         name: {{ include "opensearch.dashboards.servicename" . }}

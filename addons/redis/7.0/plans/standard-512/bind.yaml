@@ -1,10 +1,18 @@
 credential:
   {{- if not .Values.sentinel.enabled }}
+  {{ if (eq .Values.master.service.type "LoadBalancer") }}
   - name: MASTERHOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.master.service.type "ClusterIP") }}
+  - name: MASTERHOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
 
   - name: MASTERPORT
     valueFrom:
@@ -14,11 +22,19 @@ credential:
   {{- end }}
 
   {{- if and (eq .Values.architecture "replication") (not .Values.sentinel.enabled) }}
+  {{ if (eq .Values.replica.service.type "LoadBalancer") }}
   - name: REPLICASHOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.replica.service.type "ClusterIP") }}
+  - name: REPLICASHOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
 
   - name: REPLICASPORT
     valueFrom:
@@ -36,11 +52,19 @@ credential:
   {{- end }}
 
   {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
+  {{ if (eq .Values.sentinel.service.type "LoadBalancer") }}
   - name: SENTINELHOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.sentinel.service.type "ClusterIP") }}
+  - name: SENTINELHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
 
   - name: SENTINELPORT
     valueFrom:

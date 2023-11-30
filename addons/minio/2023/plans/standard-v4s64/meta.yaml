@@ -1,0 +1,6 @@
+name: "standard-v4s64"
+id: dea72135-fbd1-47ed-b7ae-d838b7ad3f66
+description: "Minio standard-v4s64 plan which limit 4 nodes, each size 64G."
+displayName: "standard-v4s64"
+bindable: true
+maximum_polling_duration: 1800

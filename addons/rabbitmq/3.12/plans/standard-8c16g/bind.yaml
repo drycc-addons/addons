@@ -1,9 +1,17 @@
 credential:
+  {{- if (eq .Values.service.type "LoadBalancer") }}
   - name: HOST
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.service.type "ClusterIP") }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
 
   {{- if or (.Values.service.portEnabled) (not .Values.auth.tls.enabled) }}
   - name: RABBITMQ_AMQP_PORT

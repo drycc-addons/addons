@@ -450,7 +450,7 @@ master:
   service:
     ## @param master.service.type Redis&trade; master service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param master.service.ports.redis Redis&trade; master service port
     ##
     ports:
@@ -810,7 +810,7 @@ replica:
   service:
     ## @param replica.service.type Redis&trade; replicas service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param replica.service.ports.redis Redis&trade; replicas service port
     ##
     ports:
@@ -1083,7 +1083,7 @@ sentinel:
   service:
     ## @param sentinel.service.type Redis&trade; Sentinel service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param sentinel.service.ports.redis Redis&trade; service port for Redis&trade;
     ## @param sentinel.service.ports.sentinel Redis&trade; service port for Redis&trade; Sentinel
     ##

@@ -1,0 +1,170 @@
+{{- $replicaCount := int .Values.volume.replicas }}
+{{- $clusterDomain := .Values.global.clusterDomain }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "seaweedfs.volume.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  serviceName: {{ include "seaweedfs.volume.fullname" . }}
+  replicas: {{ $replicaCount }}
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: OrderedReady
+  selector:
+    matchLabels:
+      component:  {{ include "seaweedfs.fullname" . }}
+      app: {{ include "seaweedfs.volume.fullname" . }}
+  template:
+    metadata:
+      labels:
+        component:  {{ include "seaweedfs.fullname" . }}
+        app: {{ include "seaweedfs.volume.fullname" . }}
+    spec:
+      {{- if .Values.volume.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.volume.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.volume.podAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.volume.podAntiAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.volume.nodeAffinityPreset.type "key" .Values.volume.nodeAffinityPreset.key "values" .Values.volume.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      serviceAccount: {{ include "seaweedfs.fullname" . }}
+      initContainers:
+      - name: {{ include "seaweedfs.cronjob.fullname" . }}-init
+        image: registry.drycc.cc/drycc/python-dev
+        imagePullPolicy: {{.Values.imagePullPolicy}}
+        args:
+        - netcat
+        - -v
+        - -a
+        - {{ include "seaweedfs.master.peers" . }}
+      containers:
+      - name: {{ include "seaweedfs.volume.fullname" . }}
+        image: {{ include "seaweedfs.image" . }}
+        imagePullPolicy: {{ include "seaweedfs.imagePullSecrets" . }}
+        args:
+        - /usr/bin/env
+        - bash
+        - -ec
+        - |
+          # run weed shell
+          CACERT="/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+          HEADER="Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
+          KUBERNETES_API_URL="https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/api/v1/nodes/${NODE_NAME}"
+          RACK=$(curl -sSL --cacert ${CACERT} --header "${HEADER}" -X GET "${KUBERNETES_API_URL}" | jq -r .metadata.labels.[\"topology.kubernetes.io/rack\"])
+          DATA_CENTER=$(curl -sSL --cacert ${CACERT} --header "${HEADER}" -X GET "${KUBERNETES_API_URL}" | jq -r .metadata.labels.[\"topology.kubernetes.io/zone\"])
+          mkdir -p /seaweedfs/{meta,data}
+          weed volume \
+            -port={{ .Values.volume.ports.http }} \
+            -port.grpc={{ .Values.volume.ports.grpc }} \
+            -metricsPort={{ .Values.volume.ports.metrics }} \
+            -max=100 \
+            -rack=${RACK} \
+            -dataCenter=${DATA_CENTER} \
+            -mserver={{ include "seaweedfs.master.peers" . }} \
+            -compactionMBps={{ .Values.volume.compactionMBps }} \
+            -dir=/seaweedfs/data \
+            -dir.idx=/seaweedfs/meta
+        env:
+        - name: TZ
+          value: UTC
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        ports:
+        - containerPort: {{ .Values.volume.ports.http }}
+        - containerPort: {{ .Values.volume.ports.grpc }}
+        - containerPort: {{ .Values.volume.ports.metrics }}
+        startupProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.volume.ports.metrics }}
+          initialDelaySeconds: 90
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.volume.ports.http }}
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.volume.ports.http }}
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
+        resources: {{ toYaml .Values.volume.resources | nindent 8 }}
+        volumeMounts:
+        - name: {{ include "seaweedfs.configuration.configMap" . }}
+          mountPath: /etc/seaweedfs
+        {{- if .Values.volume.persistence.meta.enabled }}
+        - name: datadir-meta
+          mountPath: /seaweedfs/meta
+        {{- end }}
+        {{- if .Values.volume.persistence.data.enabled }}
+        - name: datadir-data
+          mountPath: /seaweedfs/data
+        {{- end }}
+      volumes:
+      - name: {{ include "seaweedfs.configuration.configMap" . }}
+        configMap:
+          name: {{ include "seaweedfs.configuration.configMap" . }}
+      securityContext:
+        fsGroup: 1001
+        runAsGroup: 1001
+        runAsUser: 1001
+  {{- if or (.Values.volume.persistence.meta.enabled) (.Values.volume.persistence.data.enabled) }}
+  volumeClaimTemplates:
+  {{- if .Values.volume.persistence.meta.enabled }}
+  - metadata:
+      name: datadir-meta
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.volume.persistence.meta.storageClass }}
+      {{- if (eq "-" .Values.volume.persistence.meta.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.volume.persistence.meta.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.volume.persistence.meta.size | quote }}
+  {{- end }}
+  {{- if .Values.volume.persistence.data.enabled }}
+  - metadata:
+      name: datadir-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.volume.persistence.data.storageClass }}
+      {{- if (eq "-" .Values.volume.persistence.data.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.volume.persistence.data.storageClass }}"
+      {{- end }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.volume.persistence.data.size | quote }}
+  {{- end }}
+  {{- end }}
