@@ -1,0 +1,20 @@
+name: cloudbeaver
+version: 7.0
+id: b7cb26a4-b258-445c-860b-a664239a67f8
+description: "cloudbeaver"
+displayName: "cloudbeaver"
+metadata:
+  displayName: "cloudbeaver"
+  provider:
+    name: drycc
+    supportURL: http://cloudbeaver.io/
+  documentationURL: https://github.com/drycc-addons/drycc-docker-redis
+tags: cloudbeaver
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false
