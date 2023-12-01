@@ -1,0 +1,34 @@
+credential:
+  {{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: MASTER_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master-svc" (include "common.names.fullname" .) }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.service.type "ClusterIP") }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master-svc" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
+
+  - name: MASTER_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master-svc" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.ports[?(@.name=="cluster")].port }'
+
+  {{- if .Values.security.ssl.enabled }}
+  - name: HTTPS_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master-svc" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.ports[?(@.name=="https")].port }'
+  {{- else }}
+  - name: HTTP_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master-svc" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.ports[?(@.name=="http")].port }'
+  {{- end }}

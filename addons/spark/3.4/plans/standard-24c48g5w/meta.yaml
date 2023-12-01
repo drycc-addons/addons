@@ -1,0 +1,6 @@
+name: "standard-24c48g5w"
+id: faea11fd-c931-4930-8d98-c3ac4639620a
+description: "Spark standard-24c48g5w plan which limit resources 24 cores 48G memory 5 workers."
+displayName: "standard-24c48g5w"
+bindable: true
+maximum_polling_duration: 1800

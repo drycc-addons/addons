@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: "hb-spark-standard-512"
+fullnameOverride: "hb-spark-standard-4c8g3w"
 
 ## Spark master specific configuration
 ##
@@ -28,11 +28,11 @@ master:
   ##
   resources:
     limits:
-       cpu: 250m
-       memory: 512Mi
+      cpu: 4000m
+      memory: 8Gi
     requests:
-       cpu: 250m
-       memory: 256Mi
+      cpu: 2000m
+      memory: 4Gi
 
 ## @section Spark worker parameters
 ##
@@ -61,7 +61,7 @@ worker:
 
   ## @param worker.replicaCount Number of spark workers (will be the minimum number when autoscaling is enabled)
   ##
-  replicaCount: 2
+  replicaCount: 3
   ## Container resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## We usually recommend not to specify default resources and to leave this as a conscious
@@ -73,8 +73,8 @@ worker:
   ##
   resources:
     limits:
-       cpu: 250m
-       memory: 512Mi
+      cpu: 4000m
+      memory: 8Gi
     requests:
-       cpu: 250m
-       memory: 256Mi
+      cpu: 2000m
+      memory: 4Gi

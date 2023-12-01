@@ -1,0 +1,6 @@
+name: "standard-4c8g3w"
+id: a2e3fb18-b382-43d9-a882-83bd01180977
+description: "Spark standard-4c8g3w plan which limit resources 4 cores 8G memory 3 workers."
+displayName: "standard-4c8g3w"
+bindable: true
+maximum_polling_duration: 1800
