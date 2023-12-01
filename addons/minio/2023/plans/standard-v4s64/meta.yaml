@@ -1,5 +1,5 @@
 name: "standard-v4s64"
-id: dea72135-fbd1-47ed-b7ae-d838b7ad3f66
+id: 28f408b6-347e-454c-a7d8-ab1ad42971ae
 description: "Minio standard-v4s64 plan which limit 4 nodes, each size 64G."
 displayName: "standard-v4s64"
 bindable: true

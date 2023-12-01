@@ -1,5 +1,5 @@
 name: "standard-v4s32"
-id: 3e0da1bf-21fd-4ac4-a655-2c7a3e6e1428
+id: c85ceebb-55b5-43d0-a848-618d1055b0dc
 description: "Seaweedfs standard-v4s32 plan which limit 4 volumes, each size 32G."
 displayName: "standard-v4s32"
 bindable: true

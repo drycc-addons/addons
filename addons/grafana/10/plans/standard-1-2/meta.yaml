@@ -1,5 +1,5 @@
 name: "standard-10"
-id: 2b455154-8725-482a-95b2-a193c180d9b5
+id: b8ba6875-ac87-422e-90a7-07978892d369
 description: "grafana plan which limit 1c1g ,default persistence size 10Gi."
 displayName: "1C2G"
 bindable: true

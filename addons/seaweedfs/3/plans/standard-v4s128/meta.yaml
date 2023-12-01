@@ -1,5 +1,5 @@
 name: "standard-v4s128"
-id: 3e0da1bf-21fd-4ac4-a655-2c7a3e6e1428
+id: 94d81218-24e9-441c-b363-66950ea67cc5
 description: "Seaweedfs standard-v4s128 plan which limit 4 volumes, each size 128G."
 displayName: "standard-v4s128"
 bindable: true
