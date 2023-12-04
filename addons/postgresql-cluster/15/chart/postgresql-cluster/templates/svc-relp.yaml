@@ -12,7 +12,7 @@ metadata:
     cluster-name: {{ template "patroni.fullname" . }}
     role: replica
 spec:
-  type: {{ .Value.service.type }}
+  type: {{ .Values.service.type }}
   selector:
     application: {{ template "patroni.fullname" . }}
     cluster-name: {{ template "patroni.fullname" . }}
