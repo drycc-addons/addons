@@ -1,0 +1,6 @@
+name: "standard-5"
+id: 9d92b94d-c63e-47a8-ac91-352f511ef0a9
+description: "Cloudbeaver standard-5 plan: Disk 5Gi ,vCPUs 1 , RAM 2G"
+displayName: "standard-5"
+bindable: true
+maximum_polling_duration: 1800

@@ -858,7 +858,7 @@ router:
   service:
     ## @param secondary.service.type MySQL secondary Kubernetes service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param secondary.service.ports.mysql MySQL secondary Kubernetes service port
     ##
     portrw: 3306

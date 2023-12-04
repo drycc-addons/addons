@@ -12,7 +12,7 @@ metadata:
     cluster-name: {{ template "patroni.fullname" . }}
     role: master
 spec:
-  type: LoadBalancer
+  type: {{ .Values.service.type }}
   selector:
     application: {{ template "patroni.fullname" . }}
     cluster-name: {{ template "patroni.fullname" . }}

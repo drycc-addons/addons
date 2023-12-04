@@ -13,8 +13,12 @@ tags: prometheus
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: true
+plan_updateable: false
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
   description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "server.username"
+  description: "set username . default amdin"
+- name: "server.username"
+  description: "set passsword . default amdin"
 archive: false

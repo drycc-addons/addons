@@ -111,6 +111,14 @@ Get the Prometheus configuration configmap key.
 {{/*
 Get the Prometheus Alertmanager configuration configmap key.
 */}}
+{{- define "prometheus.serever.web.configmapKey" -}}
+{{- printf "web-config.yaml" -}}
+{{- end -}}
+
+
+{{/*
+Get the Prometheus Alertmanager configuration configmap key.
+*/}}
 {{- define "prometheus.alertmanager.configmapKey" -}}
 {{- if .Values.alertmanager.existingConfigmapKey -}}
     {{- include "common.tplvalues.render" (dict "value" .Values.alertmanager.existingConfigmapKey "context" .) -}}

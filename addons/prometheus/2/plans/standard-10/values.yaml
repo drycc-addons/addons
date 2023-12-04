@@ -5,3 +5,4 @@ fullnameOverride: hb-prometheus-standard-10
 server:
   persistence:
     size: 10Gi
+  retentionSize: 8Gi

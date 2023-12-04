@@ -1,30 +1,41 @@
 credential:
 {{- if (eq .Values.service.type "LoadBalancer") }}
-  - name: host
+  - name: MASTER_HOST
     valueFrom:
       serviceRef:
-        name: {{ template "common.names.fullname" . }}-master
-        jsonpath: '{.spec.clusterIPs[*]}'
-  - name: hostrepl
+        name: {{ include "common.names.fullname" . }}-master
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  - name: REPL_HOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}-repl
-        jsonpath: '{.spec.clusterIPs[*]}'
-  - name: database
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.service.type "ClusterIP") }}
+  - name: MASTER_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}-master
+        jsonpath: '{ .spec.clusterIP }'
+  - name: REPL_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}-repl
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
+  - name: DATABASE
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.data-name }' 
-  - name: password
+  - name: PASSWORD
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.data-password }' 
-  - name: username
+  - name: USERNAME
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.data-user }' 
-  - name: port
+  - name: PORT
     value: 5432
-{{- end }}

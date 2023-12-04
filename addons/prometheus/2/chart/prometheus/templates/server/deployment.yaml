@@ -114,13 +114,13 @@ spec:
           args:
             - "--config.file=/opt/drycc/prometheus/conf/{{ include "prometheus.server.configmapKey" . }}"
             - "--storage.tsdb.path={{ .Values.server.persistence.mountPath }}"
-            - "--storage.tsdb.retention.time={{ .Values.server.retention }}"
             - "--storage.tsdb.retention.size={{ .Values.server.retentionSize }}"
             - "--log.level={{ .Values.server.logLevel }}"
             - "--log.format={{ .Values.server.logFormat }}"
             - "--web.listen-address=:{{ .Values.server.containerPorts.http }}"
             - "--web.console.libraries=/opt/drycc/prometheus/conf/console_libraries"
             - "--web.console.templates=/opt/drycc/prometheus/conf/consoles"
+            - "--web.config.file=/opt/drycc/prometheus/conf/web-config.yaml"
             {{- if .Values.server.enableAdminAPI}}
             - "--web.enable-admin-api"
             {{- end }}
@@ -141,6 +141,11 @@ spec:
             {{- if .Values.server.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.server.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "prometheus.server.fullname" . }}
+                  key: PASSWORD
           envFrom:
             {{- if .Values.server.extraEnvVarsCM }}
             - configMapRef:
@@ -164,6 +169,9 @@ spec:
             httpGet:
               path: /-/healthy
               port: http
+              httpHeaders:
+              - name: Authorization
+                value: Basic {{ printf "%s:%s" .Values.server.username .Values.server.password | b64enc }}
           {{- end }}
           {{- if .Values.server.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.server.customReadinessProbe "context" $) | nindent 12 }}
@@ -172,13 +180,20 @@ spec:
             httpGet:
               path: /-/ready
               port: http
+              httpHeaders:
+              - name: Authorization
+                value: Basic {{ printf "%s:%s" .Values.server.username .Values.server.password | b64enc }}
           {{- end }}
           {{- if .Values.server.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.server.customStartupProbe "context" $) | nindent 12 }}
           {{- else if .Values.server.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.server.startupProbe "enabled") "context" $) | nindent 12 }}
-            tcpSocket:
+            httpGet:
+              path: /-/ready
               port: http
+              httpHeaders:
+              - name: Authorization
+                value: Basic {{ printf "%s:%s" .Values.server.username .Values.server.password | b64enc }}
           {{- end }}
           {{- end }}
           {{- if .Values.server.lifecycleHooks }}

@@ -1,34 +1,39 @@
 credential:
-  {{- if (eq .Values.router.service.type "LoadBalancer") }}
-  - name: host
+{{- if (eq .Values.router.service.type "LoadBalancer") }}
+  - name: HOST
     valueFrom:
-      secretKeyRef:
-        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
-        jsonpath: '{ .data.host }' 
-  - name: database
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- else if (eq .Values.router.service.type "ClusterIP") }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  {{- end }}
+  - name: DADABASE
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}-svcbind-custom-user
         jsonpath: '{ .data.database }' 
-  - name: password
+  - name: PASSWORD
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}-svcbind-custom-user
         jsonpath: '{ .data.username }' 
-  - name: username
+  - name: USERNAME
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}-svcbind-custom-user
         jsonpath: '{ .data.username }' 
-  - name: portro
+  - name: READONLY_PORT
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}-svcbind-custom-user
         jsonpath: '{ .data.portro }'
-  - name: portrw
+  - name: READWRITE_PORT
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}-svcbind-custom-user
         jsonpath: '{ .data.portrw }' 
-  {{- end }}
-
