@@ -1,0 +1,6 @@
+name: "standard-16c32g5w"
+id: 4840c53b-2765-4d90-b025-f6a4cba50617
+description: "Spark standard-16c32g5w plan which limit resources 16 cores 32G memory 5 workers."
+displayName: "standard-16c32g5w"
+bindable: true
+maximum_polling_duration: 1800

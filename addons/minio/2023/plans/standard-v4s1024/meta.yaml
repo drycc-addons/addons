@@ -1,5 +1,5 @@
 name: "standard-v4s1024"
-id: dea72135-fbd1-47ed-b7ae-d838b7ad3f66
+id: 5f45cce5-a8ee-4d6b-8d38-658328dcc137
 description: "Minio standard-v4s1024 plan which limit 4 nodes, each size 1024G."
 displayName: "standard-v4s1024"
 bindable: true

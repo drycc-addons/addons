@@ -1,0 +1,6 @@
+name: "standard-1c2g2w"
+id: c9c096e8-55a1-4b17-aa7a-5129b1852207
+description: "Spark standard-1c2g2w plan which limit resources 1 coreS 2G memory 2 workers."
+displayName: "standard-1c2g2w"
+bindable: true
+maximum_polling_duration: 1800

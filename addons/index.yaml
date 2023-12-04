@@ -6,9 +6,6 @@ entries:
   minio:
     - version: 2023
       description: "MinIO offers high-performance, S3 compatible object storage."
-  postgresql:
-    - version: 15
-      description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
   rabbitmq:
     - version: 3.12
       description: "RabbitMQ is the most widely deployed open source message broker."
@@ -33,3 +30,9 @@ entries:
   grafana:
     - version: 10
       description: "The open and composable observability and data visualization platform."
+  postgresql-cluster:
+    - version: 15
+      description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
+  seaweedfs:
+    - version: 3
+      description: "SeaweedFS is a fast distributed storage system for blobs, objects, files, and data lake, for billions of files."

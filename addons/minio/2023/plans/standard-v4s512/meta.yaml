@@ -1,5 +1,5 @@
 name: "standard-v4s512"
-id: dea72135-fbd1-47ed-b7ae-d838b7ad3f66
+id: c5488a9d-79cb-45f7-bffb-6f4d91561199
 description: "Minio standard-v4s512 plan which limit 4 nodes, each size 512G."
 displayName: "standard-v4s512"
 bindable: true

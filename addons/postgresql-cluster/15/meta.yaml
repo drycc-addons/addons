@@ -1,10 +1,10 @@
 name: postgresql-cluster
-version: 15.0
+version: 15
 id: 5cfb0abf-276c-445b-9060-9aa964ede87d
 description: "postgresql-cluster"
-displayName: "postgresql-cluster-15.0"
+displayName: "postgresql-cluster"
 metadata:
-  displayName: "postgresql-cluster-15.0"
+  displayName: "postgresql-cluster"
   provider:
     name: drycc
     supportURL: https://www.postgresql.org/

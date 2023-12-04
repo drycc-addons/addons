@@ -1,5 +1,5 @@
 name: "standard-100"
-id: 8205e5d3-a954-4c68-a570-efa8c607c1d7
+id: 20cf5c53-699f-46e8-b541-d95c9fcccb86
 description: "Mysql Cluster standard-100 plan: Disk 100Gi ,vCPUs 4 , RAM 16G , DB MAX Connection 4000"
 displayName: "standard-100"
 bindable: true
