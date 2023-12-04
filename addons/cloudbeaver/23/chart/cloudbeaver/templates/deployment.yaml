@@ -118,7 +118,7 @@ spec:
 {{ toYaml .Values.persistence.annotations | indent 8 }}
         {{- end }}
         labels:
-          application: {{ template "cloudbeaver.fullname" . }}
+          application: {{ include "common.names.fullname" . }}
           release: {{ .Release.Name }}
           heritage: {{ .Release.Service }}
       spec:
