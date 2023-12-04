@@ -1,28 +1,24 @@
 credential:
-  {{- if (eq .Values.server.service.type "LoadBalancer") }}
-  - name: host
+{{- if (eq .Values.server.service.type "LoadBalancer") }}
+  - name: HOST
     valueFrom:
       serviceRef:
-        name: {{ printf "%s" (include "common.names.fullname" .) }}
+        name: {{ include "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  - name: port
-    valueFrom:
-      secretKeyRef:
-        name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports.port }' 
-  {{- end }}
-
-alertmanager
-
-  {{- if (eq .Values.alertmanager.service.type "LoadBalancer") }}
-  - name: host
+{{- else if (eq .Values.service.type "ClusterIP") }}
+  - name: HOST
     valueFrom:
       serviceRef:
-        name: {{ printf "%s" (include "common.names.fullname" .) }}
-        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  - name: port
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+{{- end }}
+  - name: PORT
     valueFrom:
-      secretKeyRef:
+      serviceRef:
         name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports.port }' 
+        jsonpath: ' { .spec.ports[?(@.name=="http")].port }' 
+  - name: USER
+    valule: {{ .Values.server.username }} 
+  - name: PASSWORD
+    valule: {{ .Values.server.password }} 
   {{- end }}

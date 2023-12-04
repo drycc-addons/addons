@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ template "prometheus.server.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:
+    application: {{ template "prometheus.server.fullname" . }}
+    chart: {{ template "prometheus.server.fullname" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    cluster-name: {{ template "prometheus.server.fullname" . }}
+type: Opaque
+data:
+  PASSWORD: {{ if .Values.password | default "" | ne "" }} {{ .Values.service.password | b64enc }}{{ else }}{{ randAlphaNum 32 | b64enc }}{{ end }}

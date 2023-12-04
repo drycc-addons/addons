@@ -80,7 +80,7 @@ ingress:
 ## @param alertmanager.image.pullSecrets Alertmanager image pull secrets
 ##
 alertmanager:
-  enabled: true
+  enabled: false
   image: 
     registry: registry.drycc.cc
     repository: drycc-addons/alertmanager
@@ -577,6 +577,8 @@ alertmanager:
 ## @param server.image.pullSecrets Prometheus image pull secrets
 ##
 server:
+  username: admin
+  password: admin
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/prometheus
@@ -599,6 +601,10 @@ server:
   ## @param server.configuration [string] Promethus configuration. This content will be stored in the the prometheus.yaml file and the content can be a template.
   ## ref: <https://github.com/prometheus-community/helm-charts/blob/main/charts/prometheus/values.yaml>
   ##
+  webconfig : |
+   basic_auth_users:
+    {{ htpasswd  .Values.server.username   .Values.server.password   | replace ":" ": "}}
+
   configuration: |
     global:
       {{- if .Values.server.scrapeInterval }}
@@ -703,7 +709,7 @@ server:
   ## @param server.startupProbe.successThreshold Success threshold for startupProbe
   ##
   startupProbe:
-    enabled: false
+    enabled: true
     initialDelaySeconds: 2
     periodSeconds: 5
     timeoutSeconds: 2
