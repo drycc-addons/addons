@@ -82,7 +82,11 @@ preInitScript: |
           track_commit_timestamp: "off"
           archive_mode: "on"
           archive_timeout: 300s
+          {{- if .Values.walG.enabled }}
           archive_command: sh /opt/drycc/postgresql/walbackup.sh %p
+          {{- else }}
+          archive_command: /bin/true
+          {{- end }}
           # timescaledb.license: 'timescale'
           shared_preload_libraries: 'auto_explain,pg_stat_statements'
           log_destination: 'csvlog'
@@ -245,7 +249,7 @@ metrics:
       memory: 512Mi
 walG:
   # Specifies whether Wal-G should be enabled
-  enabled: true
+  enabled: false
   # Cron schedule for doing base backups
   scheduleCronJob: "*/5 * * * *"
   # Amount of base backups to retain

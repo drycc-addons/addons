@@ -23,4 +23,10 @@ allow_parameters:
   description: "Whether to enable metrics. default true"
 - name: "walG.enabled"
   description: "Whether to use S3 for backup your data. default true . ps: Make sure there is a available S3 "
+- name: "walG.s3.awsAccessKeyID"
+  description: "S3 awsAccessKeyID"
+- name: "walG.s3.awsSecretAccessKey"
+  description: "S3 awsSecretAccessKey"
+- name: "walG.s3.walGS3Prefix"
+  description: "S3 walGS3Prefix : etc . s3://bucket001"
 archive: false

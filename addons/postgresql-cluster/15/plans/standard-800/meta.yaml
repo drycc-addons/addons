@@ -1,6 +1,6 @@
 name: "standard-800"
 id: 60f37e20-e69e-4f6f-9cce-e43caec34963
-description: "Mysql Cluster standard-800 plan: Disk 800Gi ,vCPUs 32 , RAM 128G , DB MAX Connection 2000"
+description: "PostgreSQL Cluster standard-800 plan: Disk 800Gi ,vCPUs 32 , RAM 128G , DB MAX Connection 2000"
 displayName: "standard-800"
 bindable: true
 maximum_polling_duration: 1800
