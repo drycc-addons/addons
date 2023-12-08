@@ -14,6 +14,6 @@ data:
   password-superuser: {{ .Values.credentials.superuser | b64enc }}
   password-rewind: {{ .Values.credentials.rewind | b64enc }}
   password-replication: {{ .Values.credentials.replication | b64enc }} 
-  data-user: {{ .Values.dataname.username | b64enc }}
-  data-name: {{ .Values.dataname.dbname | b64enc }}
-  data-password: {{ .Values.dataname.password | b64enc }}
+  data-user: {{ .Values.database.username | b64enc }}
+  data-name: {{ .Values.database.dbname | b64enc }}
+  data-password: {{ .Values.database.password | b64enc }}

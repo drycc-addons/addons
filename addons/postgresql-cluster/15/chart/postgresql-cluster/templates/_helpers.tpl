@@ -46,7 +46,7 @@ Create the name of the service account to use.
 Return true if a cronjob object should be created for Postgresql HA patroni ## TODO feature
 */}}
 {{- define "patroni.createCronJob" -}}
-{{- if and .Values.walG.enabled }}
+{{- if and .Values.backup.enabled }}
     {{- true -}}
 {{- else -}}
 {{- end -}}
@@ -143,35 +143,35 @@ Create patroni envs.
 {{/*
 Create walg envs.
 */}}
-{{- define "walg.envs" }}
-{{- if .Values.walG.enabled }}
+{{- define "backup.envs" }}
+{{- if .Values.backup.enabled }}
 - name: USE_WALG
-  value: {{ .Values.walG.enabled | quote }}
-{{- if .Values.walG.retainBackups }}
+  value: {{ .Values.backup.enabled | quote }}
+{{- if .Values.backup.retainBackups }}
 - name: BACKUP_NUM_TO_RETAIN
-  value: {{ .Values.walG.retainBackups | quote}}
+  value: {{ .Values.backup.retainBackups | quote}}
 {{- end }}
-{{- if .Values.walG.backupThresholdMegabytes }}
+{{- if .Values.backup.backupThresholdMegabytes }}
 - name: WALG_BACKUP_THRESHOLD_MEGABYTES
-  value: {{ .Values.walG.backupThresholdMegabytes | quote }}
+  value: {{ .Values.backup.backupThresholdMegabytes | quote }}
 {{- end }}
-{{- if .Values.walG.backupThresholdPercentage }}
+{{- if .Values.backup.backupThresholdPercentage }}
 - name: WALE_BACKUP_THRESHOLD_PERCENTAGE
-  value: {{ .Values.walG.backupThresholdPercentage | quote }}
+  value: {{ .Values.backup.backupThresholdPercentage | quote }}
 {{- end }}
-{{- if .Values.walG.s3.used }}
+{{- if .Values.backup.s3.used }}
 - name: AWS_ACCESS_KEY_ID
-  value: {{ .Values.walG.s3.awsAccessKeyID | quote }}
+  value: {{ .Values.backup.s3.awsAccessKeyID | quote }}
 - name: AWS_SECRET_ACCESS_KEY
-  value: {{ .Values.walG.s3.awsSecretAccessKey | quote }}
+  value: {{ .Values.backup.s3.awsSecretAccessKey | quote }}
 - name: WALG_S3_PREFIX
-  value: {{ .Values.walG.s3.walGS3Prefix | quote }}
+  value: {{ .Values.backup.s3.walGS3Prefix | quote }}
 - name: AWS_ENDPOINT
-  value: {{ .Values.walG.s3.awsEndpoint | quote }}
+  value: {{ .Values.backup.s3.awsEndpoint | quote }}
 - name: AWS_S3_FORCE_PATH_STYLE
-  value: {{ .Values.walG.s3.awsS3ForcePathStyle | quote }}
+  value: {{ .Values.backup.s3.awsS3ForcePathStyle | quote }}
 - name: AWS_REGION
-  value: {{ .Values.walG.s3.awsRegion | quote }}
+  value: {{ .Values.backup.s3.awsRegion | quote }}
 {{- end }}
 {{- else }}
 - name: USE_WALG

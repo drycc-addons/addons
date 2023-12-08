@@ -21,7 +21,7 @@ credentials:
   rewind: cola
   replication: reppasswd
 
-dataname:
+database:
   dbname: db1
   username: us1
   password: 111w
@@ -82,7 +82,7 @@ preInitScript: |
           track_commit_timestamp: "off"
           archive_mode: "on"
           archive_timeout: 300s
-          {{- if .Values.walG.enabled }}
+          {{- if .Values.backup.enabled }}
           archive_command: sh /opt/drycc/postgresql/walbackup.sh %p
           {{- else }}
           archive_command: /bin/true
@@ -243,15 +243,15 @@ metrics:
     limits:
       cpu: 100m
       memory: 512Mi
-      # hugepages-2Mi: 4Mi
+      hugepages-2Mi: 20Mi
     requests:
       cpu: 100m
       memory: 512Mi
-walG:
+backup:
   # Specifies whether Wal-G should be enabled
-  enabled: false
+  enabled: true
   # Cron schedule for doing base backups
-  scheduleCronJob: "*/5 * * * *"
+  scheduleCronJob: "20 0 * * 0"
   # Amount of base backups to retain
   retainBackups: 2
   # Name of the secret that holds the credentials to the bucket
@@ -271,8 +271,9 @@ walG:
     awsS3ForcePathStyle: "true"
     awsRegion: dx-1
 
+
 persistentVolume:
-  enabled: false
+  enabled: true
   size: 10G
   ## database data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -338,7 +339,7 @@ serviceAccount:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: false 
+  enabled: true 
   ## @param networkPolicy.allowExternal The Policy model to apply.
   ## When set to false, only pods with the correct
   ## client label will have network access to the port Postgresql is listening
@@ -346,4 +347,5 @@ networkPolicy:
   ## (with the correct destination port).
   ##
   allowCurrentNamespace: true
-  allowNamespaces: []
+  allowNamespaces: 
+    - mx-test1
