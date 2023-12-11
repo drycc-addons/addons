@@ -74,7 +74,7 @@ backup:
 
 You can modify multiple content at once, there is no need to modify part of it each time.
 
-# Plans
+## Plans
 
 | Resource Specification | Cores | MEMORY | Storage SIZE |
 | :---: | :---: | :---: | :---: | 

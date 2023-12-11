@@ -56,9 +56,6 @@ spec:
         #   fsGroup: postgres
         env:
         {{- include "patroni.envs" . | indent 8 }} 
-        {{- if .Values.backup.enabled }}
-        {{- include "backup.envs" . | indent 8 }} 
-        {{- end }}
         {{- if .Values.env }}
         {{- range $key, $val := .Values.env }}
         - name: {{  $key | quote | upper }}
@@ -109,6 +106,9 @@ spec:
           name: patroni-config
         - mountPath: "/opt/drycc/postgresql/config/"
           name: postgresql-config
+          # readOnly: true
+        - mountPath: "/opt/drycc/postgresql/backup/"
+          name: postgresql-backup
           # readOnly: true
         resources:
 {{ toYaml .Values.resources | indent 10 }}
@@ -175,7 +175,6 @@ spec:
         - | 
           python3 /opt/drycc/postgresql/pgbackup.py 0.0.0.0 9000 
         env:
-        {{- include "backup.envs" . | indent 8 }} 
         - name: PGHOST
           value: localhost
         - name: PGPASSWORD
@@ -222,6 +221,9 @@ spec:
       - name: postgresql-config
         configMap:
           name: {{ template "common.names.fullname" . }}-postgresql
+      - name: archive-config
+        configMap:
+          name: {{ template "common.names.fullname" . }}-backup
       {{- if not .Values.persistentVolume.enabled }}
       - name: storage-volume
         emptyDir: {}

@@ -81,11 +81,7 @@ preInitScript: |
           track_commit_timestamp: "off"
           archive_mode: "on"
           archive_timeout: 300s
-          {{- if .Values.backup.enabled }}
-          archive_command: sh /opt/drycc/postgresql/walbackup.sh %p
-          {{- else }}
-          archive_command: /bin/true
-          {{- end }}
+          archive_command: sh /opt/drycc/postgresql/walbackup.sh %p %p
           # timescaledb.license: 'timescale'
           shared_preload_libraries: 'auto_explain,pg_stat_statements'
           log_destination: 'csvlog'
@@ -134,9 +130,20 @@ postInitScript: |
     echo "Skipping create admin user"
   fi
   psql -w -c  "CHECKPOINT;CHECKPOINT;"
-  #norm user 
-  #
-  #
+
+backupEnv: |
+  #!/bin/bash
+  export USE_WALG={{ .Values.backup.enabled | quote }}
+  export BACKUP_NUM_TO_RETAIN={{ .Values.backup.retainBackups | quote}}
+  export WALG_BACKUP_THRESHOLD_MEGABYTES={{ .Values.backup.backupThresholdMegabytes | quote }}
+  export WALE_BACKUP_THRESHOLD_PERCENTAGE={{ .Values.backup.backupThresholdPercentage | quote }}
+  export AWS_ACCESS_KEY_ID={{ .Values.backup.s3.awsAccessKeyID | quote }}
+  export AWS_SECRET_ACCESS_KEY={{ .Values.backup.s3.awsSecretAccessKey | quote }}
+  export WALG_S3_PREFIX={{ .Values.backup.s3.walGS3Prefix | quote }}
+  export AWS_ENDPOINT={{ .Values.backup.s3.awsEndpoint | quote }}
+  export AWS_S3_FORCE_PATH_STYLE={{ .Values.backup.s3.awsS3ForcePathStyle | quote }}
+  export AWS_REGION={{ .Values.backup.s3.awsRegion | quote }}
+
 postgresql: 
   config: |-
     log_min_duration_statement = 1000
@@ -268,7 +275,6 @@ backup:
     awsEndpoint: "http://xxxx:9000"
     awsS3ForcePathStyle: "true"
     awsRegion: dx-1
-
 
 persistentVolume:
   enabled: true

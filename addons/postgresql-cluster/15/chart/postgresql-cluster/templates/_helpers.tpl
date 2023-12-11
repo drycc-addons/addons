@@ -136,43 +136,14 @@ Create patroni envs.
 {{- end -}}
 
 {{/*
-Create walg envs.
+Return true if a configmap object should be created for PG backup.
 */}}
-{{- define "backup.envs" }}
-{{- if .Values.backup.enabled }}
-- name: USE_WALG
-  value: {{ .Values.backup.enabled | quote }}
-{{- if .Values.backup.retainBackups }}
-- name: BACKUP_NUM_TO_RETAIN
-  value: {{ .Values.backup.retainBackups | quote}}
-{{- end }}
-{{- if .Values.backup.backupThresholdMegabytes }}
-- name: WALG_BACKUP_THRESHOLD_MEGABYTES
-  value: {{ .Values.backup.backupThresholdMegabytes | quote }}
-{{- end }}
-{{- if .Values.backup.backupThresholdPercentage }}
-- name: WALE_BACKUP_THRESHOLD_PERCENTAGE
-  value: {{ .Values.backup.backupThresholdPercentage | quote }}
-{{- end }}
-{{- if .Values.backup.s3.used }}
-- name: AWS_ACCESS_KEY_ID
-  value: {{ .Values.backup.s3.awsAccessKeyID | quote }}
-- name: AWS_SECRET_ACCESS_KEY
-  value: {{ .Values.backup.s3.awsSecretAccessKey | quote }}
-- name: WALG_S3_PREFIX
-  value: {{ .Values.backup.s3.walGS3Prefix | quote }}
-- name: AWS_ENDPOINT
-  value: {{ .Values.backup.s3.awsEndpoint | quote }}
-- name: AWS_S3_FORCE_PATH_STYLE
-  value: {{ .Values.backup.s3.awsS3ForcePathStyle | quote }}
-- name: AWS_REGION
-  value: {{ .Values.backup.s3.awsRegion | quote }}
-{{- end }}
-{{- else }}
-- name: USE_WALG
-  value: ""
-{{- end }}
-{{- end }}
+{{- define "backup.createConfigmap" -}}
+{{- if and .Values.backup.enabled }}
+    {{- true -}}
+{{- else -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Generate random password 
