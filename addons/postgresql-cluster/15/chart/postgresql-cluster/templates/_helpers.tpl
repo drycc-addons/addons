@@ -107,6 +107,16 @@ Create patroni envs.
     secretKeyRef:
       name: {{ template "patroni.fullname" . }}
       key: password-rewind
+- name: ADMIN_USER
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: admin-user
+- name: ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: admin-password
 - name: PATRONI_SCOPE
   value: {{ template "patroni.fullname" . }}
 - name: PATRONI_NAME
@@ -123,21 +133,6 @@ Create patroni envs.
   value: '0.0.0.0:5432'
 - name: PATRONI_RESTAPI_LISTEN
   value: '0.0.0.0:8008'
-- name: DATABASE_NAME
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "patroni.fullname" . }}
-      key: data-name
-- name: DATABASE_USER
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "patroni.fullname" . }}
-      key: data-user
-- name: DATABASE_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "patroni.fullname" . }}
-      key: data-password
 {{- end -}}
 
 {{/*
@@ -178,3 +173,66 @@ Create walg envs.
   value: ""
 {{- end }}
 {{- end }}
+
+{{/*
+Generate random password 
+*/}}
+
+{{/*
+Get the super user  password ;
+*/}}
+{{- define "credentials.superuserValue" }}
+{{- if .Values.credentials.superuser }}                                         
+    {{- .Values.credentials.superuser -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-superuser")  -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the rewind password ;
+*/}}
+{{- define "credentials.rewindValue" }}
+{{- if .Values.credentials.rewind }}                                         
+    {{- .Values.credentials.rewind -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-rewind")  -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the replication password ;
+*/}}
+{{- define "credentials.replicationValue" }}
+{{- if .Values.credentials.replication }}                                         
+    {{- .Values.credentials.replication -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-replication")  -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Get the administrator password ;
+*/}}
+{{- define "adminRole.passwordValue" }}
+{{- if .Values.adminRole.password }}
+    {{- .Values.adminRole.password -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-replication")  -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Returns the available value for certain key in an existing secret (if it exists),
+otherwise it generates a random value.
+*/}}
+{{- define "getValueFromSecret" }}
+{{- $len := (default 16 .Length) | int -}}
+{{- $obj := (lookup "v1" "Secret" .Namespace .Name).data -}}
+{{- if $obj }}
+{{- index $obj .Key | b64dec -}}
+{{- else -}}
+{{- randAlphaNum $len -}}
+{{- end -}}
+{{- end }}
+

@@ -17,14 +17,13 @@ image:
 # https://github.com/zalando/patroni/blob/master/docs/SETTINGS.rst#postgresql
 # https://github.com/zalando/spilo/blob/master/ENVIRONMENT.rst
 credentials:
-  superuser: tea
-  rewind: cola
-  replication: reppasswd
+  superuser: ""
+  rewind: ""
+  replication: ""
 
-database:
-  dbname: db1
-  username: us1
-  password: 111w
+adminRole:
+  username: administrator
+  password: ""
 
 # Distribution Configuration stores
 # Please note that only one of the following stores should be enabled.
@@ -126,22 +125,21 @@ postInitScript: |
   #!/bin/bash
   set -Eeu
   # Create monitor user
-  psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor"
-  # Create init database & user 
-  if [[( -n "$DATABASE_USER") &&  ( -n "$DATABASE_PASSWORD") && ( -n "$DATABASE_NAME")]]; then
-    echo "Creating user ${DATABASE_USER}"
-    psql -w -c "create user ${DATABASE_USER} WITH LOGIN ENCRYPTED PASSWORD '${DATABASE_PASSWORD}'"
-    echo "Creating database ${DATABASE_NAME} "
-    psql -w -c "CREATE DATABASE ${DATABASE_NAME} OWNER ${DATABASE_USER} CONNECTION LIMIT 1000"
-    psql -w -d ${DATABASE_NAME} -c "create extension postgis ; create extension pg_stat_statements ; create extension pg_buffercache ;"
-    psql -w -c  "CHECKPOINT;CHECKPOINT;"
+  psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor;create extension pg_stat_statements;create extension pg_buffercache ;"
+  # Create admin  user 
+  if [[( -n "$ADMIN_USER") &&  ( -n "$ADMIN_PASSWORD")]]; then
+     echo "Creating user ${ADMIN_USER}"
+    # psql -w -c "CREATE USER ${ADMIN_USER} WITH NOSUPERUSER CREATEDB CREATEROLE REPLICATION CONNECTION LIMIT 10 LOGIN ENCRYPTED PASSWORD '${ADMIN_PASSWORD}'"
   else
-    echo "Skipping user creation"
-    echo "Skipping database creation"
+    echo "Skipping create admin user"
   fi
+  psql -w -c  "CHECKPOINT;CHECKPOINT;"
+  #norm user 
+  #
+  #
 postgresql: 
   config: |-
-    log_min_duration_statement = 1008
+    log_min_duration_statement = 1000
     max_wal_size = 4GB
     min_wal_size = 4GB
     max_connections = 1005
@@ -249,7 +247,7 @@ metrics:
       memory: 512Mi
 backup:
   # Specifies whether Wal-G should be enabled
-  enabled: true
+  enabled: false
   # Cron schedule for doing base backups
   scheduleCronJob: "20 0 * * 0"
   # Amount of base backups to retain
@@ -257,17 +255,17 @@ backup:
   # Name of the secret that holds the credentials to the bucket
   kubernetesSecret:
   # Maximum size of the WAL segments accumulated after the base backup to
-  # consider WAL-E restore instead of pg_basebackup
+  # consider WAL-G restore instead of pg_basebackup
   backupThresholdMegabytes: 1024
   # Maximum ratio (in percents) of the accumulated WAL files to the base backup
-  # to consider WAL-E restore instead of pg_basebackup
+  # to consider WAL-G restore instead of pg_basebackup
   backupThresholdPercentage: 30
   s3:
     used: true
-    awsAccessKeyID: "minioadmin"
-    awsSecretAccessKey: "minioadmin"
-    walGS3Prefix: "s3://pg1"
-    awsEndpoint: "http://10.10.2.11:9000"
+    awsAccessKeyID: ""
+    awsSecretAccessKey: ""
+    walGS3Prefix: "s3://xx"
+    awsEndpoint: "http://xxxx:9000"
     awsS3ForcePathStyle: "true"
     awsRegion: dx-1
 
