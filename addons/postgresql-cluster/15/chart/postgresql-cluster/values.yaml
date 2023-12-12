@@ -3,7 +3,8 @@ diagnosticMode:
   enable: false
 
 service:
- type: ClusterIP
+ # ClusterIP LoadBalancer
+ type: LoadBalancer
 
 image:
   # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
@@ -81,7 +82,7 @@ preInitScript: |
           track_commit_timestamp: "off"
           archive_mode: "on"
           archive_timeout: 300s
-          archive_command: sh /opt/drycc/postgresql/walbackup.sh %p %p
+          archive_command: sh /opt/drycc/postgresql/walbackup.sh %p
           # timescaledb.license: 'timescale'
           shared_preload_libraries: 'auto_explain,pg_stat_statements'
           log_destination: 'csvlog'
@@ -201,7 +202,7 @@ patroni:
 ## Postgresql Prometheus exporter parameters
 ##
 metrics:
-  enabled: false 
+  enabled: true 
   image:
     repository: registry.drycc.cc/drycc-addons/postgres-exporter
     tag: "0"
@@ -248,15 +249,15 @@ metrics:
     limits:
       cpu: 100m
       memory: 512Mi
-      hugepages-2Mi: 20Mi
+      # hugepages-2Mi: 20Mi
     requests:
       cpu: 100m
       memory: 512Mi
 backup:
   # Specifies whether Wal-G should be enabled
-  enabled: false
+  enabled: true
   # Cron schedule for doing base backups
-  scheduleCronJob: "20 0 * * 0"
+  scheduleCronJob: "22 0 * * 0"
   # Amount of base backups to retain
   retainBackups: 2
   # Name of the secret that holds the credentials to the bucket
@@ -352,4 +353,3 @@ networkPolicy:
   ##
   allowCurrentNamespace: true
   allowNamespaces: 
-    - mx-test1
