@@ -3,8 +3,12 @@ diagnosticMode:
   enable: false
 
 service:
+<<<<<<< HEAD
  # ClusterIP LoadBalancer
  type: LoadBalancer
+=======
+ type: ClusterIP
+>>>>>>> c98da89fd38c2acf5b6cc3043a3a4faa17fb9acd
 
 image:
   # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
@@ -253,7 +257,11 @@ metrics:
     requests:
       cpu: 100m
       memory: 512Mi
+<<<<<<< HEAD
 backup:
+=======
+walG:
+>>>>>>> c98da89fd38c2acf5b6cc3043a3a4faa17fb9acd
   # Specifies whether Wal-G should be enabled
   enabled: true
   # Cron schedule for doing base backups
