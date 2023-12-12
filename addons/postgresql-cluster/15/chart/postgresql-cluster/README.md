@@ -1,151 +1,154 @@
-# ⚠️ Repo Archive Notice
 
-As of Nov 13, 2020, charts in this repo will no longer be updated.
-For more information, see the Helm Charts [Deprecation and Archive Notice](https://github.com/helm/charts#%EF%B8%8F-deprecation-and-archive-notice), and [Update](https://helm.sh/blog/charts-repo-deprecation/).
+#   Postgresql cluster addons 
+## Plans
 
-# Patroni Helm Chart
+View and choose the service resource specifications you need.
+```
+ # drycc resources:plans postgresql-cluster 
+```
+### Resource specification list
+| Resource Specification | Cores | MEMORY | Storage SIZE |
+| :---: | :---: | :---: | :---: | 
+| standard-10 | 1C | 2G | 10G |  
+| standard-20 | 2C | 4G | 20G | 
+| standard-50 | 2C | 8G | 50G | 
+| standard-100 | 4C | 16G | 100G |  
+| standard-200 | 8C | 32G | 200G |  
+| standard-400 | 16C | 64G | 400G | 
+| standard-800 | 32C | 128G | 800G | 
 
-This directory contains a Kubernetes chart to deploy a five node [Patroni](https://github.com/zalando/patroni/) cluster using a [Spilo](https://github.com/zalando/spilo) and a StatefulSet.
+In order to obtain a better experience, it is recommended not to exceed 80% usage of resource utilization for a long period of time. If there is a need for larger resource scale, please apply for private customization.
 
+## Create Postgresql Cluster Service instance
 
-## Prerequisites Details
-* Kubernetes 1.9+
-* PV support on the underlying infrastructure
+- Create Postgresql service
+```
+#  drycc resources:create postgresql-cluster:standard-10 `my_pg_001`
+```
+- View service status 
+```
+# drycc resources:describe `my_pg_001`
+``` 
+- Bind service
+```
+# drycc resources:bind `my_pg_001`
+```
+- View resource status 
+```
+# drycc resources:describe `my_pg_001`
+``` 
 
-## StatefulSet Details
-* https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+## Create Service with values file
 
-## StatefulSet Caveats
-* https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#limitations
-
-
-## Chart Details
-This chart will do the following:
-
-* Implement a HA scalable PostgreSQL 10 cluster using a Kubernetes StatefulSet.
-
-## Installing the Chart
-
-To install the chart with the release name `my-release`:
-
-```console
-$ helm repo add 
-$ helm dependency update
-$ helm install --name my-release postgresql-cluster
+`vim values.yaml`  
+```
+#  create or update pg instance template yaml
+networkPolicy.allowNamespaces:
+ - mx-test1 
+service.type: ClusterIP
+metrics.enabled: true
+backup:
+  # whether BackUP should be enabled
+  enabled: true
+  # Cron schedule for doing base backups
+  scheduleCronJob: "20 0 * * 0"
+  Amount of base backups to retain
+  retainBackups: 2
+  s3:
+    awsAccessKeyID: ""
+    awsSecretAccessKey: ""
+    walGS3Prefix: "s3://xx"
+    awsEndpoint: "http://xxxx:9000"
+    awsS3ForcePathStyle: "true"
+    awsRegion: dx-1
+```
+```
+ drycc resources:create postgresql-cluster:standard-10 `my_pg_001` -f ./values.yaml
 ```
 
-To install the chart with randomly generated passwords:
+## Update Service 
+###  Create app user and database
 
-```console
-$ helm install --name my-release postgresql-cluster \
-  --set credentials.superuser="$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c32)",credentials.admin="$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c32)",credentials.standby="$(< /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c32)"
+- Login database web with admin user & password
+
+- CREATE APP USER
+```
+CREATE USER `my_user` WITH CONNECTION LIMIT `conn_limit` LOGIN ENCRYPTED PASSWORD 'password';
+```
+- CREATE APP DATABASE
+```
+CREATE DATABASE `my_db` OWNER `my_user`;
+```
+- CREATE EXTENSIONS
+```
+CREATE EXTENSION pg_buffercache;
 ```
 
-## Connecting to PostgreSQL
+### Network Access 
 
-Your access point is a cluster IP. In order to access it spin up another pod:
+Default access allow policy: only namespace scope.
 
-```console
-$ kubectl run -i --tty --rm psql --image=postgres --restart=Never -- bash -il
+- allow `mx-test1` namespace access 
+
+`vim values.yaml `
+```
+networkPolicy.allowNamespaces:
+ - mx-test1 
+```
+```
+drycc resources:update postgresql-cluster:standard-10  `my_pg_001` -f ./values.yaml
 ```
 
-Then, from inside the pod, connect to PostgreSQL:
+ - Assign external network IP address 
 
-```console
-$ psql -U admin -h my-release-patroni.default.svc.cluster.local postgres
-<admin password from values.yaml>
-postgres=>
+`vim values.yaml`
+``` 
+ service.type: LoadBlancer
+```
+```
+drycc resources:update postgresql-cluster:standard-10 `my_pg_001` -f ./values.yaml
+```
+- View resource status 
+```
+# drycc resources:describe  `my_pg_001`
+``` 
+
+ ### Manger backup your data `Very important`
+ 
+`Strongly recommend enabling this feature.`
+`Strongly recommend enabling this feature.`
+`Strongly recommend enabling this feature.`
+
+PG data backup use S3 as backenp store. Choose an independent storage space `outside of the current environment` as your backup space.
+
+`vim values.yaml`
+```
+backup:
+  # whether BackUP should be enabled
+  enabled: true
+  # Cron schedule for doing base backups
+  scheduleCronJob: "20 0 * * 0"
+  Amount of base backups to retain
+  retainBackups: 2
+  s3:
+    awsAccessKeyID: DO9l771LqiwZkhhz
+    awsSecretAccessKey: R3Dv0NEmJBo8JFdn1q8jz49ArWwpDjFn
+    walGS3Prefix: mx-test
+```
+```
+drycc resources:update postgresql-cluster:standard-10 `my_pg_001` -f ./values.yaml
 ```
 
-## Configuration
+You can modify multiple content at once, there is no need to modify part of it each time. 
 
-The following table lists the configurable parameters of the patroni chart and their default values.
 
-|       Parameter                   |           Description                       |                         Default                     |
-|-----------------------------------|---------------------------------------------|-----------------------------------------------------|
-| `nameOverride`                    | Override the name of the chart              | `nil`                                               |
-| `fullnameOverride`                | Override the fullname of the chart          | `nil`                                               |
-| `replicaCount`                    | Amount of pods to spawn                     | `5`                                                 |
-| `image.repository`                | The image to pull                           | `registry.opensource.zalan.do/acid/spilo-10`        |
-| `image.tag`                       | The version of the image to pull            | `1.5-p5`                                            |
-| `image.pullPolicy`                | The pull policy                             | `IfNotPresent`                                      |
-| `credentials.superuser`           | Password of the superuser                   | `tea`                                               |
-| `credentials.admin`               | Password of the admin                       | `cola`                                              |
-| `credentials.standby`             | Password of the replication user            | `pinacolada`                                        |
-| `kubernetes.dcs.enable`           | Using Kubernetes as DCS                     | `true`                                              |
-| `kubernetes.configmaps.enable`    | Using Kubernetes configmaps instead of endpoints | `false`                                        |
-| `etcd.enable`                     | Using etcd as DCS                           | `false`                                             |
-| `etcd.deployChart`                | Deploy etcd chart                           | `false`                                             |
-| `etcd.host`                       | Host name of etcd cluster                   | `nil`                                               |
-| `etcd.discovery`                  | Domain name of etcd cluster                 | `nil`                                               |
-| `zookeeper.enable`                | Using ZooKeeper as DCS                      | `false`                                             |
-| `zookeeper.deployChart`           | Deploy ZooKeeper chart                      | `false`                                             |
-| `zookeeper.hosts`                 | List of ZooKeeper cluster members           | `host1:port1,host2:port,etc...`                     |
-| `consul.enable`                   | Using Consul as DCS                         | `false`                                             |
-| `consul.deployChart`              | Deploy Consul chart                         | `false`                                             |
-| `consul.host`                     | Host name of consul cluster                 | `nil`                                               |
-| `env`                             | Extra custom environment variables          | `{}`                                                |
-| `walE.enable`                     | Use of Wal-E tool for base backup/restore   | `false`                                             |
-| `walE.scheduleCronJob`            | Schedule of Wal-E backups                   | `00 01 * * *`                                       |
-| `walE.retainBackups`              | Number of base backups to retain            | `2`                                                 |
-| `walE.s3Bucket:`                  | Amazon S3 bucket used for wal-e backups     | `nil`                                               |
-| `walE.gcsBucket`                  | GCS storage used for Wal-E backups          | `nil`                                               |
-| `walE.kubernetesSecret`           | K8s secret name for provider bucket         | `nil`                                               |
-| `walE.backupThresholdMegabytes`   | Maximum size of the WAL segments accumulated after the base backup to consider WAL-E restore instead of pg_basebackup | `1024` |
-| `walE.backupThresholdPercentage`  | Maximum ratio (in percents) of the accumulated WAL files to the base backup to consider WAL-E restore instead of pg_basebackup | `30` |
-| `resources`                       | Any resources you wish to assign to the pod | `{}`                                                |
-| `nodeSelector`                    | Node label to use for scheduling            | `{}`                                                |
-| `tolerations`                     | List of node taints to tolerate             | `[]`                                                |
-| `affinityTemplate`                | A template string to use to generate the affinity settings | Anti-affinity preferred on hostname  |
-| `affinity`                        | Affinity settings. Overrides `affinityTemplate` if set. | `{}`                                    |
-| `schedulerName`                   | Alternate scheduler name                    | `nil`                                               |
-| `persistentVolume.accessModes`    | Persistent Volume access modes              | `[ReadWriteOnce]`                                   |
-| `persistentVolume.annotations`    | Annotations for Persistent Volume Claim`    | `{}`                                                |
-| `persistentVolume.mountPath`      | Persistent Volume mount root path           | `/home/postgres/pgdata`                             |
-| `persistentVolume.size`           | Persistent Volume size                      | `2Gi`                                               |
-| `persistentVolume.storageClass`   | Persistent Volume Storage Class             | `volume.alpha.kubernetes.io/storage-class: default` |
-| `persistentVolume.subPath`        | Subdirectory of Persistent Volume to mount  | `""`                                                |
-| `rbac.create`                     | Create required role and rolebindings       | `true`                                              |
-| `serviceAccount.create`           | If true, create a new service account	      | `true`                                              |
-| `serviceAccount.name`             | Service account to be used. If not set and `serviceAccount.create` is `true`, a name is generated using the fullname template | `nil` |
+## Destroy Service
 
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`.
-
-Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
-
-```console
-$ helm install --name my-release -f values.yaml incubator/patroni
+- Unbind service first
 ```
-
-> **Tip**: You can use the default [values.yaml](values.yaml)
-
-## Cleanup
-
-To remove the spawned pods you can run a simple `helm delete <release-name>`.
-
-Helm will however preserve created persistent volume claims,
-to also remove them execute the commands below.
-
-```console
-$ release=<release-name>
-$ helm delete $release
-$ kubectl delete pvc -l release=$release
+# drycc resources:unbind `my_pg_001`
 ```
-
-## Internals
-
-Patroni is responsible for electing a PostgreSQL master pod by leveraging the
-DCS of your choice. After election it adds a `spilo-role=master` label to the
-elected master and set the label to `spilo-role=replica` for all replicas.
-Simultaneously it will update the `<release-name>-patroni` endpoint to let the
-service route traffic to the elected master.
-
-```console
-$ kubectl get pods -l spilo-role -L spilo-role
-NAME                   READY     STATUS    RESTARTS   AGE       SPILO-ROLE
-my-release-patroni-0   1/1       Running   0          9m        replica
-my-release-patroni-1   1/1       Running   0          9m        master
-my-release-patroni-2   1/1       Running   0          8m        replica
-my-release-patroni-3   1/1       Running   0          8m        replica
-my-release-patroni-4   1/1       Running   0          8m        replica
+- Destroy service
+```
+# drycc resources:destroy `my_pg_001`
 ```

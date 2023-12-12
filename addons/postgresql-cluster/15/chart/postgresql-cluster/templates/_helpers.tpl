@@ -46,7 +46,7 @@ Create the name of the service account to use.
 Return true if a cronjob object should be created for Postgresql HA patroni ## TODO feature
 */}}
 {{- define "patroni.createCronJob" -}}
-{{- if and .Values.walG.enabled }}
+{{- if and .Values.backup.enabled }}
     {{- true -}}
 {{- else -}}
 {{- end -}}
@@ -107,6 +107,16 @@ Create patroni envs.
     secretKeyRef:
       name: {{ template "patroni.fullname" . }}
       key: password-rewind
+- name: ADMIN_USER
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: admin-user
+- name: ADMIN_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ template "patroni.fullname" . }}
+      key: admin-password
 - name: PATRONI_SCOPE
   value: {{ template "patroni.fullname" . }}
 - name: PATRONI_NAME
@@ -123,58 +133,77 @@ Create patroni envs.
   value: '0.0.0.0:5432'
 - name: PATRONI_RESTAPI_LISTEN
   value: '0.0.0.0:8008'
-- name: DATABASE_NAME
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "patroni.fullname" . }}
-      key: data-name
-- name: DATABASE_USER
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "patroni.fullname" . }}
-      key: data-user
-- name: DATABASE_PASSWORD
-  valueFrom:
-    secretKeyRef:
-      name: {{ template "patroni.fullname" . }}
-      key: data-password
 {{- end -}}
 
 {{/*
-Create walg envs.
+Return true if a configmap object should be created for PG backup.
 */}}
-{{- define "walg.envs" }}
-{{- if .Values.walG.enabled }}
-- name: USE_WALG
-  value: {{ .Values.walG.enabled | quote }}
-{{- if .Values.walG.retainBackups }}
-- name: BACKUP_NUM_TO_RETAIN
-  value: {{ .Values.walG.retainBackups | quote}}
+{{- define "backup.createConfigmap" -}}
+{{- if and .Values.backup.enabled }}
+    {{- true -}}
+{{- else -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Generate random password 
+*/}}
+
+{{/*
+Get the super user  password ;
+*/}}
+{{- define "credentials.superuserValue" }}
+{{- if .Values.credentials.superuser }}                                         
+    {{- .Values.credentials.superuser -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-superuser")  -}}
+{{- end -}}
 {{- end }}
-{{- if .Values.walG.backupThresholdMegabytes }}
-- name: WALG_BACKUP_THRESHOLD_MEGABYTES
-  value: {{ .Values.walG.backupThresholdMegabytes | quote }}
+
+{{/*
+Get the rewind password ;
+*/}}
+{{- define "credentials.rewindValue" }}
+{{- if .Values.credentials.rewind }}                                         
+    {{- .Values.credentials.rewind -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-rewind")  -}}
+{{- end -}}
 {{- end }}
-{{- if .Values.walG.backupThresholdPercentage }}
-- name: WALE_BACKUP_THRESHOLD_PERCENTAGE
-  value: {{ .Values.walG.backupThresholdPercentage | quote }}
+
+{{/*
+Get the replication password ;
+*/}}
+{{- define "credentials.replicationValue" }}
+{{- if .Values.credentials.replication }}                                         
+    {{- .Values.credentials.replication -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-replication")  -}}
+{{- end -}}
 {{- end }}
-{{- if .Values.walG.s3.used }}
-- name: AWS_ACCESS_KEY_ID
-  value: {{ .Values.walG.s3.awsAccessKeyID | quote }}
-- name: AWS_SECRET_ACCESS_KEY
-  value: {{ .Values.walG.s3.awsSecretAccessKey | quote }}
-- name: WALG_S3_PREFIX
-  value: {{ .Values.walG.s3.walGS3Prefix | quote }}
-- name: AWS_ENDPOINT
-  value: {{ .Values.walG.s3.awsEndpoint | quote }}
-- name: AWS_S3_FORCE_PATH_STYLE
-  value: {{ .Values.walG.s3.awsS3ForcePathStyle | quote }}
-- name: AWS_REGION
-  value: {{ .Values.walG.s3.awsRegion | quote }}
+
+{{/*
+Get the administrator password ;
+*/}}
+{{- define "adminRole.passwordValue" }}
+{{- if .Values.adminRole.password }}
+    {{- .Values.adminRole.password -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-replication")  -}}
+{{- end -}}
 {{- end }}
-{{- else }}
-- name: USE_WALG
-  value: ""
+
+{{/*
+Returns the available value for certain key in an existing secret (if it exists),
+otherwise it generates a random value.
+*/}}
+{{- define "getValueFromSecret" }}
+{{- $len := (default 16 .Length) | int -}}
+{{- $obj := (lookup "v1" "Secret" .Namespace .Name).data -}}
+{{- if $obj }}
+{{- index $obj .Key | b64dec -}}
+{{- else -}}
+{{- randAlphaNum $len -}}
+{{- end -}}
 {{- end }}
-{{- end }}
+

@@ -17,14 +17,13 @@ image:
 # https://github.com/zalando/patroni/blob/master/docs/SETTINGS.rst#postgresql
 # https://github.com/zalando/spilo/blob/master/ENVIRONMENT.rst
 credentials:
-  superuser: tea
-  rewind: cola
-  replication: reppasswd
+  superuser: ""
+  rewind: ""
+  replication: ""
 
-dataname:
-  dbname: db1
-  username: us1
-  password: 111w
+adminRole:
+  username: administrator
+  password: ""
 
 # Distribution Configuration stores
 # Please note that only one of the following stores should be enabled.
@@ -122,22 +121,32 @@ postInitScript: |
   #!/bin/bash
   set -Eeu
   # Create monitor user
-  psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor"
-  # Create init database & user 
-  if [[( -n "$DATABASE_USER") &&  ( -n "$DATABASE_PASSWORD") && ( -n "$DATABASE_NAME")]]; then
-    echo "Creating user ${DATABASE_USER}"
-    psql -w -c "create user ${DATABASE_USER} WITH LOGIN ENCRYPTED PASSWORD '${DATABASE_PASSWORD}'"
-    echo "Creating database ${DATABASE_NAME} "
-    psql -w -c "CREATE DATABASE ${DATABASE_NAME} OWNER ${DATABASE_USER} CONNECTION LIMIT 1000"
-    psql -w -d ${DATABASE_NAME} -c "create extension postgis ; create extension pg_stat_statements ; create extension pg_buffercache ;"
-    psql -w -c  "CHECKPOINT;CHECKPOINT;"
+  psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor;create extension pg_stat_statements;create extension pg_buffercache ;"
+  # Create admin  user 
+  if [[( -n "$ADMIN_USER") &&  ( -n "$ADMIN_PASSWORD")]]; then
+     echo "Creating user ${ADMIN_USER}"
+    # psql -w -c "CREATE USER ${ADMIN_USER} WITH NOSUPERUSER CREATEDB CREATEROLE REPLICATION CONNECTION LIMIT 10 LOGIN ENCRYPTED PASSWORD '${ADMIN_PASSWORD}'"
   else
-    echo "Skipping user creation"
-    echo "Skipping database creation"
+    echo "Skipping create admin user"
   fi
+  psql -w -c  "CHECKPOINT;CHECKPOINT;"
+
+backupEnv: |
+  #!/bin/bash
+  export USE_WALG={{ .Values.backup.enabled | quote }}
+  export BACKUP_NUM_TO_RETAIN={{ .Values.backup.retainBackups | quote}}
+  export WALG_BACKUP_THRESHOLD_MEGABYTES={{ .Values.backup.backupThresholdMegabytes | quote }}
+  export WALE_BACKUP_THRESHOLD_PERCENTAGE={{ .Values.backup.backupThresholdPercentage | quote }}
+  export AWS_ACCESS_KEY_ID={{ .Values.backup.s3.awsAccessKeyID | quote }}
+  export AWS_SECRET_ACCESS_KEY={{ .Values.backup.s3.awsSecretAccessKey | quote }}
+  export WALG_S3_PREFIX={{ .Values.backup.s3.walGS3Prefix | quote }}
+  export AWS_ENDPOINT={{ .Values.backup.s3.awsEndpoint | quote }}
+  export AWS_S3_FORCE_PATH_STYLE={{ .Values.backup.s3.awsS3ForcePathStyle | quote }}
+  export AWS_REGION={{ .Values.backup.s3.awsRegion | quote }}
+
 postgresql: 
   config: |-
-    log_min_duration_statement = 1008
+    log_min_duration_statement = 1000
     max_wal_size = 4GB
     min_wal_size = 4GB
     max_connections = 1005
@@ -192,7 +201,7 @@ patroni:
 ## Postgresql Prometheus exporter parameters
 ##
 metrics:
-  enabled: false 
+  enabled: true 
   image:
     repository: registry.drycc.cc/drycc-addons/postgres-exporter
     tag: "0"
@@ -239,36 +248,36 @@ metrics:
     limits:
       cpu: 100m
       memory: 512Mi
-      # hugepages-2Mi: 4Mi
+      hugepages-2Mi: 20Mi
     requests:
       cpu: 100m
       memory: 512Mi
-walG:
+backup:
   # Specifies whether Wal-G should be enabled
-  enabled: true
+  enabled: false
   # Cron schedule for doing base backups
-  scheduleCronJob: "*/5 * * * *"
+  scheduleCronJob: "22 0 * * 0"
   # Amount of base backups to retain
   retainBackups: 2
   # Name of the secret that holds the credentials to the bucket
   kubernetesSecret:
   # Maximum size of the WAL segments accumulated after the base backup to
-  # consider WAL-E restore instead of pg_basebackup
+  # consider WAL-G restore instead of pg_basebackup
   backupThresholdMegabytes: 1024
   # Maximum ratio (in percents) of the accumulated WAL files to the base backup
-  # to consider WAL-E restore instead of pg_basebackup
+  # to consider WAL-G restore instead of pg_basebackup
   backupThresholdPercentage: 30
   s3:
     used: true
-    awsAccessKeyID: "minioadmin"
-    awsSecretAccessKey: "minioadmin"
-    walGS3Prefix: "s3://pg1"
-    awsEndpoint: "http://10.10.2.11:9000"
+    awsAccessKeyID: ""
+    awsSecretAccessKey: ""
+    walGS3Prefix: "s3://xx"
+    awsEndpoint: "http://xxxx:9000"
     awsS3ForcePathStyle: "true"
     awsRegion: dx-1
 
 persistentVolume:
-  enabled: false
+  enabled: true
   size: 10G
   ## database data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -334,7 +343,7 @@ serviceAccount:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: false 
+  enabled: true 
   ## @param networkPolicy.allowExternal The Policy model to apply.
   ## When set to false, only pods with the correct
   ## client label will have network access to the port Postgresql is listening
@@ -342,4 +351,4 @@ networkPolicy:
   ## (with the correct destination port).
   ##
   allowCurrentNamespace: true
-  allowNamespaces: []
+  allowNamespaces: 

@@ -21,6 +21,6 @@ allow_parameters:
   description: "service type config for values.yaml"
 - name: "metrics.enabled"
   description: "Whether to enable metrics. default true"
-- name: "walG.enabled"
-  description: "Whether to use S3 for backup your data. default true . ps: Make sure there is a available S3 "
+- name: "backup"
+  description: "Whether to use S3 for backup your data. default false . ps: Make sure there is a available S3 "
 archive: false

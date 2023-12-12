@@ -1,16 +1,16 @@
 credential:
 {{- if (eq .Values.service.type "LoadBalancer") }}
-  - name: MASTER_HOST
+  - name: EXTRANET_MASTER_HOST
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}-master
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  - name: REPL_HOST
+  - name: EXTRANET_REPL_HOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}-repl
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.service.type "ClusterIP") }}
+ {{- end }}
   - name: MASTER_HOST
     valueFrom:
       serviceRef:
@@ -21,7 +21,6 @@ credential:
       serviceRef:
         name: {{ include "common.names.fullname" . }}-repl
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
   - name: DADABASE
     valueFrom:
       secretKeyRef:
@@ -39,4 +38,3 @@ credential:
         jsonpath: '{ .data.data-user }' 
   - name: PORT
     value: 5432
-

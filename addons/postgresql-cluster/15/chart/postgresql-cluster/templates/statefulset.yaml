@@ -56,9 +56,6 @@ spec:
         #   fsGroup: postgres
         env:
         {{- include "patroni.envs" . | indent 8 }} 
-        {{- if .Values.walG.enabled }}
-        {{- include "walg.envs" . | indent 8 }} 
-        {{- end }}
         {{- if .Values.env }}
         {{- range $key, $val := .Values.env }}
         - name: {{  $key | quote | upper }}
@@ -110,6 +107,9 @@ spec:
         - mountPath: "/opt/drycc/postgresql/config/"
           name: postgresql-config
           # readOnly: true
+        - mountPath: "/opt/drycc/postgresql/backup/"
+          name: backup-config
+          # readOnly: true
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       {{- if .Values.metrics.enabled }}
@@ -127,7 +127,7 @@ spec:
         {{- end }}
         env:
           - name: DATA_SOURCE_NAME
-            value: {{ printf "postgresql://tea_mon:password@127.0.0.1:5432/%s?sslmode=disable" $.Values.dataname.dbname }}       
+            value: {{ printf "postgresql://tea_mon:password@127.0.0.1:5432/postgres?sslmode=disable" }}       
         ports:
           - name: http-metrics
             containerPort: {{ .Values.metrics.containerPort }}
@@ -161,7 +161,7 @@ spec:
         resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
         {{- end }}
       {{- end }}
-       {{- if .Values.walG.enabled }}
+       {{- if .Values.backup.enabled }}
       - name: {{ .Chart.Name }}-backup
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -175,7 +175,6 @@ spec:
         - | 
           python3 /opt/drycc/postgresql/pgbackup.py 0.0.0.0 9000 
         env:
-        {{- include "walg.envs" . | indent 8 }} 
         - name: PGHOST
           value: localhost
         - name: PGPASSWORD
@@ -222,6 +221,9 @@ spec:
       - name: postgresql-config
         configMap:
           name: {{ template "common.names.fullname" . }}-postgresql
+      - name: backup-config
+        configMap:
+          name: {{ template "common.names.fullname" . }}-backup
       {{- if not .Values.persistentVolume.enabled }}
       - name: storage-volume
         emptyDir: {}

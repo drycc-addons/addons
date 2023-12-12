@@ -19,7 +19,7 @@ metadata:
   {{- end }}
 
 spec:
-  schedule: "{{ .Values.walG.scheduleCronJob }}"
+  schedule: "{{ .Values.backup.scheduleCronJob }}"
   failedJobsHistoryLimit: 1
   successfulJobsHistoryLimit: 1
   jobTemplate:
