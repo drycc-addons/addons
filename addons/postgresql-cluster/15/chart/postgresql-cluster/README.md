@@ -27,7 +27,7 @@ In order to obtain a better experience, it is recommended not to exceed 80% usag
 ```
 - View service status 
 ```
-# drycc resources:descript `my_pg_001`
+# drycc resources:describe `my_pg_001`
 ``` 
 - Bind service
 ```
@@ -35,12 +35,12 @@ In order to obtain a better experience, it is recommended not to exceed 80% usag
 ```
 - View resource status 
 ```
-# drycc resources:descript `my_pg_001`
+# drycc resources:describe `my_pg_001`
 ``` 
 
-## Create Service with parameters
+## Create Service with values file
 
-`vim value.yaml`  
+`vim values.yaml`  
 ```
 #  create or update pg instance template yaml
 networkPolicy.allowNamespaces:
@@ -63,7 +63,7 @@ backup:
     awsRegion: dx-1
 ```
 ```
- drycc resources:create postgresql-cluster:standard-10 `my_pg_001` -f ./value.yaml
+ drycc resources:create postgresql-cluster:standard-10 `my_pg_001` -f ./values.yaml
 ```
 
 ## Update Service 
@@ -90,23 +90,23 @@ Default access allow policy: only namespace scope.
 
 - allow `mx-test1` namespace access 
 
-`vim value.yaml `
+`vim values.yaml `
 ```
 networkPolicy.allowNamespaces:
  - mx-test1 
 ```
 ```
-drycc resources:update postgresql-cluster:standard-10  `my_pg_001` -f ./value.yaml
+drycc resources:update postgresql-cluster:standard-10  `my_pg_001` -f ./values.yaml
 ```
 
  - Assign external network IP address 
 
-`vim value.yaml`
+`vim values.yaml`
 ``` 
  service.type: LoadBlancer
 ```
 ```
-drycc resources:update postgresql-cluster:standard-10 `my_pg_001` -f ./value.yaml
+drycc resources:update postgresql-cluster:standard-10 `my_pg_001` -f ./values.yaml
 ```
 - View resource status 
 ```
@@ -121,7 +121,7 @@ drycc resources:update postgresql-cluster:standard-10 `my_pg_001` -f ./value.yam
 
 PG data backup use S3 as backenp store. Choose an independent storage space `outside of the current environment` as your backup space.
 
-`vim value.yaml`
+`vim values.yaml`
 ```
 backup:
   # whether BackUP should be enabled
@@ -136,7 +136,7 @@ backup:
     walGS3Prefix: mx-test
 ```
 ```
-drycc resources:update postgresql-cluster:standard-10 `my_pg_001` -f ./value.yaml
+drycc resources:update postgresql-cluster:standard-10 `my_pg_001` -f ./values.yaml
 ```
 
 You can modify multiple content at once, there is no need to modify part of it each time. 
