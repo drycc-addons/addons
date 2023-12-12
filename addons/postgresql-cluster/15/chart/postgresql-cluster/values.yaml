@@ -3,12 +3,7 @@ diagnosticMode:
   enable: false
 
 service:
-<<<<<<< HEAD
- # ClusterIP LoadBalancer
- type: LoadBalancer
-=======
  type: ClusterIP
->>>>>>> c98da89fd38c2acf5b6cc3043a3a4faa17fb9acd
 
 image:
   # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
