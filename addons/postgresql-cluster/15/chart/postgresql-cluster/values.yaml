@@ -248,17 +248,13 @@ metrics:
     limits:
       cpu: 100m
       memory: 512Mi
-      # hugepages-2Mi: 20Mi
+      hugepages-2Mi: 20Mi
     requests:
       cpu: 100m
       memory: 512Mi
-<<<<<<< HEAD
 backup:
-=======
-walG:
->>>>>>> c98da89fd38c2acf5b6cc3043a3a4faa17fb9acd
   # Specifies whether Wal-G should be enabled
-  enabled: true
+  enabled: false
   # Cron schedule for doing base backups
   scheduleCronJob: "22 0 * * 0"
   # Amount of base backups to retain
