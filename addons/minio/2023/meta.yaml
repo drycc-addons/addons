@@ -13,7 +13,7 @@ tags: minio
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: false
+plan_updateable: true
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
   description: "networkPolicy allowNamespaces config for values.yaml"
