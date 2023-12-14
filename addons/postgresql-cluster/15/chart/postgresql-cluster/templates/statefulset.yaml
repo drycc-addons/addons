@@ -161,7 +161,7 @@ spec:
         resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
         {{- end }}
       {{- end }}
-       {{- if .Values.backup.enabled }}
+
       - name: {{ .Chart.Name }}-backup
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -195,7 +195,7 @@ spec:
         volumeMounts:
         - name: storage-volume
           mountPath: "{{ .Values.persistentVolume.mountPath }}" 
-      {{- end }}
+      
      {{- with .Values.nodeSelector }} 
       nodeSelector:
 {{ toYaml . | indent 8 }}

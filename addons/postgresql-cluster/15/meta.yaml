@@ -13,14 +13,12 @@ tags: postgresql-cluster
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: false
+plan_updateable: true
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
   description: "service type config for values.yaml"
-- name: "metrics.enabled"
-  description: "Whether to enable metrics. default true"
 - name: "backup"
   description: "Whether to use S3 for backup your data. default false . ps: Make sure there is a available S3 "
 archive: false
