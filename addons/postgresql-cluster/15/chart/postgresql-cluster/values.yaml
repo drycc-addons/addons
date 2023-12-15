@@ -112,7 +112,7 @@ preInitScript: |
         password: '${PATRONI_REPLICATION_PASSWORD}'
       rewind:  # Has no effect on postgres 10 and lower
         username: rewinder
-        password: '${PATRONI_REWIND_USERNAME}'
+        password: '${PATRONI_REWIND_PASSWORD}'
   watchdog:
     mode: off
   __EOF__
