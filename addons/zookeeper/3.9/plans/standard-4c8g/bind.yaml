@@ -1,17 +1,17 @@
 credential:
   {{- if (eq .Values.service.type "LoadBalancer") }}
-  - name: HOST
+  - name: EXTERNAL_HOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.service.type "ClusterIP") }}
+  {{- end }}
+
   - name: HOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
   
   {{- if not .Values.service.disableBaseClientPort }}
   - name: TCP_CLIENT_PORT

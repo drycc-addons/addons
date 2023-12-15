@@ -1,18 +1,18 @@
 credential:
   {{- if not .Values.sentinel.enabled }}
   {{ if (eq .Values.master.service.type "LoadBalancer") }}
-  - name: MASTERHOST
+  - name: EXTERNAL_MASTERHOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.master.service.type "ClusterIP") }}
+  {{- end }}
+
   - name: MASTERHOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
 
   - name: MASTERPORT
     valueFrom:
@@ -23,18 +23,18 @@ credential:
 
   {{- if and (eq .Values.architecture "replication") (not .Values.sentinel.enabled) }}
   {{ if (eq .Values.replica.service.type "LoadBalancer") }}
-  - name: REPLICASHOST
+  - name: EXTERNAL_REPLICASHOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.replica.service.type "ClusterIP") }}
+  {{- end }}
+
   - name: REPLICASHOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
 
   - name: REPLICASPORT
     valueFrom:
@@ -53,18 +53,18 @@ credential:
 
   {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
   {{ if (eq .Values.sentinel.service.type "LoadBalancer") }}
-  - name: SENTINELHOST
+  - name: EXTERNAL_SENTINELHOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.sentinel.service.type "ClusterIP") }}
+  {{- end }}
+
   - name: SENTINELHOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
 
   - name: SENTINELPORT
     valueFrom:
