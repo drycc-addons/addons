@@ -21,10 +21,10 @@ master:
   ##
   resources:
     limits:
-      cpu: 1000m
-      memory: 1024Mi
+      cpu: 2000m
+      memory: 2048Mi
     requests:
-      cpu: 100m
+      cpu: 500m
       memory: 512Mi
   ## @param master.heapSize OpenSearch master-eligible node heap size.
   ## Note: The recommended heapSize is half of the container's memory.
