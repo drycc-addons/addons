@@ -16,7 +16,7 @@ credential:
   - name: S3_PORT
     valueFrom:
       serviceRef:
-        name: {{ include "seaweedfs.configuration.configMap" . }}
+        name: {{ include "seaweedfs.filer.fullname" . }}
         jsonpath: '{.spec.ports[?(@.name=="s3")].port}'
 
   - name: S3_CONFIG

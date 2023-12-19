@@ -19,12 +19,12 @@ spec:
     type: RollingUpdate
   podManagementPolicy: OrderedReady
   selector:
-    matchLabels:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       component:  {{ include "seaweedfs.fullname" . }}
       app: {{ include "seaweedfs.filer.fullname" . }}
   template:
     metadata:
-      labels:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
         component:  {{ include "seaweedfs.fullname" . }}
         app: {{ include "seaweedfs.filer.fullname" . }}
     spec:

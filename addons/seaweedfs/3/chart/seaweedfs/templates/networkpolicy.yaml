@@ -16,10 +16,8 @@ spec:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   ingress:
   # Allow inbound connections
-  - ports:
-    - port: {{ .Values.filer.ports.s3 }}
     {{- if not .Values.networkPolicy.allowExternal }}
-    from:
+  - from:
     - podSelector:
         matchLabels:
           {{ include "common.names.fullname" . }}-client: "true"

@@ -217,7 +217,7 @@ filer:
     ## e.g:
     ## clusterIP: None
     ##
-    clusterIP: None
+    clusterIP: ""
     ## @param filer.service.annotations Annotations for Seaweedfs filer service
     ##
     annotations:

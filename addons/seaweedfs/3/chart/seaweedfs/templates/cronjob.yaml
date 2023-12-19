@@ -20,7 +20,7 @@ spec:
     spec:
       template:
         metadata:
-          labels:
+          labels: {{- include "common.labels.standard" . | nindent 12 }}
             component:  {{ include "seaweedfs.fullname" . }}
             app: {{ include "seaweedfs.cronjob.fullname" . }}
         spec:
