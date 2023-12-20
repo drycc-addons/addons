@@ -160,10 +160,10 @@ master:
     loadBalancerSourceRanges: []
   affinity: {}
   podAffinityPreset: ""
-  nodeAffinityPreset:
-    type: ""
-    key: ""
-    values: []
+  ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+  ##
+  podAntiAffinityPreset: hard
   nodeAffinityPreset:
     type: ""
     key: ""
@@ -239,10 +239,10 @@ filer:
     loadBalancerSourceRanges: []
   affinity: {}
   podAffinityPreset: ""
-  nodeAffinityPreset:
-    type: ""
-    key: ""
-    values: []
+  ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+  ##
+  podAntiAffinityPreset: hard
   nodeAffinityPreset:
     type: ""
     key: ""
@@ -312,10 +312,10 @@ volume:
     loadBalancerSourceRanges: []
   affinity: {}
   podAffinityPreset: ""
-  nodeAffinityPreset:
-    type: ""
-    key: ""
-    values: []
+  ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+  ##
+  podAntiAffinityPreset: hard
   nodeAffinityPreset:
     type: ""
     key: ""
