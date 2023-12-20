@@ -198,6 +198,8 @@ master:
 
 filer:
   replicas: 3
+  # encrypt data on volume servers
+  dataEncryption: false
   ports:
     s3: 8333
     http: 8888

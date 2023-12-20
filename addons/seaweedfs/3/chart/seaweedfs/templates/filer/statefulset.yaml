@@ -57,6 +57,9 @@ spec:
         - -port.grpc={{ .Values.filer.ports.grpc }}
         - -port.readonly={{ .Values.filer.ports.readonly }}
         - -master={{ include "seaweedfs.master.peers" . }}
+        {{- if .Values.filer.dataEncryption }}
+        - -encryptVolumeData
+        {{- end }}
         - -s3
         - -s3.port={{ .Values.filer.ports.s3 }}
         - -s3.config=/etc/seaweedfs/s3.json
