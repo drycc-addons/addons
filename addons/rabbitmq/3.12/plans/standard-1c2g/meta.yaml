@@ -1,6 +1,0 @@
-name: "standard-1c2g"
-id: ea882c81-2ca9-47e1-b290-5f630391eb6a
-description: "RabbitMQ standard-1c2g plan which limit resources 1 core 2G memory."
-displayName: "standard-1c2g"
-bindable: true
-maximum_polling_duration: 1800
