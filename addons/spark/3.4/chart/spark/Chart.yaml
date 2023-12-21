@@ -1,4 +1,4 @@
-# Copyright VMware, Inc.
+# Copyright Drycc Community.
 # SPDX-License-Identifier: APACHE-2.0
 
 annotations:
@@ -20,7 +20,7 @@ keywords:
   - apache
   - spark
 maintainers:
-  - name: VMware, Inc.
+  - name: Drycc Community.
     url: https://github.com/bitnami/charts
 name: spark
 sources:
