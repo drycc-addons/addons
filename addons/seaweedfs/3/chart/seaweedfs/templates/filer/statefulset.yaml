@@ -124,6 +124,11 @@ spec:
         runAsGroup: 1001
         runAsUser: 1001
   {{- if .Values.filer.persistence.enabled }}
+  {{- if .Values.filer.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.filer.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.filer.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
   - metadata:
       name: datadir

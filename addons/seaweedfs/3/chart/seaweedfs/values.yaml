@@ -195,6 +195,15 @@ master:
     storageClass: ""
   garbageThreshold: 0.3
   defaultReplication: "001"
+  ## persistentVolumeClaimRetentionPolicy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ## @param persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+  ## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+  ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+  persistentVolumeClaimRetentionPolicy:
+    enabled: true
+    whenScaled: Deleted
+    whenDeleted: Deleted
 
 filer:
   replicas: 3
@@ -272,6 +281,15 @@ filer:
     enabled: false
     size: 5Gi
     storageClass: ""
+  ## persistentVolumeClaimRetentionPolicy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ## @param persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+  ## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+  ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+  persistentVolumeClaimRetentionPolicy:
+    enabled: true
+    whenScaled: Deleted
+    whenDeleted: Deleted
 
 volume:
   replicas: 4
@@ -351,6 +369,15 @@ volume:
       size: 5Gi
       storageClass: ""
   compactionMBps: 50
+  ## persistentVolumeClaimRetentionPolicy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ## @param persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+  ## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+  ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+  persistentVolumeClaimRetentionPolicy:
+    enabled: true
+    whenScaled: Deleted
+    whenDeleted: Deleted
 
 cronjob:
   scripts: |

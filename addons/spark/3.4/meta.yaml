@@ -19,6 +19,10 @@ allow_parameters:
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
   description: "service type config for values.yaml"
+- name: "master.configOptions"
+  description: "master configOptions config for values.yaml"
+- name: "worker.configOptions"
+  description: "worker configOptions config for values.yaml"
 - name: "metrics.enable"
   description: "metrics enable or not config for values.yaml"
 archive: false

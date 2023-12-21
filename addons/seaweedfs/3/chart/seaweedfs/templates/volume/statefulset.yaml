@@ -134,6 +134,11 @@ spec:
         runAsGroup: 1001
         runAsUser: 1001
   {{- if or (.Values.volume.persistence.meta.enabled) (.Values.volume.persistence.data.enabled) }}
+  {{- if .Values.volume.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.volume.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.volume.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
   {{- if .Values.volume.persistence.meta.enabled }}
   - metadata:
