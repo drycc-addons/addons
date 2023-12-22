@@ -1,0 +1,6 @@
+name: "standard-100"
+id: 118aada0-4826-4dba-83d8-989fbf47c55a
+description: "Prometheus Cluster standard-100 plan persistence size 100Gi."
+displayName: "100Gi"
+bindable: true
+maximum_polling_duration: 1800

@@ -13,12 +13,18 @@ tags: prometheus
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: false
+plan_updateable: true
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
   description: "networkPolicy allowNamespaces config for values.yaml"
-- name: "server.username"
-  description: "set username . default amdin"
-- name: "server.username"
-  description: "set passsword . default amdin"
+- name: "server.service.type"
+  description: "service type config for values.yaml"
+- name: "alertmanager.enabled"
+  description: "alertmanager config for values.yaml"
+- name: "server.retentionDays"
+  description: "retentionDays config for values.yaml default 15d"
+- name: "server.retentionSize"
+  description: "retentionSize config for values.yaml default 0, unit  MB, GB, TB"
+- name: "server.rules"
+  description: "rules config for values.yaml"
 archive: false

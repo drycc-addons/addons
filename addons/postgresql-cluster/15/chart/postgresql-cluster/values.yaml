@@ -112,7 +112,7 @@ preInitScript: |
         password: '${PATRONI_REPLICATION_PASSWORD}'
       rewind:  # Has no effect on postgres 10 and lower
         username: rewinder
-        password: '${PATRONI_REWIND_USERNAME}'
+        password: '${PATRONI_REWIND_PASSWORD}'
   watchdog:
     mode: off
   __EOF__
@@ -124,8 +124,10 @@ postInitScript: |
   psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor;create extension pg_stat_statements;create extension pg_buffercache ;"
   # Create admin  user 
   if [[( -n "$ADMIN_USER") &&  ( -n "$ADMIN_PASSWORD")]]; then
-     echo "Creating user ${ADMIN_USER}"
-    # psql -w -c "CREATE USER ${ADMIN_USER} WITH NOSUPERUSER CREATEDB CREATEROLE REPLICATION CONNECTION LIMIT 10 LOGIN ENCRYPTED PASSWORD '${ADMIN_PASSWORD}'"
+
+    echo "Creating user ${ADMIN_USER}"
+    psql -w -c "CREATE USER ${ADMIN_USER} WITH SUPERUSER CREATEDB CREATEROLE CONNECTION LIMIT 10 LOGIN ENCRYPTED PASSWORD '${ADMIN_PASSWORD}'"
+
   else
     echo "Skipping create admin user"
   fi

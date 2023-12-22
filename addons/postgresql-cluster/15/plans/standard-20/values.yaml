@@ -74,4 +74,4 @@ resources:
 
 persistentVolume:
   enabled: true
-  size: 20G
+  size: 20Gi

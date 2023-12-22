@@ -360,7 +360,7 @@ alertmanager:
   ingress:
     ## @param alertmanager.ingress.enabled Enable ingress record generation for Alertmanager
     ##
-    enabled: true
+    enabled: false
     ## @param alertmanager.ingress.pathType Ingress path type
     ##
     pathType: ImplementationSpecific
@@ -479,7 +479,7 @@ alertmanager:
   service:
     ## @param alertmanager.service.type Alertmanager service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param alertmanager.service.ports.http Alertmanager service HTTP port
     ## @param alertmanager.service.ports.cluster Alertmanager cluster HA port
     ##
@@ -578,7 +578,7 @@ alertmanager:
 ##
 server:
   username: admin
-  password: admin
+  password: To6EJBHPUo
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/prometheus
@@ -626,6 +626,9 @@ server:
     {{- end }}
     scrape_configs:
       - job_name: prometheus
+        basic_auth:
+          username: {{ .Values.server.username }}
+          password: {{ .Values.server.password }}
       {{- include "prometheus.scrape_config" (dict "component" "server" "context" $) | nindent 4 }}
     {{- if .Values.alertmanager.enabled }}
       - job_name: alertmanager
@@ -650,15 +653,29 @@ server:
         - scheme: HTTP
           static_configs:
             - targets: [ "{{ printf "%s.%s.svc.%s:%d" (include "prometheus.alertmanager.fullname" .) (include "common.names.namespace" .) .Values.clusterDomain (int .Values.alertmanager.service.ports.http) }}" ]
+    {{- end }}
     rule_files:
       - rules.yaml
-    {{- end }}
-
-
+    
   ## @param server.alertingRules Prometheus alerting rules. This content will be stored in the the rules.yaml file and the content can be a template.
   ## ref: <https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/>
-  ##
-  alertingRules: {}
+  ## 
+  rules: |
+    {{`
+    groups:
+    - name: PG数据库-监控告警
+      rules:
+      - alert: PostgresqlDown
+        expr: pg_up == 0
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: Postgresql down (instance {{ $labels.instance }})
+          description: "Postgresql instance is down\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+     `}}
+
   ## @param server.extraScrapeConfigs Promethus configuration, useful to declare new scrape_configs. This content will be merged with the 'server.configuration' value and stored in the the prometheus.yaml file.
   ## ref: <https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config>
   ##
@@ -932,7 +949,7 @@ server:
   logFormat: logfmt
   ## @param server.retention Metrics retention days
   ##
-  retention: 10d
+  retentionDays: 15d
   ## @param server.retentionSize Maximum size of metrics
   ##
   retentionSize: "0"
@@ -1239,7 +1256,7 @@ server:
   ingress:
     ## @param server.ingress.enabled Enable ingress record generation for Prometheus
     ##
-    enabled: true
+    enabled: false
     ## @param server.ingress.pathType Ingress path type
     ##
     pathType: ImplementationSpecific
@@ -1357,7 +1374,7 @@ server:
   service:
     ## @param server.service.type Prometheus service type
     ##
-    type: LoadBalancer
+    type: ClusterIP
     ## @param server.service.ports.http Prometheus service HTTP port
     ##
     ports:
@@ -1412,6 +1429,7 @@ server:
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
+
   persistence:
     ## @param server.persistence.enabled Enable persistence using Persistent Volume Claims. If you have multiple instances (server.repicacount > 1), please considere using an external storage service like Thanos or Grafana Mimir
     ##

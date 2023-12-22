@@ -71,13 +71,23 @@ backup:
 
 - Login database web with admin user & password
 
+- Change administrator initial password 
+```
+ALTER USER  administrator WITH ENCRYPTED PASSWORD 'newpassword';
+```
+- View total connections number in postgresql cluster;
+```
+show max_connections ;
+```
 - CREATE APP USER
 ```
-CREATE USER `my_user` WITH CONNECTION LIMIT `conn_limit` LOGIN ENCRYPTED PASSWORD 'password';
+CREATE USER `myuser` WITH CONNECTION LIMIT `conn limit` LOGIN ENCRYPTED PASSWORD 'password';
+GRANT `myuser` to administrator ;
 ```
 - CREATE APP DATABASE
 ```
-CREATE DATABASE `my_db` OWNER `my_user`;
+CREATE DATABASE `mydb` OWNER `myuser`;
+
 ```
 - CREATE EXTENSIONS
 ```

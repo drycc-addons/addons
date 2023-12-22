@@ -11,4 +11,4 @@ metadata:
     cluster-name: {{ template "prometheus.server.fullname" . }}
 type: Opaque
 data:
-  PASSWORD: {{ if .Values.password | default "" | ne "" }} {{ .Values.service.password | b64enc }}{{ else }}{{ randAlphaNum 32 | b64enc }}{{ end }}
+  PASSWORD: {{ include "server.passwordValue" . | b64enc | quote }}

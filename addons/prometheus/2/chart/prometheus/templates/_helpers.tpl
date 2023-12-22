@@ -162,3 +162,25 @@ Get the Alertmanager configuration configmap.
     {{- include "prometheus.alertmanager.fullname" . -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "server.passwordValue" -}}
+{{- if .Values.server.password }}
+    {{- .Values.server.password -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "PASSWORD")  -}}
+{{- end -}}
+{{- end }}
+
+{{/*
+Returns the available value for certain key in an existing secret (if it exists),
+otherwise it generates a random value.
+*/}}
+{{- define "getValueFromSecret" }}
+{{- $len := (default 16 .Length) | int -}}
+{{- $obj := (lookup "v1" "Secret" .Namespace .Name).data -}}
+{{- if $obj }}
+{{- index $obj .Key | b64dec -}}
+{{- else -}}
+{{- randAlphaNum $len -}}
+{{- end -}}
+{{- end }}

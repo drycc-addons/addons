@@ -57,6 +57,14 @@ Return the Grafana admin password key
 {{- end -}}
 {{- end -}}
 
+{{- define "admin.passwordValue" -}}
+{{- if .Values.admin.password }}
+    {{- .Values.admin.password -}}
+{{- else -}}
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "GF_SECURITY_ADMIN_PASSWORD")  -}}
+{{- end -}}
+{{- end }}
+
 {{/*
 Return true if a secret object should be created
 */}}
@@ -66,6 +74,20 @@ Return true if a secret object should be created
 {{- else -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Returns the available value for certain key in an existing secret (if it exists),
+otherwise it generates a random value.
+*/}}
+{{- define "getValueFromSecret" }}
+{{- $len := (default 16 .Length) | int -}}
+{{- $obj := (lookup "v1" "Secret" .Namespace .Name).data -}}
+{{- if $obj }}
+{{- index $obj .Key | b64dec -}}
+{{- else -}}
+{{- randAlphaNum $len -}}
+{{- end -}}
+{{- end }}
 
 {{/*
 Return the Grafana SMTP credentials secret

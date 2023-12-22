@@ -21,6 +21,7 @@ spec:
     # Allow inbound connections
     - ports:
       - port: 5432
+      - port: 9000
       {{- if and .Values.metrics.enabled }}
       - port: {{ .Values.metrics.containerPort }}
       {{ end }} 

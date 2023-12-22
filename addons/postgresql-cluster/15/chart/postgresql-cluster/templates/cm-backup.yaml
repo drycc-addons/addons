@@ -1,4 +1,3 @@
-{{- if (include "backup.createConfigmap" .) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -15,8 +14,4 @@ metadata:
 data:
   backup.env: |-
     {{- include "common.tplvalues.render" ( dict "value" .Values.backupEnv "context" $ ) | nindent 4 }}
-  # archive_command.sh: | -
-  #   #/bin/bash
-  #   source backup.env 
-  #   [ $USE_WALG ] ? sh /opt/drycc/postgresql/walbackup.sh %p : /bin/true
-{{- end -}}
+

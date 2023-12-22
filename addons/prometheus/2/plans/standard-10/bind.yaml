@@ -1,24 +1,23 @@
 credential:
 {{- if (eq .Values.server.service.type "LoadBalancer") }}
-  - name: HOST
+  - name: EXTRANET_HOST
     valueFrom:
-      serviceRef:
-        name: {{ include "common.names.fullname" . }}
+      serviceRef: 
+        name: {{ template "prometheus.server.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-{{- else if (eq .Values.service.type "ClusterIP") }}
+{{- end }}
   - name: HOST
     valueFrom:
       serviceRef:
-        name: {{ include "common.names.fullname" . }}
+        name: {{ template "prometheus.server.fullname" . }}
         jsonpath: '{ .spec.clusterIP }'
-{{- end }}
   - name: PORT
     valueFrom:
       serviceRef:
-        name: {{ template "common.names.fullname" . }}
+        name: {{ template "prometheus.server.fullname" . }}
         jsonpath: ' { .spec.ports[?(@.name=="http")].port }' 
   - name: USER
-    valule: {{ .Values.server.username }} 
+    value: {{ .Values.server.username }}
   - name: PASSWORD
-    valule: {{ .Values.server.password }} 
-  {{- end }}
+    value: {{ .Values.server.password }} 
+
