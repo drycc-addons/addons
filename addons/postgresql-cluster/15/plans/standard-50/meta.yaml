@@ -1,10 +1,6 @@
 name: "standard-50"
 id: 0542f411-4e7b-46af-966c-c9989e54873c
-<<<<<<< HEAD
 description: "PostgreSQL Cluster standard-50 plan: Disk 50Gi ,vCPUs 2 , RAM 8G , DB MAX Connection 2000"
-=======
-description: "PostgreSQL standard-50 plan: Disk 50Gi ,vCPUs 2 , RAM 8G , DB MAX Connection 2000"
->>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
 displayName: "standard-50"
 bindable: true
 maximum_polling_duration: 1800

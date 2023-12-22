@@ -71,7 +71,6 @@ backup:
 
 - Login database web with admin user & password
 
-<<<<<<< HEAD
 - Change administrator initial password 
 ```
 ALTER USER  administrator WITH ENCRYPTED PASSWORD 'newpassword';
@@ -88,15 +87,7 @@ GRANT `myuser` to administrator ;
 - CREATE APP DATABASE
 ```
 CREATE DATABASE `mydb` OWNER `myuser`;
-=======
-- CREATE APP USER
-```
-CREATE USER `my_user` WITH CONNECTION LIMIT `conn_limit` LOGIN ENCRYPTED PASSWORD 'password';
-```
-- CREATE APP DATABASE
-```
-CREATE DATABASE `my_db` OWNER `my_user`;
->>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
+
 ```
 - CREATE EXTENSIONS
 ```

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-{{- if (include "backup.createConfigmap" .) }}
->>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -17,13 +13,5 @@ metadata:
   {{- end }}
 data:
   backup.env: |-
-<<<<<<< HEAD
     {{- include "common.tplvalues.render" ( dict "value" .Values.backupEnv "context" $ ) | nindent 4 }}
-=======
-    {{- include "common.tplvalues.render" ( dict "value" .Values.backupEnv "context" $ ) | nindent 4 }}
-  # archive_command.sh: | -
-  #   #/bin/bash
-  #   source backup.env 
-  #   [ $USE_WALG ] ? sh /opt/drycc/postgresql/walbackup.sh %p : /bin/true
-{{- end -}}
->>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
+

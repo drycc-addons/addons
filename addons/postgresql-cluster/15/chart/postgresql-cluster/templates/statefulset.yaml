@@ -161,11 +161,6 @@ spec:
         resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
         {{- end }}
       {{- end }}
-<<<<<<< HEAD
-
-=======
-       {{- if .Values.backup.enabled }}
->>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
       - name: {{ .Chart.Name }}-backup
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
