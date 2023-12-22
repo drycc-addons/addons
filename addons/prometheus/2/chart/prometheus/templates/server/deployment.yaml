@@ -114,6 +114,7 @@ spec:
           args:
             - "--config.file=/opt/drycc/prometheus/conf/{{ include "prometheus.server.configmapKey" . }}"
             - "--storage.tsdb.path={{ .Values.server.persistence.mountPath }}"
+            - "--storage.tsdb.retention.time={{ .Values.server.retentionDays }}"
             - "--storage.tsdb.retention.size={{ .Values.server.retentionSize }}"
             - "--log.level={{ .Values.server.logLevel }}"
             - "--log.format={{ .Values.server.logFormat }}"

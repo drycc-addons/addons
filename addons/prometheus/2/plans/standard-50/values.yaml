@@ -5,4 +5,4 @@ fullnameOverride: hb-prometheus-standard-50
 server:
   persistence:
     size: 50Gi
-  retentionSize: 48Gi
+  # retentionSize: 48GBi

@@ -1,0 +1,6 @@
+name: "standard-500"
+id: c28dc645-f17d-4304-a3f9-5dcaabad2a49
+description: "Prometheus Cluster standard-500 plan persistence size 500Gi."
+displayName: "500Gi"
+bindable: true
+maximum_polling_duration: 1800

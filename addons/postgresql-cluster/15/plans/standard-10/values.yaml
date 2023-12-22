@@ -72,5 +72,5 @@ resources:
 
 persistentVolume:
   enabled: true
-  size: 10G
+  size: 10Gi
 

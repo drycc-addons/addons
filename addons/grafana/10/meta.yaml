@@ -1,5 +1,5 @@
-name: Grafana
-version: 7.0
+name: grafana
+version: "10"
 id: fff5b6c7-ed85-429b-8265-493e40cc53c7
 description: "grafana"
 displayName: "grafana"
@@ -9,12 +9,14 @@ metadata:
     name: drycc
     supportURL: http://grafana.io/
   documentationURL: https://github.com/drycc-addons/
-tags: cloudbeaver
+tags: grafana
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: false
+plan_updateable: true
 allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
   description: "service type config for values.yaml"
 archive: false
