@@ -189,7 +189,11 @@ Get the administrator password ;
 {{- if .Values.adminRole.password }}
     {{- .Values.adminRole.password -}}
 {{- else -}}
+<<<<<<< HEAD
   {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "admin-password")  -}}
+=======
+  {{- include "getValueFromSecret" (dict "Namespace" .Release.Namespace "Name" (include "common.names.fullname" .) "Length" 10 "Key" "password-replication")  -}}
+>>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
 {{- end -}}
 {{- end }}
 

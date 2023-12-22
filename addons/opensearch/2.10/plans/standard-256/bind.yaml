@@ -1,18 +1,18 @@
 credential:
   {{- if (eq .Values.service.type "LoadBalancer") }}
-  - name: OPENSEARCH_HOST
+  - name: EXTERNAL_OPENSEARCH_HOST
     valueFrom:
       serviceRef:
         name: {{ include "opensearch.service.name" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.service.type "ClusterIP") }}
+  {{- end }}
+
   - name: OPENSEARCH_HOST
     valueFrom:
       serviceRef:
         name: {{ include "opensearch.service.name" . }}
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
-
+  
   - name: OPENSEARCH_TCP_REST_API_PORT
     valueFrom:
       serviceRef:
@@ -26,19 +26,19 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="tcp-transport")].port }'
 
   {{- if .Values.dashboards.enabled }}
-  {{- if (eq .Values.dashboards.service.type "LoadBalancer") }}
-  - name: OPENSEARCH_DASHBOARDS_HOST
+  {{ if (eq .Values.dashboards.service.type "LoadBalancer") }}
+  - name: EXTERNAL_OPENSEARCH_DASHBOARDS_HOST
     valueFrom:
       serviceRef:
         name: {{ include "opensearch.dashboards.servicename" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.dashboards.service.type "ClusterIP") }}
+  {{- end }}
+
   - name: OPENSEARCH_DASHBOARDS_HOST
     valueFrom:
       serviceRef:
         name: {{ include "opensearch.dashboards.servicename" . }}
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
 
   - name: OPENSEARCH_DASHBOARDS_PORT
     valueFrom:
@@ -50,19 +50,19 @@ credential:
   {{- if .Values.security.enabled }}
   - name: OPENSEARCH_PASSWORD
     valueFrom:
-      secretRef:
+      secretKeyRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.opensearch-password }'
 
   - name: OPENSEARCH_DASHBOARDS_PASSWORD
     valueFrom:
-      secretRef:
+      secretKeyRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.opensearch-dashboards-password }'
 
   - name: LOGSTASH_PASSWORD
     valueFrom:
-      secretRef:
+      secretKeyRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.logstash-password }'
   {{- end }}

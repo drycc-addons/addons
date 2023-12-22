@@ -437,6 +437,11 @@ spec:
           emptyDir: {}
           {{- end }}
   {{- else }}
+  {{- if .Values.replica.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.replica.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.replica.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: redis-data

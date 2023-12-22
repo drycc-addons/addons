@@ -28,7 +28,7 @@ spec:
   clusterIP: {{ .Values.volume.service.clusterIP }}
   {{- end }}
   publishNotReadyAddresses: true
-  selector:
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
     component:  {{ include "seaweedfs.fullname" . }}
     app: {{ include "seaweedfs.volume.fullname" . }}
   ports:

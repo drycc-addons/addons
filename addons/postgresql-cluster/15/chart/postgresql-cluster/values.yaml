@@ -124,8 +124,13 @@ postInitScript: |
   psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor;create extension pg_stat_statements;create extension pg_buffercache ;"
   # Create admin  user 
   if [[( -n "$ADMIN_USER") &&  ( -n "$ADMIN_PASSWORD")]]; then
+<<<<<<< HEAD
     echo "Creating user ${ADMIN_USER}"
     psql -w -c "CREATE USER ${ADMIN_USER} WITH SUPERUSER CREATEDB CREATEROLE CONNECTION LIMIT 10 LOGIN ENCRYPTED PASSWORD '${ADMIN_PASSWORD}'"
+=======
+     echo "Creating user ${ADMIN_USER}"
+    # psql -w -c "CREATE USER ${ADMIN_USER} WITH NOSUPERUSER CREATEDB CREATEROLE REPLICATION CONNECTION LIMIT 10 LOGIN ENCRYPTED PASSWORD '${ADMIN_PASSWORD}'"
+>>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
   else
     echo "Skipping create admin user"
   fi

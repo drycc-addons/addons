@@ -19,12 +19,12 @@ spec:
     type: RollingUpdate
   podManagementPolicy: OrderedReady
   selector:
-    matchLabels:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       component:  {{ include "seaweedfs.fullname" . }}
       app: {{ include "seaweedfs.master.fullname" . }}
   template:
     metadata:
-      labels:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
         component:  {{ include "seaweedfs.fullname" . }}
         app: {{ include "seaweedfs.master.fullname" . }}
     spec:
@@ -109,6 +109,11 @@ spec:
         runAsGroup: 1001
         runAsUser: 1001
   {{- if .Values.master.persistence.enabled }}
+  {{- if .Values.master.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.master.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.master.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
   - metadata:
       name: datadir

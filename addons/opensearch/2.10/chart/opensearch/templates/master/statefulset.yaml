@@ -1,5 +1,5 @@
 {{- /*
-Copyright VMware, Inc.
+Copyright Drycc Community.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
@@ -339,6 +339,11 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.master.persistence.existingClaim }}
   {{- else }}
+  {{- if .Values.master.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.master.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.master.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
     - metadata:
         name: "data"

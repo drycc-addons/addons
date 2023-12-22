@@ -19,12 +19,12 @@ spec:
     type: RollingUpdate
   podManagementPolicy: OrderedReady
   selector:
-    matchLabels:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       component:  {{ include "seaweedfs.fullname" . }}
       app: {{ include "seaweedfs.filer.fullname" . }}
   template:
     metadata:
-      labels:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
         component:  {{ include "seaweedfs.fullname" . }}
         app: {{ include "seaweedfs.filer.fullname" . }}
     spec:
@@ -57,6 +57,9 @@ spec:
         - -port.grpc={{ .Values.filer.ports.grpc }}
         - -port.readonly={{ .Values.filer.ports.readonly }}
         - -master={{ include "seaweedfs.master.peers" . }}
+        {{- if .Values.filer.dataEncryption }}
+        - -encryptVolumeData
+        {{- end }}
         - -s3
         - -s3.port={{ .Values.filer.ports.s3 }}
         - -s3.config=/etc/seaweedfs/s3.json
@@ -121,6 +124,11 @@ spec:
         runAsGroup: 1001
         runAsUser: 1001
   {{- if .Values.filer.persistence.enabled }}
+  {{- if .Values.filer.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.filer.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.filer.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
   - metadata:
       name: datadir

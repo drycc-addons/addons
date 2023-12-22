@@ -14,5 +14,10 @@ data:
   password-superuser: {{ include "credentials.superuserValue" . | b64enc | quote }}
   password-rewind: {{ include "credentials.rewindValue" . | b64enc | quote }}
   password-replication: {{ include "credentials.replicationValue" . | b64enc | quote  }} 
+<<<<<<< HEAD
   admin-user: {{ .Values.adminRole.username | b64enc | quote }}
   admin-password: {{ include "adminRole.passwordValue" . | b64enc | quote }}
+=======
+  admin-user: {{ .Values.adminRole.username | b64enc }}
+  admin-password: {{ .Values.adminRole.password | b64enc }}
+>>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd

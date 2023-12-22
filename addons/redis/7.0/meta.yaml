@@ -13,8 +13,10 @@ tags: redis
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: false
+plan_updateable: true
 allow_parameters:
+- name: "auth.password"
+  description: "auth.password config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "master.service.type"

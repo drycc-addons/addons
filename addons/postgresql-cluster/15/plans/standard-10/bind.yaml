@@ -32,6 +32,10 @@ credential:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.admin-user }' 
   - name: PORT
+<<<<<<< HEAD
     value: 5432
   - name: DADABASE
     value: postgres
+=======
+    value: 5432
+>>>>>>> d9ed1063e1d4d34d5a535bf86bacd2c9d2a31dfd
