@@ -20,20 +20,20 @@ spec:
   podManagementPolicy: OrderedReady
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
-      component:  {{ include "seaweedfs.fullname" . }}
-      app: {{ include "seaweedfs.master.fullname" . }}
+      app: {{ include "seaweedfs.fullname" . }}
+      app.kubernetes.io/component: master
   template:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
-        component:  {{ include "seaweedfs.fullname" . }}
-        app: {{ include "seaweedfs.master.fullname" . }}
+        app:  {{ include "seaweedfs.fullname" . }}
+        app.kubernetes.io/component: master
     spec:
       {{- if .Values.master.affinity }}
       affinity: {{- include "common.tplvalues.render" (dict "value" .Values.master.affinity "context" $) | nindent 8 }}
       {{- else }}
       affinity:
-        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAffinityPreset "component" "read" "context" $) | nindent 10 }}
-        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAntiAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAffinityPreset "component" "master" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.master.podAntiAffinityPreset "component" "master" "context" $) | nindent 10 }}
         nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.master.nodeAffinityPreset.type "key" .Values.master.nodeAffinityPreset.key "values" .Values.master.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       serviceAccount: {{ include "seaweedfs.fullname" . }}

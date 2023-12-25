@@ -30,8 +30,8 @@ spec:
   {{- end }}
   publishNotReadyAddresses: true
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
-    component:  {{ include "seaweedfs.fullname" . }}
-    app: {{ include "seaweedfs.filer.fullname" . }}
+    app:  {{ include "seaweedfs.fullname" . }}
+    app.kubernetes.io/component: filer
   ports:
   - name: s3
     port: {{ .Values.filer.ports.s3 }}
