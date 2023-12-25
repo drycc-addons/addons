@@ -329,8 +329,8 @@ persistence:
 ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
 persistentVolumeClaimRetentionPolicy:
   enabled: true
-  whenScaled: Deleted
-  whenDeleted: Deleted
+  whenScaled: Delete
+  whenDeleted: Delete
 ## Init containers parameters:
 ## volumePermissions: Change the owner of the persist volume mountpoint to RunAsUser:fsGroup
 ##

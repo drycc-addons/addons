@@ -20,12 +20,10 @@ spec:
   podManagementPolicy: OrderedReady
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
-      app: {{ include "seaweedfs.fullname" . }}
       app.kubernetes.io/component: master
   template:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
-        app:  {{ include "seaweedfs.fullname" . }}
         app.kubernetes.io/component: master
     spec:
       {{- if .Values.master.affinity }}
@@ -92,7 +90,7 @@ spec:
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 5
-        resources: {{ toYaml .Values.master.resources | nindent 8 }}
+        resources: {{ toYaml .Values.master.resources | nindent 10 }}
         volumeMounts:
         - name: {{ include "seaweedfs.configuration.configMap" . }}
           mountPath: /etc/seaweedfs

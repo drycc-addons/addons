@@ -29,7 +29,6 @@ spec:
   {{- end }}
   publishNotReadyAddresses: true
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
-    app:  {{ include "seaweedfs.fullname" . }}
     app.kubernetes.io/component: master
   ports:
   - name: http
