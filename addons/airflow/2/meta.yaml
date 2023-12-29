@@ -1,0 +1,30 @@
+name: airflow
+version: 2
+id: 15032a52-33c2-4b40-97aa-ceb972f51509
+description: "airflow."
+displayName: "airflow"
+metadata:
+  displayName: "airflow"
+  provider:
+    name: drycc
+    supportURL: http://airflow.apache.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/airflow
+tags: airflow
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "auth.password"
+  description: "auth.password config for values.yaml"
+- name: "git"
+  description: "git config for values.yaml"
+- name: "service.type"
+  description: "service type config for values.yaml"
+- name: "metrics.enable"
+  description: "metrics enable or not config for values.yaml"
+- name: "externalDatabase"
+  description: "externalDatabase config for values.yaml"
+- name: "externalRedis"
+  description: "externalRedis config for values.yaml"
+archive: false
