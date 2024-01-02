@@ -29,8 +29,7 @@ spec:
   {{- end }}
   publishNotReadyAddresses: true
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
-    component:  {{ include "seaweedfs.fullname" . }}
-    app: {{ include "seaweedfs.volume.fullname" . }}
+    app.kubernetes.io/component: volume
   ports:
   - name: http
     port: {{ .Values.volume.ports.http }}

@@ -1,0 +1,6 @@
+name: "standard-2048"
+id: 75f949c8-8366-4805-aa8b-553de0ec6c24
+description: "airflow standard-2048 plan which limit resources memory size 2048Mi."
+displayName: "standard-2048"
+bindable: true
+maximum_polling_duration: 1800

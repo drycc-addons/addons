@@ -21,4 +21,6 @@ allow_parameters:
   description: "service type config for values.yaml"
 - name: "metrics.enable"
   description: "metrics enable or not config for values.yaml"
+- name: "extraConfiguration"
+  description: "extraConfiguration config for values.yaml"
 archive: false

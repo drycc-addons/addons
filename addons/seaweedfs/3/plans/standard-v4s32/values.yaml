@@ -1,3 +1,5 @@
+fullnameOverride: hb-seaweedfs-standard-v4s32
+
 master:
   resources:
     limits:

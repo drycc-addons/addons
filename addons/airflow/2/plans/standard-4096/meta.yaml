@@ -1,0 +1,6 @@
+name: "standard-4096"
+id: 6ac9f053-4204-43d0-a93d-6409d55ec3dd
+description: "airflow standard-4096 plan which limit resources memory size 4096Mi."
+displayName: "standard-4096"
+bindable: true
+maximum_polling_duration: 1800

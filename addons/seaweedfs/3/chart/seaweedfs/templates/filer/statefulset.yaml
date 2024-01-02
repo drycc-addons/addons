@@ -20,20 +20,18 @@ spec:
   podManagementPolicy: OrderedReady
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
-      component:  {{ include "seaweedfs.fullname" . }}
-      app: {{ include "seaweedfs.filer.fullname" . }}
+      app.kubernetes.io/component: filer
   template:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
-        component:  {{ include "seaweedfs.fullname" . }}
-        app: {{ include "seaweedfs.filer.fullname" . }}
+        app.kubernetes.io/component: filer
     spec:
       {{- if .Values.filer.affinity }}
       affinity: {{- include "common.tplvalues.render" (dict "value" .Values.filer.affinity "context" $) | nindent 8 }}
       {{- else }}
       affinity:
-        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.filer.podAffinityPreset "component" "read" "context" $) | nindent 10 }}
-        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.filer.podAntiAffinityPreset "component" "read" "context" $) | nindent 10 }}
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.filer.podAffinityPreset "component" "filer" "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.filer.podAntiAffinityPreset "component" "filer" "context" $) | nindent 10 }}
         nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.filer.nodeAffinityPreset.type "key" .Values.filer.nodeAffinityPreset.key "values" .Values.filer.nodeAffinityPreset.values) | nindent 10 }}
       {{- end }}
       serviceAccount: {{ include "seaweedfs.fullname" . }}
@@ -107,7 +105,7 @@ spec:
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 5
-        resources: {{ toYaml .Values.filer.resources | nindent 8 }}
+        resources: {{ toYaml .Values.filer.resources | nindent 10 }}
         volumeMounts:
         - name: {{ include "seaweedfs.configuration.configMap" . }}
           mountPath: /etc/seaweedfs

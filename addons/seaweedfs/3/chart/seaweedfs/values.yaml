@@ -202,8 +202,8 @@ master:
   ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Deleted
-    whenDeleted: Deleted
+    whenScaled: Delete
+    whenDeleted: Delete
 
 filer:
   replicas: 3
@@ -288,8 +288,8 @@ filer:
   ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Deleted
-    whenDeleted: Deleted
+    whenScaled: Delete
+    whenDeleted: Delete
 
 volume:
   replicas: 4
@@ -376,8 +376,8 @@ volume:
   ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Deleted
-    whenDeleted: Deleted
+    whenScaled: Delete
+    whenDeleted: Delete
 
 cronjob:
   scripts: |

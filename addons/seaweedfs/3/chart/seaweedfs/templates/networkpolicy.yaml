@@ -22,7 +22,7 @@ spec:
         matchLabels:
           {{ include "common.names.fullname" . }}-client: "true"
     - podSelector:
-        matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
+        matchLabels: {{- include "common.labels.matchLabels" . | nindent 10 }}
     {{- if .Values.networkPolicy.allowCurrentNamespace }}
     - namespaceSelector:
         matchLabels:
