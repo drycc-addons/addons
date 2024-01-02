@@ -16,15 +16,21 @@ bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
 - name: "auth.password"
+  required: false
   description: "auth.password config for values.yaml"
 - name: "git"
+  required: false
   description: "git config for values.yaml"
 - name: "service.type"
+  required: false
   description: "service type config for values.yaml"
 - name: "metrics.enable"
+  required: false
   description: "metrics enable or not config for values.yaml"
 - name: "externalDatabase"
+  required: false
   description: "externalDatabase config for values.yaml"
 - name: "externalRedis"
+  required: false
   description: "externalRedis config for values.yaml"
 archive: false

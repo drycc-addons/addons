@@ -16,11 +16,15 @@ bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
 - name: "password"
+  required: false
   description: "password config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
+  required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
+  required: false
   description: "service type config for values.yaml"
 - name: "metrics.enable"
+  required: false
   description: "metrics enable or not config for values.yaml"
 archive: false

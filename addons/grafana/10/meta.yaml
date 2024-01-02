@@ -16,7 +16,9 @@ bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
+  required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
+  required: false
   description: "service type config for values.yaml"
 archive: false

@@ -16,13 +16,18 @@ bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
+  required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "master.service.type"
+  required: false
   description: "master service type config for values.yaml"
 - name: "filer.dataEncryption"
+  required: false
   description: "filer encrypt data config for values.yaml"
 - name: "filer.service.type"
+  required: false
   description: "filer service type config for values.yaml"
 - name: "volume.service.type"
+  required: false
   description: "volume service type config for values.yaml"
 archive: false
