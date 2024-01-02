@@ -26,17 +26,17 @@ postgresql:
     synchronous_commit = on
 
     # Checkpointing: 
-    checkpoint_timeout  = '15 min' 
+    checkpoint_timeout  = '25 min' 
     checkpoint_completion_target = 0.9
-    max_wal_size = '1024 MB'
-    min_wal_size = '512 MB'
+    max_wal_size = '4 GB'
+    min_wal_size = '2 GB'
 
     # WAL writing
     wal_compression = on
     wal_buffers = -1    # auto-tuned by Postgres till maximum of segment size (16MB by default)
     wal_writer_delay = 200ms
     wal_writer_flush_after = 1MB
-    wal_keep_size = '3650 MB'
+    wal_keep_size = '4 GB'
 
 
     # Background writer

@@ -72,7 +72,6 @@ preInitScript: |
           hot_standby: "on"
           max_connections: 1005
           max_worker_processes: 8
-          wal_keep_segments: 1024
           max_wal_senders: 10
           max_replication_slots: 10
           max_prepared_transactions: 0
