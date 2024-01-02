@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "fluentbit.daemonset.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  {{- $podLabels := include "common.tplvalues.merge" (dict "values" (list .Values.daemonset.podLabels .Values.commonLabels) "context" .) }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.daemonset.podAnnotations }}
+  annotations: {{- include "common.tplvalues.render" (dict "value" .Values.daemonset.podAnnotations "context" $) | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.daemonset.updateStrategy }}
+  updateStrategy: {{- toYaml .Values.daemonset.updateStrategy | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+    spec:
+      affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - {{randAlphaNum 32}}
+      {{- include "fluentbit.imagePullSecrets" . | nindent 6 }}
+      containers:
+      - name: reloader
+        image: {{ include "fluentbit.reloader.image" . }}
+        imagePullPolicy: {{ .Values.reloader.image.pullPolicy }}
+        {{- if .Values.reloader.containerSecurityContext.enabled }}
+        securityContext: {{- omit .Values.reloader.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
+        args:
+        - -w
+        - /opt/drycc/fluent-bit/etc/fluent-bit
+        - -d
+        - "{{ .Values.reloader.delayInterval }}"
+        - --
+        - curl
+        - -X
+        - POST
+        - -d
+        - '{}'
+        - 127.0.0.1:2020/api/v2/reload
+        volumeMounts:
+        - name: {{ include "fluentbit.configMap" . }}
+          mountPath: /opt/drycc/fluent-bit/etc/fluent-bit
+        {{- if .Values.reloader.resources }}
+        resources: {{- toYaml .Values.reloader.resources | nindent 10 }}
+        {{- end }}
+      - name: fluentbit
+        image: {{ include "fluentbit.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        resources: {{ toYaml .Values.daemonset.resources | nindent 10 }}
+        args:
+        - fluent-bit
+        - -c
+        - /opt/drycc/fluent-bit/etc/fluent-bit/fluentbit.conf
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: varlog
+          mountPath: /var/log
+        - name: {{ include "fluentbit.configMap" . }}
+          mountPath: /opt/drycc/fluent-bit/etc/fluent-bit
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: {{ include "fluentbit.configMap" . }}
+        configMap:
+          name: {{ include "fluentbit.configMap" . }}

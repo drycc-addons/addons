@@ -1,0 +1,21 @@
+{{- /*
+Copyright Drycc Community.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "fluentbit.configMap" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  parsers.conf: |
+    {{- (tpl .Values.daemonset.config.parsers $)  | nindent 4 }}
+  fluentbit.conf: |
+    {{- (tpl .Values.daemonset.config.service $)  | nindent 4 }}
+    {{- (tpl .Values.daemonset.config.inputs $)   | nindent 4 }}
+    {{- (tpl .Values.daemonset.config.outputs $)  | nindent 4 }}
