@@ -706,6 +706,20 @@ worker:
   ## @param worker.extraEnvVarsSecrets List of secrets with extra environment variables for Airflow worker pods
   ##
   extraEnvVarsSecrets: []
+  ## @param requirements Specify content for Airflow worker requirements.txt file
+  ## e.g:
+  ## requirements: |-
+  ##   pylint==2.13.9
+  ##   ...
+  ##
+  requirements: ""
+  ## @param pip.conf Specify content for Airflow worker pip.conf file
+  ## e.g:
+  ## pip: |-
+  ##  [global]
+  ##   ...
+  ##
+  pip: ""
   ## @param worker.containerPorts.http Airflow worker HTTP container port
   ##
   containerPorts:

@@ -28,9 +28,9 @@ allow_parameters:
   required: false
   description: "metrics enable or not config for values.yaml"
 - name: "externalDatabase"
-  required: false
+  required: true
   description: "externalDatabase config for values.yaml"
 - name: "externalRedis"
-  required: false
+  required: true
   description: "externalRedis config for values.yaml"
 archive: false

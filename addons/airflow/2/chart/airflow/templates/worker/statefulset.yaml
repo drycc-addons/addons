@@ -195,6 +195,16 @@ spec:
               mountPath: /opt/drycc/airflow/airflow.cfg
               subPath: airflow.cfg
             {{- end }}
+            {{- if .Values.worker.requirements }}
+            - name: worker-config
+              mountPath: /opt/drycc/python/requirements.txt
+              subPath: requirements.txt
+            {{- end }}
+            {{- if .Values.worker.pip }}
+            - name: worker-config
+              mountPath: /opt/drycc/.config/pip/pip.conf
+              subPath: pip.conf
+            {{- end }}
             {{- include "airflow.git.maincontainer.volumeMounts" . | trim | nindent 12 }}
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
@@ -220,6 +230,11 @@ spec:
         - name: custom-configuration-file
           configMap:
             name: {{ include "airflow.configMapName"  . }}
+        {{- end }}
+        {{- if or .Values.worker.requirements .Values.worker.pip }}
+        - name: worker-config
+          configMap:
+            name: {{ include "common.names.fullname" . }}-worker
         {{- end }}
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}
