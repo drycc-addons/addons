@@ -57,6 +57,9 @@ diagnosticMode:
   args:
     - infinity
 
+# Default timezone in case supplied date times are naive
+# can be utc (default), system, or any IANA timezone string (e.g. Asia/Shanghai)
+timezone: utc
 ## @section Airflow common parameters
 
 ## Authentication parameters
@@ -248,7 +251,7 @@ web:
   ##
   livenessProbe:
     enabled: true
-    initialDelaySeconds: 180
+    initialDelaySeconds: 360
     periodSeconds: 20
     timeoutSeconds: 5
     failureThreshold: 6
@@ -455,7 +458,7 @@ scheduler:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc-addons/airflow-scheduler
+    repository: drycc-addons/airflow
     tag: 2
     digest: ""
     ## Specify a imagePullPolicy
@@ -669,7 +672,7 @@ worker:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc-addons/airflow-worker
+    repository: drycc-addons/airflow
     tag: 2
     digest: ""
     ## Specify a imagePullPolicy
@@ -706,20 +709,6 @@ worker:
   ## @param worker.extraEnvVarsSecrets List of secrets with extra environment variables for Airflow worker pods
   ##
   extraEnvVarsSecrets: []
-  ## @param requirements Specify content for Airflow worker requirements.txt file
-  ## e.g:
-  ## requirements: |-
-  ##   pylint==2.13.9
-  ##   ...
-  ##
-  requirements: ""
-  ## @param pip.conf Specify content for Airflow worker pip.conf file
-  ## e.g:
-  ## pip: |-
-  ##  [global]
-  ##   ...
-  ##
-  pip: ""
   ## @param worker.containerPorts.http Airflow worker HTTP container port
   ##
   containerPorts:
@@ -738,7 +727,7 @@ worker:
   ##
   livenessProbe:
     enabled: true
-    initialDelaySeconds: 180
+    initialDelaySeconds: 360
     periodSeconds: 20
     timeoutSeconds: 5
     failureThreshold: 6
@@ -949,7 +938,55 @@ worker:
     maxReplicas: 3
     targetCPU: 80
     targetMemory: 80
-
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    ## @param worker.persistence.enabled Enable persistence using a `PersistentVolumeClaim`
+    ##
+    enabled: false
+    ## @param worker.persistence.storageClass Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: ""
+    ## @param worker.persistence.existingClaim Existing Persistent Volume Claim
+    ## then accept the value as an existing Persistent Volume Claim to which
+    ## the container should be bound
+    ##
+    existingClaim: ""
+    ## @param worker.persistence.existingVolume Existing Persistent Volume for use as volume match label selector to the `volumeClaimTemplate`. Ignored when `worker.persistence.selector` is set.
+    ##
+    existingVolume: ""
+    ## @param worker.persistence.selector Configure custom selector for existing Persistent Volume. Overwrites `worker.persistence.existingVolume`
+    ## selector:
+    ##   matchLabels:
+    ##     volume:
+    ##
+    selector: {}
+    ## @param worker.persistence.annotations Persistent Volume Claim annotations
+    ##
+    annotations: {}
+    ## @param worker.persistence.accessModes Persistent Volume Access Modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## @param worker.persistence.size Persistent Volume Size
+    ##
+    size: 8Gi
+  ## persistentVolumeClaimRetentionPolicy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ## @param worker.persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+  ## @param worker.persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+  ## @param worker.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+  ##
+  persistentVolumeClaimRetentionPolicy:
+    enabled: true
+    whenScaled: Delete
+    whenDeleted: Delete
 ## @section Airflow git sync parameters
 
 ## Configure Git to pull dags and plugins
@@ -1067,6 +1104,20 @@ git:
     ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
     ##
     resources: {}
+## @param requirements Specify content for Airflow worker requirements.txt file
+## e.g:
+## requirements: |-
+##   pylint==2.13.9
+##   ...
+##
+requirements: ""
+## @param pip.conf Specify content for Airflow worker pip.conf file
+## e.g:
+## pip: |-
+##  [global]
+##   ...
+##
+pip: ""
 
 ## @section Airflow ldap parameters
 
@@ -1312,25 +1363,13 @@ rbac:
   ##
   rules: []
 
-## @section Airflow metrics parameters
-
-metrics:
-  ## @param metrics.enabled Whether or not to create a standalone Airflow exporter to expose Airflow metrics
-  ##
+# StatsD settings
+statsd:
   enabled: false
-  ## Bitnami Airflow exporter image
-  ## ref: https://hub.docker.com/r/bitnami/airflow-exporter/tags/
-  ## @param metrics.image.registry [default: REGISTRY_NAME] Airflow exporter image registry
-  ## @param metrics.image.repository [default: REPOSITORY_NAME/airflow-exporter] Airflow exporter image repository
-  ## @skip metrics.image.tag Airflow exporter image tag (immutable tags are recommended)
-  ## @param metrics.image.digest Airflow exporter image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
-  ## @param metrics.image.pullPolicy Airflow exporter image pull policy
-  ## @param metrics.image.pullSecrets Airflow exporter image pull secrets
-  ##
   image:
     registry: registry.drycc.cc
-    repository: drycc-addons/airflow-exporter
-    tag: 2
+    repository: drycc-addons/statsd-exporter
+    tag: "0"
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
@@ -1341,177 +1380,65 @@ metrics:
     ##   - myRegistryKeySecretName
     ##
     pullSecrets: []
-  ## @param metrics.extraEnvVars Array with extra environment variables to add Airflow exporter pods
-  ##
-  extraEnvVars: []
-  ## @param metrics.extraEnvVarsCM ConfigMap containing extra environment variables for Airflow exporter pods
-  ##
-  extraEnvVarsCM: ""
-  ## @param metrics.extraEnvVarsSecret Secret containing extra environment variables (in case of sensitive data) for Airflow exporter pods
-  ##
-  extraEnvVarsSecret: ""
-  ## @param metrics.containerPorts.http Airflow exporter metrics container port
-  ##
-  containerPorts:
-    http: 9112
-  ## Airflow exporter resource requests and limits
-  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
-  ## @param metrics.resources.limits The resources limits for the container
-  ## @param metrics.resources.requests The requested resources for the container
-  ##
-  resources:
-    limits: {}
-    requests: {}
-  ## Airflow exporter pods' Security Context
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-  ## @param metrics.podSecurityContext.enabled Enable security context for the pods
-  ## @param metrics.podSecurityContext.fsGroup Set Airflow exporter pod's Security Context fsGroup
-  ##
-  podSecurityContext:
-    enabled: true
-    fsGroup: 1001
-  ## Airflow exporter containers' Security Context
-  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
-  ## @param metrics.containerSecurityContext.enabled Enable Airflow exporter containers' Security Context
-  ## @param metrics.containerSecurityContext.runAsUser Set Airflow exporter containers' Security Context runAsUser
-  ## @param metrics.containerSecurityContext.runAsNonRoot Set Airflow exporter containers' Security Context runAsNonRoot
-  ## @param metrics.containerSecurityContext.privileged Set metrics container's Security Context privileged
-  ## @param metrics.containerSecurityContext.allowPrivilegeEscalation Set metrics container's Security Context allowPrivilegeEscalation
-  ## @param metrics.containerSecurityContext.capabilities.drop List of capabilities to be dropped
-  ## @param metrics.containerSecurityContext.seccompProfile.type Set container's Security Context seccomp profile
-  ## e.g:
-  ##   containerSecurityContext:
-  ##     enabled: true
-  ##     capabilities:
-  ##       drop: ["NET_RAW"]
-  ##     readOnlyRootFilesystem: true
-  ##
-  containerSecurityContext:
-    enabled: true
-    runAsUser: 1001
-    runAsNonRoot: true
-    privileged: false
-    allowPrivilegeEscalation: false
-    capabilities:
-      drop: ["ALL"]
-    seccompProfile:
-      type: "RuntimeDefault"
-  ## @param metrics.lifecycleHooks for the Airflow exporter container(s) to automate configuration before or after startup
-  ##
+  ports:
+    scrape: 9102
+  # Add custom annotations to the statsd configmap
+  configMapAnnotations: {}
+
   lifecycleHooks: {}
-  ## @param metrics.hostAliases Airflow exporter pods host aliases
-  ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
-  ##
-  hostAliases: []
-  ## @param metrics.podLabels Extra labels for Airflow exporter pods
-  ## Ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  ##
-  podLabels: {}
-  ## @param metrics.podAnnotations Extra annotations for Airflow exporter pods
-  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  ##
-  podAnnotations: {}
-  ## @param metrics.podAffinityPreset Pod affinity preset. Ignored if `metrics.affinity` is set. Allowed values: `soft` or `hard`
-  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
-  ##
-  podAffinityPreset: ""
-  ## @param metrics.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `metrics.affinity` is set. Allowed values: `soft` or `hard`
-  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
-  ##
-  podAntiAffinityPreset: soft
-  ## Node metrics.affinity preset
-  ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
-  ##
-  nodeAffinityPreset:
-    ## @param metrics.nodeAffinityPreset.type Node affinity preset type. Ignored if `metrics.affinity` is set. Allowed values: `soft` or `hard`
-    ##
-    type: ""
-    ## @param metrics.nodeAffinityPreset.key Node label key to match Ignored if `metrics.affinity` is set.
-    ## E.g.
-    ## key: "kubernetes.io/e2e-az-name"
-    ##
-    key: ""
-    ## @param metrics.nodeAffinityPreset.values Node label values to match. Ignored if `metrics.affinity` is set.
-    ## E.g.
-    ## values:
-    ##   - e2e-az1
-    ##   - e2e-az2
-    ##
-    values: []
-  ## @param metrics.affinity Affinity for pod assignment
-  ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  ## Note: metrics.podAffinityPreset, metrics.podAntiAffinityPreset, and metrics.nodeAffinityPreset will be ignored when it's set
-  ##
-  affinity: {}
-  ## @param metrics.nodeSelector Node labels for pod assignment
-  ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
-  ##
-  nodeSelector: {}
-  ## @param metrics.tolerations Tolerations for pod assignment
-  ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  ##
-  tolerations: []
-  ## @param metrics.schedulerName Name of the k8s scheduler (other than default) for Airflow exporter
-  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-  ##
-  schedulerName: ""
-  ## Airflow exporter service configuration
-  ##
+  # Max number of old replicasets to retain
+  revisionHistoryLimit: ~
+
+  # Annotations to add to the StatsD Deployment.
+  annotations: {}
+
+  # (deprecated, use `securityContexts` instead)
+  securityContext: {}
+  #  runAsUser: 65534
+  #  fsGroup: 0
+  #  runAsGroup: 0
+
+  # Detailed default security context for statsd deployments for container and pod level
+  securityContexts:
+    pod: {}
+    container: {}
+
+  # container level lifecycle hooks
+  containerLifecycleHooks: {}
+
+  # Additional network policies as needed
+  extraNetworkPolicies: []
+  resources: {}
+  #   limits:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+
   service:
-    ## @param metrics.service.ports.http Airflow exporter metrics service port
-    ##
-    ports:
-      http: 9112
-    ## @param metrics.service.clusterIP Static clusterIP or None for headless services
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#choosing-your-own-ip-address
-    ##
-    clusterIP: ""
-    ## @param metrics.service.sessionAffinity Control where client requests go, to the same pod or round-robin
-    ## Values: ClientIP or None
-    ## ref: https://kubernetes.io/docs/user-guide/services/
-    ##
-    sessionAffinity: None
-    ## @param metrics.service.annotations [object] Annotations for the Airflow exporter service
-    ##
-    annotations:
-      prometheus.io/scrape: "true"
-      prometheus.io/port: "{{ .Values.metrics.service.ports.http }}"
-  ## Prometheus Operator ServiceMonitor configuration
-  ##
-  serviceMonitor:
-    ## @param metrics.serviceMonitor.enabled if `true`, creates a Prometheus Operator ServiceMonitor (requires `metrics.enabled` to be `true`)
-    ##
-    enabled: false
-    ## @param metrics.serviceMonitor.namespace Namespace in which Prometheus is running
-    ##
-    namespace: ""
-    ## @param metrics.serviceMonitor.interval Interval at which metrics should be scraped
-    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
-    ##
-    interval: ""
-    ## @param metrics.serviceMonitor.scrapeTimeout Timeout after which the scrape is ended
-    ## ref: https://github.com/coreos/prometheus-operator/blob/master/Documentation/api.md#endpoint
-    ##
-    scrapeTimeout: ""
-    ## @param metrics.serviceMonitor.labels Additional labels that can be used so ServiceMonitor will be discovered by Prometheus
-    ##
-    labels: {}
-    ## @param metrics.serviceMonitor.selector Prometheus instance selector labels
-    ## ref: https://github.com/bitnami/charts/tree/main/bitnami/prometheus-operator#prometheus-configuration
-    ##
-    selector: {}
-    ## @param metrics.serviceMonitor.relabelings RelabelConfigs to apply to samples before scraping
-    ##
-    relabelings: []
-    ## @param metrics.serviceMonitor.metricRelabelings MetricRelabelConfigs to apply to samples before ingestion
-    ##
-    metricRelabelings: []
-    ## @param metrics.serviceMonitor.honorLabels Specify honorLabels parameter to add the scrape endpoint
-    ##
-    honorLabels: false
-    ## @param metrics.serviceMonitor.jobLabel The name of the label on the target service to use as the job name in prometheus.
-    ##
-    jobLabel: ""
+    extraAnnotations: {}
+
+  # Select certain nodes for StatsD pods.
+  nodeSelector: {}
+  affinity: {}
+  tolerations: []
+  topologySpreadConstraints: []
+
+  priorityClassName: ~
+
+  # Additional mappings for StatsD exporter.
+  # If set, will merge default mapping and extra mappings, default mapping has higher priority.
+  # So, if you want to change some default mapping, please use `overrideMappings`
+  extraMappings: []
+
+  # Override mappings for StatsD exporter.
+  # If set, will ignore setting item in default and `extraMappings`.
+  # So, If you use it, ensure all mapping item contains in it.
+  overrideMappings: []
+
+  podAnnotations: {}
+  env: []
 
 ## @section Airflow database parameters
 
@@ -1546,32 +1473,9 @@ externalDatabase:
   existingSecret: ""
   existingSecretPasswordKey: ""
 
-## Redis&reg; chart configuration
-## ref: https://github.com/bitnami/charts/blob/main/bitnami/redis/values.yaml
-## @param redis.enabled Switch to enable or disable the Redis&reg; helm
-## @param redis.auth.enabled Enable password authentication
-## @param redis.auth.password Redis&reg; password
-## @param redis.auth.existingSecret The name of an existing secret with Redis&reg; credentials
-## @param redis.architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
-##
-redis:
-  enabled: false
+## External broker url; configuration
+# redis://[USER:PASSWORD@]REDIS_ADDRESS[:PORT][/VIRTUALHOST]
+celeryBrokerUrl: ""
 
-## External Redis&reg; configuration
-## All of these values are only used when redis.enabled is set to false
-## @param externalRedis.host Redis&reg; host
-## @param externalRedis.port Redis&reg; port number
-## @param externalRedis.username Redis&reg; username
-## @param externalRedis.password Redis&reg; password
-## @param externalRedis.existingSecret Name of an existing secret resource containing the Redis&trade credentials
-## @param externalRedis.existingSecretPasswordKey Name of an existing secret key containing the Redis&trade credentials
-##
-externalRedis:
-  host: localhost
-  port: 6379
-  ## Most Redis&reg; implementations do not require a username
-  ## to authenticate and it should be enough with the password
-  username: ""
-  password: ""
-  existingSecret: ""
-  existingSecretPasswordKey: ""
+# Example: {{ "master_name": "mycluster" }, "sentinel_kwargs": { "password": "password" } }
+celeryBrokerTransportOption: ""

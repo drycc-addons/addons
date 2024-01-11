@@ -1,0 +1,43 @@
+credential:
+  {{ if (eq .Values.service.type "LoadBalancer") }}
+  - name: EXTERNAL_WEB_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: WEB_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: WEB_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="http")].port }'
+
+  - name: USER
+    value: {{ .Values.auth.username }}
+
+  {{- if (not .Values.auth.existingSecret) }}
+  - name: AIRFLOW_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .data.airflow-password }'
+
+  - name: AIRFLOW_FERNET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .data.airflow-fernet-key }'
+
+  - name: AIRFLOW_SECRET_KEY
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .data.airflow-secret-key }'
+  {{- end }}

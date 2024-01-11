@@ -3,7 +3,7 @@ Copyright Drycc Community.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
-{{- if (or (eq .Values.executor "LocalExecutor") (eq .Values.executor "LocalKubernetesExecutor") (eq .Values.executor "SequentialExecutor")) }}
+{{- if (or .Values.statsd.enabled (eq .Values.executor "LocalExecutor") (eq .Values.executor "LocalKubernetesExecutor") (eq .Values.executor "SequentialExecutor")) }}
 kind: Service
 apiVersion: v1
 metadata:
@@ -13,15 +13,30 @@ metadata:
   {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.commonLabels $versionLabel ) "context" . ) }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: scheduler
-  {{- if .Values.commonAnnotations }}
-  annotations: {{- include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- if or .Values.commonAnnotations .Values.statsd.enabled }}
+  annotations: 
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.statsd.enabled }}
+    prometheus.io/port: {{ .Values.statsd.ports.scrape | quote }}
+    prometheus.io/scrape: "true"
+    {{- end }}
+  {{- end }}  
 spec:
   clusterIP: None
   ports:
+    {{- if (or (eq .Values.executor "LocalExecutor") (eq .Values.executor "LocalKubernetesExecutor") (eq .Values.executor "SequentialExecutor")) }}
     - name: task-logs
       port: {{ .Values.worker.containerPorts.http }}
       targetPort: task-logs
+    {{- end }}
+    {{- if .Values.statsd.enabled }}
+    - name: statsd-scrape
+      protocol: TCP
+      port: {{ .Values.statsd.ports.scrape }}
+      targetPort: {{ .Values.statsd.ports.scrape }}
+    {{- end }}
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.scheduler.podLabels .Values.commonLabels ) "context" . ) }}
   selector: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: scheduler

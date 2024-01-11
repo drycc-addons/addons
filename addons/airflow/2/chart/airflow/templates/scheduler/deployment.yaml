@@ -82,6 +82,7 @@ spec:
         {{- end }}
       containers:
         {{- include "airflow.git.containers.sync" (dict "securityContext" .Values.scheduler.containerSecurityContext "context" $) | trim | nindent 8 }}
+        {{- include "airflow.statsd.container" (dict "securityContext" .Values.worker.containerSecurityContext "context" $) | trim | nindent 8 }}
         - name: airflow-scheduler
           image: {{ include "airflow.schedulerImage" . | quote }}
           imagePullPolicy: {{ .Values.scheduler.image.pullPolicy | quote }}
@@ -103,6 +104,16 @@ spec:
             {{- include "airflow.configure.database" . | nindent 12 }}
             {{- include "airflow.configure.redis" . | nindent 12 }}
             {{- include "airflow.configure.airflow.kubernetesExecutor" . | nindent 12 }}
+            - name: AIRFLOW_EXTRA_ARGS
+              value: scheduler
+            {{- if .Values.statsd.enabled }}
+            - name: AIRFLOW_STATSD_ON
+              value: "True"
+            {{- end }}
+            - name: AIRFLOW__CORE__DEFAULT_TIMEZONE
+              value: {{ .Values.timezone }}
+            - name: AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE
+              value: {{ .Values.timezone }}
             - name: AIRFLOW_EXECUTOR
               value: {{ .Values.executor }}
             - name: AIRFLOW_WEBSERVER_HOST
@@ -182,6 +193,16 @@ spec:
               mountPath: /opt/drycc/airflow/pod_template.yaml
               subPath: pod_template.yaml
             {{- end }}
+            {{- if .Values.requirements }}
+            - name: req-config
+              mountPath: /opt/drycc/python/requirements.txt
+              subPath: requirements.txt
+            {{- end }}
+            {{- if .Values.pip }}
+            - name: req-config
+              mountPath: /opt/drycc/.config/pip/pip.conf
+              subPath: pip.conf
+            {{- end }}
             {{- if .Values.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumeMounts "context" $) | nindent 12 }}
             {{- end }}
@@ -207,6 +228,11 @@ spec:
         - name: custom-configuration-file
           configMap:
             name: {{ include "airflow.configMapName"  . }}
+        {{- end }}
+        {{- if or .Values.requirements .Values.pip }}
+        - name: req-config
+          configMap:
+            name: {{ include "common.names.fullname" . }}-req
         {{- end }}
         {{- if .Values.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.extraVolumes "context" $) | nindent 8 }}

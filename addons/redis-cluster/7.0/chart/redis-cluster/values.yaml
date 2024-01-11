@@ -568,7 +568,7 @@ redis:
   ## @param redis.podAntiAffinityPreset Redis&reg; pod anti-affinity preset. Ignored if `redis.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
-  podAntiAffinityPreset: hard
+  podAntiAffinityPreset: soft
   ## Redis&reg; node affinity preset
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
   ##
@@ -664,7 +664,7 @@ updateJob:
   ## @param updateJob.podAntiAffinityPreset Update job pod anti-affinity preset. Ignored if `updateJob.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
-  podAntiAffinityPreset: hard
+  podAntiAffinityPreset: soft
   ## Update job node affinity preset
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
   ##

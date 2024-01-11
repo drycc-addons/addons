@@ -81,6 +81,7 @@ spec:
         {{- end }}
       containers:
         {{- include "airflow.git.containers.sync" (dict "securityContext" .Values.web.containerSecurityContext "context" $) | trim | nindent 8 }}
+        {{- include "airflow.statsd.container" (dict "securityContext" .Values.worker.containerSecurityContext "context" $) | trim | nindent 8 }}
         - name: airflow-web
           image: {{ include "airflow.image" . }}
           imagePullPolicy: {{ .Values.web.image.pullPolicy | quote }}
@@ -102,6 +103,16 @@ spec:
             {{- include "airflow.configure.database" . | nindent 12 }}
             {{- include "airflow.configure.redis" . | nindent 12 }}
             {{- include "airflow.configure.airflow.kubernetesExecutor" . | nindent 12 }}
+            - name: AIRFLOW_EXTRA_ARGS
+              value: webserver
+            {{- if .Values.statsd.enabled }}
+            - name: AIRFLOW_STATSD_ON
+              value: "True"
+            {{- end }}
+            - name: AIRFLOW__CORE__DEFAULT_TIMEZONE
+              value: {{ .Values.timezone }}
+            - name: AIRFLOW__WEBSERVER__DEFAULT_UI_TIMEZONE
+              value: {{ .Values.timezone }}
             - name: AIRFLOW_EXECUTOR
               value: {{ .Values.executor }}
             - name: AIRFLOW_WEBSERVER_HOST

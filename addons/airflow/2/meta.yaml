@@ -15,22 +15,40 @@ instances_retrievable: true
 bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
+- name: "timezone"
+  required: false
+  description: "timezone config for values.yaml"
 - name: "auth.password"
   required: false
   description: "auth.password config for values.yaml"
 - name: "git"
   required: false
   description: "git config for values.yaml"
+- name: "master.image"
+  required: false
+  description: "master image config for values.yaml"
+- name: "scheduler.image"
+  required: false
+  description: "scheduler image config for values.yaml"
+- name: "worker.image"
+  required: false
+  description: "worker image config for values.yaml"
+- name: "worker.persistence"
+  required: false
+  description: "worker persistence config for values.yaml"
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
-- name: "metrics.enable"
+- name: "statsd.enable"
   required: false
-  description: "metrics enable or not config for values.yaml"
+  description: "statsd enable or not config for values.yaml"
 - name: "externalDatabase"
   required: true
   description: "externalDatabase config for values.yaml"
-- name: "externalRedis"
+- name: celeryBrokerUrl
   required: true
-  description: "externalRedis config for values.yaml"
+  description: "celeryBrokerUrl config for values.yaml"
+- name: celeryBrokerTransportOption
+  required: false
+  description: "celeryBrokerTransportOption config for values.yaml"
 archive: false

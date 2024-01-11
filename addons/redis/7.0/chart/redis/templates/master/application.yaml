@@ -94,7 +94,7 @@ spec:
       terminationGracePeriodSeconds: {{ .Values.master.terminationGracePeriodSeconds }}
       containers:
         - name: redis
-          image: {{ .Values.global.image.tag }}
+          image: {{ template "redis.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           {{- if .Values.master.lifecycleHooks }}
           lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.master.lifecycleHooks "context" $) | nindent 12 }}

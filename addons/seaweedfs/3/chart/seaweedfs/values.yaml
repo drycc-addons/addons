@@ -163,7 +163,7 @@ master:
   ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
-  podAntiAffinityPreset: hard
+  podAntiAffinityPreset: soft
   nodeAffinityPreset:
     type: ""
     key: ""
@@ -251,7 +251,7 @@ filer:
   ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
-  podAntiAffinityPreset: hard
+  podAntiAffinityPreset: soft
   nodeAffinityPreset:
     type: ""
     key: ""
@@ -333,7 +333,7 @@ volume:
   ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
   ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
   ##
-  podAntiAffinityPreset: hard
+  podAntiAffinityPreset: soft
   nodeAffinityPreset:
     type: ""
     key: ""
