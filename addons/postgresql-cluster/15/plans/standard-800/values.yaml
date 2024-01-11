@@ -65,7 +65,7 @@ resources:
   limits:
     cpu: 32000m
     memory: 128Gi
-    # hugepages-2Mi: 4Mi
+    hugepages-2Mi: 80Mi
   requests:
     cpu: 32000m
     memory: 128Gi
