@@ -42,6 +42,9 @@ allow_parameters:
 - name: "statsd.enable"
   required: false
   description: "statsd enable or not config for values.yaml"
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "externalDatabase"
   required: true
   description: "externalDatabase config for values.yaml"

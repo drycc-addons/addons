@@ -1,0 +1,35 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: {{ include "common.capabilities.networkPolicy.apiVersion" . }}
+kind: NetworkPolicy
+metadata:
+  name: {{ printf "%s-worker" (include "common.names.fullname" .) }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+    app.kubernetes.io/component: worker
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  podSelector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: worker
+  ingress:
+    {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
+    - from:
+      {{- if .Values.networkPolicy.allowCurrentNamespace }}
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: {{ .Release.Namespace }}
+      {{- end }}
+      {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+      {{- if $namespace }}
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: {{ $namespace }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+{{- end }}

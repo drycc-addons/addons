@@ -1440,6 +1440,15 @@ statsd:
   podAnnotations: {}
   env: []
 
+## Add networkpolicies
+##
+networkPolicy:
+  ## @param networkPolicy.enabled Enable network policies
+  ##
+  enabled: true
+  allowCurrentNamespace: true
+  allowNamespaces: []
+
 ## @section Airflow database parameters
 
 ## PostgreSQL chart configuration

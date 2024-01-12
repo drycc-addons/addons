@@ -349,17 +349,17 @@ Add environment variables to configure redis values
 */}}
 {{- define "airflow.configure.redis" -}}
 {{- if (not (or (eq .Values.executor "KubernetesExecutor" ) (eq .Values.executor "LocalKubernetesExecutor" ))) }}
-- name: CELERY_BROKER_URL
+- name: AIRFLOW_CELERY_BROKER_URL
   valueFrom:
     secretKeyRef:
       name: {{ printf "%s-%s" .Release.Name "celerybroker"  }}
-      key: celeryBrokerUrl
+      key: celery-broker-url
 {{- if .Values.celeryBrokerTransportOption }}
-- name: CELERY_BROKER_TRANSPORT_OPTION
+- name: AIRFLOW_CELERY_BROKER_TRANSPORT_OPTIONS
   valueFrom:
     secretKeyRef:
       name: {{ printf "%s-%s" .Release.Name "celerybroker"  }}
-      key: celeryBrokerTransportOption
+      key: celery-broker-transport-option
 {{- end }}
 {{- end }}
 {{- end -}}
