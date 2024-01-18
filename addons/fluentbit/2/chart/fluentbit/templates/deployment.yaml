@@ -1,0 +1,104 @@
+{{- /*
+Copyright Drycc Community.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "fluentbit.deployment.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
+  {{- if or .Values.deployment.deploymentAnnotations .Values.commonAnnotations }}
+  {{- $annotations := include "common.tplvalues.merge" (dict "values" (list .Values.deployment.deploymentAnnotations .Values.commonAnnotations) "context" .) }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: 1
+  {{- if .Values.deployment.updateStrategy }}
+  strategy: {{- toYaml .Values.deployment.updateStrategy | nindent 4 }}
+  {{- end }}
+  {{- $podLabels := include "common.tplvalues.merge" (dict "values" (list .Values.deployment.podLabels .Values.commonLabels) "context" .) }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
+  template:
+    metadata:
+      {{- if .Values.deployment.podAnnotations }}
+      annotations: {{- include "common.tplvalues.render" (dict "value" .Values.deployment.podAnnotations "context" $) | nindent 8 }}
+      {{- end }}
+      labels: {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
+    spec:
+      serviceAccountName: {{ template "fluentbit.serviceAccountName" . }}
+      {{- include "fluentbit.imagePullSecrets" . | nindent 6 }}
+      {{- if .Values.deployment.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.deployment.hostAliases "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.affinity }}
+      affinity: {{- include "common.tplvalues.render" ( dict "value" .Values.deployment.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.deployment.podAffinityPreset "component" "deployment" "customLabels" $podLabels "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.deployment.podAntiAffinityPreset "component" "deployment" "customLabels" $podLabels "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.deployment.nodeAffinityPreset.type "key" .Values.deployment.nodeAffinityPreset.key "values" .Values.deployment.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      {{- if .Values.deployment.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" ( dict "value" .Values.deployment.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.deployment.tolerations "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.priorityClassName }}
+      priorityClassName: {{ .Values.deployment.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.deployment.schedulerName }}
+      schedulerName: {{ .Values.deployment.schedulerName | quote }}
+      {{- end }}
+      {{- if .Values.deployment.topologySpreadConstraints }}
+      topologySpreadConstraints: {{- include "common.tplvalues.render" (dict "value" .Values.deployment.topologySpreadConstraints "context" .) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.deployment.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if .Values.deployment.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
+      {{- end }}
+      containers:
+      - name: controller
+        image: {{ include "fluentbit.image" . }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.deployment.containerSecurityContext.enabled }}
+        securityContext: {{- omit .Values.deployment.containerSecurityContext "enabled" | toYaml | nindent 10 }}
+        {{- end }}
+        {{- if .Values.diagnosticMode.enabled }}
+        command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 10 }}
+        {{- else if .Values.deployment.command }}
+        command: {{- include "common.tplvalues.render" (dict "value" .Values.deployment.command "context" $) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.diagnosticMode.enabled }}
+        args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 10 }}
+        {{- else if .Values.deployment.args }}
+        args: {{- include "common.tplvalues.render" (dict "value" .Values.deployment.args "context" $) | nindent 10 }}
+        {{- end }}
+        env:
+          - name: FLUENTBIT_EXTRA_ARGS
+            value: --namespace {{ .Release.Namespace }} --daemonset-name {{ include "fluentbit.daemonset.fullname" . }} --retry-interval {{ .Values.deployment.retryInterval }}
+          - name: DRYCC_DEBUG
+            value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
+          {{- if .Values.deployment.extraEnvVars }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.deployment.extraEnvVars "context" $) | nindent 10 }}
+          {{- end }}
+        envFrom:
+          {{- if .Values.deployment.extraEnvVarsCM }}
+          - configMapRef:
+              name: {{ include "common.tplvalues.render" (dict "value" .Values.deployment.extraEnvVarsCM "context" $) }}
+          {{- end }}
+          {{- if .Values.deployment.extraEnvVarsSecret }}
+          - secretRef:
+              name: {{ include "common.tplvalues.render" (dict "value" .Values.deployment.extraEnvVarsSecret "context" $) }}
+          {{- end }}
+        {{- if .Values.deployment.resources }}
+        resources: {{- toYaml .Values.deployment.resources | nindent 12 }}
+        {{- end }}
+        {{- if .Values.deployment.sidecars }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.deployment.sidecars "context" $) | nindent 8 }}
+        {{- end }}

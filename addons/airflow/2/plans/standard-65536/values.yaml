@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: hb-airflow-standard-1024
+fullnameOverride: hb-airflow-standard-65536
 
 ## @section Airflow web parameters
 
@@ -15,11 +15,11 @@ web:
   ##
   resources:
     limits:
-      cpu: 1000m
-      memory: 1024Mi
+      cpu: 16
+      memory: 64Gi
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 4
+      memory: 32Gi
 
 ## @section Airflow scheduler parameters
 
@@ -34,11 +34,11 @@ scheduler:
   ##
   resources:
     limits:
-      cpu: 1000m
-      memory: 1024Mi
+      cpu: 16
+      memory: 64Gi
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 4
+      memory: 32Gi
 
 ## @section Airflow worker parameters
 
@@ -53,8 +53,8 @@ worker:
   ##
   resources:
     limits:
-      cpu: 1000m
-      memory: 2048Mi
+      cpu: 16
+      memory: 64Gi
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 4
+      memory: 32Gi

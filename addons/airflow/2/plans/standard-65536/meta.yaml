@@ -1,0 +1,6 @@
+name: "standard-65536"
+id: 2e3cdbe4-297f-470b-bcee-8ea58698ef85
+description: "airflow standard-65536 plan which limit resources memory size 65536Mi."
+displayName: "standard-65536"
+bindable: true
+maximum_polling_duration: 1800

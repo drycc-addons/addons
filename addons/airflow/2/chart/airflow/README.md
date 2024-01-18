@@ -125,7 +125,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `web.containerPorts.http`                               | Airflow web HTTP container port                                                                                          | `8080`                    |
 | `web.replicaCount`                                      | Number of Airflow web replicas                                                                                           | `1`                       |
 | `web.livenessProbe.enabled`                             | Enable livenessProbe on Airflow web containers                                                                           | `true`                    |
-| `web.livenessProbe.initialDelaySeconds`                 | Initial delay seconds for livenessProbe                                                                                  | `180`                     |
+| `web.livenessProbe.initialDelaySeconds`                 | Initial delay seconds for livenessProbe                                                                                  | `360`                     |
 | `web.livenessProbe.periodSeconds`                       | Period seconds for livenessProbe                                                                                         | `20`                      |
 | `web.livenessProbe.timeoutSeconds`                      | Timeout seconds for livenessProbe                                                                                        | `5`                       |
 | `web.livenessProbe.failureThreshold`                    | Failure threshold for livenessProbe                                                                                      | `6`                       |
@@ -258,7 +258,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `worker.containerPorts.http`                               | Airflow worker HTTP container port                                                                                       | `8793`                           |
 | `worker.replicaCount`                                      | Number of Airflow worker replicas                                                                                        | `1`                              |
 | `worker.livenessProbe.enabled`                             | Enable livenessProbe on Airflow worker containers                                                                        | `true`                           |
-| `worker.livenessProbe.initialDelaySeconds`                 | Initial delay seconds for livenessProbe                                                                                  | `180`                            |
+| `worker.livenessProbe.initialDelaySeconds`                 | Initial delay seconds for livenessProbe                                                                                  | `360`                            |
 | `worker.livenessProbe.periodSeconds`                       | Period seconds for livenessProbe                                                                                         | `20`                             |
 | `worker.livenessProbe.timeoutSeconds`                      | Timeout seconds for livenessProbe                                                                                        | `5`                              |
 | `worker.livenessProbe.failureThreshold`                    | Failure threshold for livenessProbe                                                                                      | `6`                              |
@@ -411,59 +411,6 @@ The command removes all the Kubernetes components associated with the chart and 
 | `serviceAccount.annotations`                  | Additional custom annotations for the ServiceAccount                   | `{}`    |
 | `rbac.create`                                 | Create Role and RoleBinding                                            | `false` |
 | `rbac.rules`                                  | Custom RBAC rules to set                                               | `[]`    |
-
-### Airflow metrics parameters
-
-| Name                                                        | Description                                                                                                      | Value                              |
-| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `metrics.enabled`                                           | Whether or not to create a standalone Airflow exporter to expose Airflow metrics                                 | `false`                            |
-| `metrics.image.registry`                                    | Airflow exporter image registry                                                                                  | `REGISTRY_NAME`                    |
-| `metrics.image.repository`                                  | Airflow exporter image repository                                                                                | `REPOSITORY_NAME/airflow-exporter` |
-| `metrics.image.digest`                                      | Airflow exporter image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                               |
-| `metrics.image.pullPolicy`                                  | Airflow exporter image pull policy                                                                               | `IfNotPresent`                     |
-| `metrics.image.pullSecrets`                                 | Airflow exporter image pull secrets                                                                              | `[]`                               |
-| `metrics.extraEnvVars`                                      | Array with extra environment variables to add Airflow exporter pods                                              | `[]`                               |
-| `metrics.extraEnvVarsCM`                                    | ConfigMap containing extra environment variables for Airflow exporter pods                                       | `""`                               |
-| `metrics.extraEnvVarsSecret`                                | Secret containing extra environment variables (in case of sensitive data) for Airflow exporter pods              | `""`                               |
-| `metrics.containerPorts.http`                               | Airflow exporter metrics container port                                                                          | `9112`                             |
-| `metrics.resources.limits`                                  | The resources limits for the container                                                                           | `{}`                               |
-| `metrics.resources.requests`                                | The requested resources for the container                                                                        | `{}`                               |
-| `metrics.podSecurityContext.enabled`                        | Enable security context for the pods                                                                             | `true`                             |
-| `metrics.podSecurityContext.fsGroup`                        | Set Airflow exporter pod's Security Context fsGroup                                                              | `1001`                             |
-| `metrics.containerSecurityContext.enabled`                  | Enable Airflow exporter containers' Security Context                                                             | `true`                             |
-| `metrics.containerSecurityContext.runAsUser`                | Set Airflow exporter containers' Security Context runAsUser                                                      | `1001`                             |
-| `metrics.containerSecurityContext.runAsNonRoot`             | Set Airflow exporter containers' Security Context runAsNonRoot                                                   | `true`                             |
-| `metrics.containerSecurityContext.privileged`               | Set metrics container's Security Context privileged                                                              | `false`                            |
-| `metrics.containerSecurityContext.allowPrivilegeEscalation` | Set metrics container's Security Context allowPrivilegeEscalation                                                | `false`                            |
-| `metrics.containerSecurityContext.capabilities.drop`        | List of capabilities to be dropped                                                                               | `["ALL"]`                          |
-| `metrics.containerSecurityContext.seccompProfile.type`      | Set container's Security Context seccomp profile                                                                 | `RuntimeDefault`                   |
-| `metrics.lifecycleHooks`                                    | for the Airflow exporter container(s) to automate configuration before or after startup                          | `{}`                               |
-| `metrics.hostAliases`                                       | Airflow exporter pods host aliases                                                                               | `[]`                               |
-| `metrics.podLabels`                                         | Extra labels for Airflow exporter pods                                                                           | `{}`                               |
-| `metrics.podAnnotations`                                    | Extra annotations for Airflow exporter pods                                                                      | `{}`                               |
-| `metrics.podAffinityPreset`                                 | Pod affinity preset. Ignored if `metrics.affinity` is set. Allowed values: `soft` or `hard`                      | `""`                               |
-| `metrics.podAntiAffinityPreset`                             | Pod anti-affinity preset. Ignored if `metrics.affinity` is set. Allowed values: `soft` or `hard`                 | `soft`                             |
-| `metrics.nodeAffinityPreset.type`                           | Node affinity preset type. Ignored if `metrics.affinity` is set. Allowed values: `soft` or `hard`                | `""`                               |
-| `metrics.nodeAffinityPreset.key`                            | Node label key to match Ignored if `metrics.affinity` is set.                                                    | `""`                               |
-| `metrics.nodeAffinityPreset.values`                         | Node label values to match. Ignored if `metrics.affinity` is set.                                                | `[]`                               |
-| `metrics.affinity`                                          | Affinity for pod assignment                                                                                      | `{}`                               |
-| `metrics.nodeSelector`                                      | Node labels for pod assignment                                                                                   | `{}`                               |
-| `metrics.tolerations`                                       | Tolerations for pod assignment                                                                                   | `[]`                               |
-| `metrics.schedulerName`                                     | Name of the k8s scheduler (other than default) for Airflow exporter                                              | `""`                               |
-| `metrics.service.ports.http`                                | Airflow exporter metrics service port                                                                            | `9112`                             |
-| `metrics.service.clusterIP`                                 | Static clusterIP or None for headless services                                                                   | `""`                               |
-| `metrics.service.sessionAffinity`                           | Control where client requests go, to the same pod or round-robin                                                 | `None`                             |
-| `metrics.service.annotations`                               | Annotations for the Airflow exporter service                                                                     | `{}`                               |
-| `metrics.serviceMonitor.enabled`                            | if `true`, creates a Prometheus Operator ServiceMonitor (requires `metrics.enabled` to be `true`)                | `false`                            |
-| `metrics.serviceMonitor.namespace`                          | Namespace in which Prometheus is running                                                                         | `""`                               |
-| `metrics.serviceMonitor.interval`                           | Interval at which metrics should be scraped                                                                      | `""`                               |
-| `metrics.serviceMonitor.scrapeTimeout`                      | Timeout after which the scrape is ended                                                                          | `""`                               |
-| `metrics.serviceMonitor.labels`                             | Additional labels that can be used so ServiceMonitor will be discovered by Prometheus                            | `{}`                               |
-| `metrics.serviceMonitor.selector`                           | Prometheus instance selector labels                                                                              | `{}`                               |
-| `metrics.serviceMonitor.relabelings`                        | RelabelConfigs to apply to samples before scraping                                                               | `[]`                               |
-| `metrics.serviceMonitor.metricRelabelings`                  | MetricRelabelConfigs to apply to samples before ingestion                                                        | `[]`                               |
-| `metrics.serviceMonitor.honorLabels`                        | Specify honorLabels parameter to add the scrape endpoint                                                         | `false`                            |
-| `metrics.serviceMonitor.jobLabel`                           | The name of the label on the target service to use as the job name in prometheus.                                | `""`                               |
 
 ### Airflow database parameters
 

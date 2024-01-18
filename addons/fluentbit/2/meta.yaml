@@ -1,0 +1,21 @@
+name: fluentbit
+version: 2
+id: b80c51a1-957c-4d93-b3d5-efde84cd8031
+description: "fluentbit controller"
+displayName: "fluentbit"
+metadata:
+  displayName: "fluentbit"
+  provider:
+    name: drycc
+    supportURL: https://fluentbit.io/
+  documentationURL: https://docs.fluentbit.io/
+tags: fluentbit
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "daemonset.config.outputs"
+  required: true
+  description: "destinations for your data: databases, cloud services and more"
+archive: false

@@ -86,17 +86,17 @@ Return the proper Airflow Worker image name
 {{- end -}}
 
 {{/*
+Return the proper Airflow Worker image name
+*/}}
+{{- define "airflow.statsdImage" -}}
+{{- include "common.images.image" (dict "imageRoot" .Values.statsd.image "global" .Values.global) -}}
+{{- end -}}
+
+{{/*
 Return the proper git image name
 */}}
 {{- define "git.image" -}}
 {{- include "common.images.image" (dict "imageRoot" .Values.git.image "global" .Values.global) -}}
-{{- end -}}
-
-{{/*
-Return the proper Airflow Metrics image name
-*/}}
-{{- define "airflow.metrics.image" -}}
-{{- include "common.images.image" (dict "imageRoot" .Values.metrics.image "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
@@ -110,7 +110,7 @@ Return the proper load Airflow DAGs image name
 Return the proper Docker Image Registry Secret Names
 */}}
 {{- define "airflow.imagePullSecrets" -}}
-{{- include "common.images.pullSecrets" (dict "images" (list .Values.web.image .Values.scheduler.image .Values.worker.image .Values.git .Values.metrics.image) "global" .Values.global) -}}
+{{- include "common.images.pullSecrets" (dict "images" (list .Values.web.image .Values.scheduler.image .Values.worker.image .Values.git .Values.statsd.image) "global" .Values.global) -}}
 {{- end -}}
 
 {{/*
@@ -349,19 +349,18 @@ Add environment variables to configure redis values
 */}}
 {{- define "airflow.configure.redis" -}}
 {{- if (not (or (eq .Values.executor "KubernetesExecutor" ) (eq .Values.executor "LocalKubernetesExecutor" ))) }}
-- name: REDIS_HOST
-  value: {{ ternary (include "airflow.redis.fullname" .) .Values.externalRedis.host .Values.redis.enabled | quote }}
-- name: REDIS_PORT_NUMBER
-  value: {{ ternary "6379" .Values.externalRedis.port .Values.redis.enabled | quote }}
-{{- if and (not .Values.redis.enabled) .Values.externalRedis.username }}
-- name: REDIS_USER
-  value: {{ .Values.externalRedis.username | quote }}
-{{- end }}
-- name: REDIS_PASSWORD
+- name: AIRFLOW_CELERY_BROKER_URL
   valueFrom:
     secretKeyRef:
-      name: {{ include "airflow.redis.secretName" . }}
-      key: redis-password
+      name: {{ printf "%s-%s" .Release.Name "celerybroker"  }}
+      key: celery-broker-url
+{{- if .Values.celeryBrokerTransportOption }}
+- name: AIRFLOW_CELERY_BROKER_TRANSPORT_OPTIONS
+  valueFrom:
+    secretKeyRef:
+      name: {{ printf "%s-%s" .Release.Name "celerybroker"  }}
+      key: celery-broker-transport-option
+{{- end }}
 {{- end }}
 {{- end -}}
 
@@ -530,7 +529,7 @@ airflow: git.plugins.repositories[$index].branch
 {{- include "common.warnings.rollingTag" .Values.scheduler.image }}
 {{- include "common.warnings.rollingTag" .Values.worker.image }}
 {{- include "common.warnings.rollingTag" .Values.git.image }}
-{{- include "common.warnings.rollingTag" .Values.metrics.image }}
+{{- include "common.warnings.rollingTag" .Values.statsd.image }}
 {{- end -}}
 
 {{/*

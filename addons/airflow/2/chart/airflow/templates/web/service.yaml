@@ -12,10 +12,16 @@ metadata:
   {{- $labels := include "common.tplvalues.merge" ( dict "values" ( list .Values.commonLabels $versionLabel ) "context" . ) }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" $labels "context" $ ) | nindent 4 }}
     app.kubernetes.io/component: web
-  {{- if or .Values.service.annotations .Values.commonAnnotations }}
-  {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.service.annotations .Values.commonAnnotations ) "context" . ) }}
-  annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 4 }}
-  {{- end }}
+  {{- if or .Values.commonAnnotations .Values.statsd.enabled }}
+  annotations: 
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.commonAnnotations "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.statsd.enabled }}
+    prometheus.io/port: {{ .Values.statsd.ports.scrape | quote }}
+    prometheus.io/scrape: "true"
+    {{- end }}
+  {{- end }}  
 spec:
   type: {{ .Values.service.type }}
   {{- if .Values.service.sessionAffinity }}
@@ -46,6 +52,12 @@ spec:
       {{- else if eq .Values.service.type "ClusterIP" }}
       nodePort: null
       {{- end }}
+    {{- if .Values.statsd.enabled }}
+    - name: statsd-scrape
+      protocol: TCP
+      port: {{ .Values.statsd.ports.scrape }}
+      targetPort: {{ .Values.statsd.ports.scrape }}
+    {{- end }}
     {{- if .Values.service.extraPorts }}
     {{- include "common.tplvalues.render" (dict "value" .Values.service.extraPorts "context" $) | nindent 4 }}
     {{- end }}

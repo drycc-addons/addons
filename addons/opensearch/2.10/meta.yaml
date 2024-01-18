@@ -16,17 +16,24 @@ bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
 - name: "master.networkPolicy.allowNamespaces"
+  required: false
   description: "master networkPolicy allowNamespaces config for values.yaml"
 - name: "ingest.networkPolicy.allowNamespaces"
+  required: false
   description: "ingest networkPolicy allowNamespaces config for values.yaml"
 - name: "data.networkPolicy.allowNamespaces"
+  required: false
   description: "data networkPolicy allowNamespaces config for values.yaml"
 - name: "coordinating.networkPolicy.allowNamespaces"
+  required: false
   description: "coordinating networkPolicy allowNamespaces config for values.yaml"
 - name: "dashboards.networkPolicy.allowNamespaces"
+  required: false
   description: "dashboards networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
+  required: false
   description: "service type config for values.yaml"
 - name: "dashboards.service.type"
+  required: false
   description: "dashboards service type config for values.yaml"
 archive: false

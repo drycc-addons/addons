@@ -1,0 +1,6 @@
+name: "standard-16384"
+id: 326d2737-e8a1-4374-942a-2fb1dc549c7c
+description: "airflow standard-16384 plan which limit resources memory size 16384Mi."
+displayName: "standard-16384"
+bindable: true
+maximum_polling_duration: 1800

@@ -16,15 +16,21 @@ bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
+  required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "server.service.type"
+  required: false
   description: "service type config for values.yaml"
 - name: "alertmanager.enabled"
+  required: false
   description: "alertmanager config for values.yaml"
 - name: "server.retentionDays"
+  required: false
   description: "retentionDays config for values.yaml default 15d"
 - name: "server.retentionSize"
+  required: false
   description: "retentionSize config for values.yaml default 0, unit  MB, GB, TB"
 - name: "server.rules"
+  required: false
   description: "rules config for values.yaml"
 archive: false

@@ -16,7 +16,7 @@ web:
   resources:
     limits:
       cpu: 1500m
-      memory: 4GMi
+      memory: 4Gi
     requests:
       cpu: 150m
       memory: 2Gi
