@@ -229,6 +229,11 @@ spec:
       - name: storage-volume
         emptyDir: {}
       {{- end }}
+  {{- if .Values.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   {{- if .Values.persistentVolume.enabled }}
   volumeClaimTemplates:
     - metadata:
