@@ -72,7 +72,6 @@ preInitScript: |
           hot_standby: "on"
           max_connections: 1005
           max_worker_processes: 8
-          wal_keep_segments: 1024
           max_wal_senders: 10
           max_replication_slots: 10
           max_prepared_transactions: 0
@@ -278,6 +277,15 @@ backup:
     awsS3ForcePathStyle: "true"
     awsRegion: dx-1
 
+## persistentVolumeClaimRetentionPolicy
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+## @param persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+persistentVolumeClaimRetentionPolicy:
+  enabled: true
+  whenScaled: Delete
+  whenDeleted: Delete
 persistentVolume:
   enabled: true
   size: 10G

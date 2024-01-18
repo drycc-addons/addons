@@ -28,7 +28,7 @@ postgresql:
     # Checkpointing: 
     checkpoint_timeout  = '15 min' 
     checkpoint_completion_target = 0.9
-    max_wal_size = '1024 MB'
+    max_wal_size = '2 GB'
     min_wal_size = '512 MB'
 
     # WAL writing
@@ -36,7 +36,7 @@ postgresql:
     wal_buffers = -1    # auto-tuned by Postgres till maximum of segment size (16MB by default)
     wal_writer_delay = 200ms
     wal_writer_flush_after = 1MB
-    wal_keep_size = '3650 MB'
+    wal_keep_size = '3 GB'
 
 
     # Background writer
@@ -66,10 +66,11 @@ resources:
   limits:
     cpu: 2000m
     memory: 8Gi
+    hugepages-2Mi: 20Mi
   requests:
     cpu: 2000m
     memory: 8Gi
 
 persistentVolume:
   enabled: true
-  size: 50G
+  size: 50Gi

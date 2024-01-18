@@ -122,6 +122,7 @@ spec:
             - "--web.console.libraries=/opt/drycc/prometheus/conf/console_libraries"
             - "--web.console.templates=/opt/drycc/prometheus/conf/consoles"
             - "--web.config.file=/opt/drycc/prometheus/conf/web-config.yaml"
+            - "--web.enable-lifecycle"
             {{- if .Values.server.enableAdminAPI}}
             - "--web.enable-admin-api"
             {{- end }}

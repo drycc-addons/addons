@@ -51,7 +51,7 @@ persistence:
     - ReadWriteOnce
   ## @param primary.persistence.size MySQL primary persistent volume size
   ##
-  size: 5Gi
+  size: 10Gi
   ## @param primary.persistence.selector Selector to match an existing Persistent Volume
   ## selector:
   ##   matchLabels:
