@@ -200,6 +200,8 @@ spec:
             - name: custom-init-scripts-secret
               mountPath: /docker-entrypoint-initdb.d/init-scripts-secret
             {{- end }}
+            - name: work-data
+              mountPath: /opt/drycc/spark/work
           env:
             - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
@@ -344,6 +346,43 @@ spec:
             secretName: {{ template ".Values.initScriptsSecret" . }}
             defaultMode: 0755
         {{- end }}
-  {{- if .Values.master.extraVolumeClaimTemplates }}
-  volumeClaimTemplates: {{- include "common.tplvalues.render" (dict "value" .Values.master.extraVolumeClaimTemplates "context" $) | nindent 8 }}
+  {{- if not .Values.master.persistence.enabled }}
+        - name: "work-data"
+          emptyDir: {}
+  {{- else if .Values.master.persistence.existingClaim }}
+        - name: "work-data"
+          persistentVolumeClaim:
+            claimName: {{ .Values.master.persistence.existingClaim }}
+  {{- else }}
+  {{- if .Values.master.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.master.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.master.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: "work-data"
+        {{- if or .Values.master.persistence.annotations .Values.commonAnnotations }}
+        {{- $claimAnnotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.master.persistence.annotations .Values.commonAnnotations ) "context" . ) }}
+        annotations: {{- include "common.tplvalues.render" ( dict "value" $claimAnnotations "context" $) | nindent 4 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        labels: {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- range .Values.master.persistence.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.master.persistence.size | quote }}
+        {{- if .Values.master.persistence.selector }}
+        selector: {{- include "common.tplvalues.render" (dict "value" .Values.master.persistence.selector "context" $) | nindent 10 }}
+        {{- else if .Values.master.persistence.existingVolume }}
+        selector:
+          matchLabels:
+            volume: {{ .Values.master.persistence.existingVolume }}
+        {{- end }}
+        {{- include "common.storage.class" (dict "persistence" .Values.master.persistence "global" .Values.global) | nindent 8 }}
   {{- end }}

@@ -24,9 +24,15 @@ allow_parameters:
 - name: "master.configOptions"
   required: false
   description: "master configOptions config for values.yaml"
+- name: "master.persistence"
+  required: false
+  description: "master persistence config for values.yaml"
 - name: "worker.configOptions"
   required: false
   description: "worker configOptions config for values.yaml"
+- name: "worker.persistence"
+  required: false
+  description: "worker persistence config for values.yaml"
 - name: "metrics.enable"
   required: false
   description: "metrics enable or not config for values.yaml"
