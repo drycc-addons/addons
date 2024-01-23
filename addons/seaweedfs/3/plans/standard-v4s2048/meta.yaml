@@ -1,0 +1,6 @@
+name: "standard-v4s2048"
+id: 62127217-09e3-4e9b-8464-1a0dffab8803
+description: "Seaweedfs standard-v4s2048 plan which limit 4 volumes, each size 2048G."
+displayName: "standard-v4s2048"
+bindable: true
+maximum_polling_duration: 1800

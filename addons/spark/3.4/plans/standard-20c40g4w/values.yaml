@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: "hb-spark-standard-4c8g3w"
+fullnameOverride: "hb-spark-standard-20c40g4w"
 
 ## Spark master specific configuration
 ##
@@ -28,11 +28,11 @@ master:
   ##
   resources:
     limits:
-      cpu: 4000m
-      memory: 8Gi
+      cpu: 20000m
+      memory: 40Gi
     requests:
-      cpu: 2000m
-      memory: 4Gi
+      cpu: 4000m
+      memory: 20Gi
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -40,7 +40,7 @@ master:
     enabled: true
     accessModes:
       - ReadWriteOnce
-    size: 1Gi
+    size: 2Gi
 ## @section Spark worker parameters
 ##
 
@@ -68,7 +68,7 @@ worker:
 
   ## @param worker.replicaCount Number of spark workers (will be the minimum number when autoscaling is enabled)
   ##
-  replicaCount: 3
+  replicaCount: 4
   ## Container resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## We usually recommend not to specify default resources and to leave this as a conscious
@@ -80,11 +80,11 @@ worker:
   ##
   resources:
     limits:
-      cpu: 4000m
-      memory: 8Gi
+      cpu: 20000m
+      memory: 40Gi
     requests:
-      cpu: 2000m
-      memory: 4Gi
+      cpu: 4000m
+      memory: 20Gi
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -92,4 +92,4 @@ worker:
     enabled: true
     accessModes:
       - ReadWriteOnce
-    size: 1Gi
+    size: 2Gi

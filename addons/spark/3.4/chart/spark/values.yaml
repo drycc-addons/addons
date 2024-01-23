@@ -383,7 +383,55 @@ master:
   ##         containerPort: 1234
   ##
   initContainers: []
-
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    ## @param master.persistence.enabled Enable persistence using a `PersistentVolumeClaim`
+    ##
+    enabled: false
+    ## @param master.persistence.storageClass Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: ""
+    ## @param master.persistence.existingClaim Existing Persistent Volume Claim
+    ## then accept the value as an existing Persistent Volume Claim to which
+    ## the container should be bound
+    ##
+    existingClaim: ""
+    ## @param master.persistence.existingVolume Existing Persistent Volume for use as volume match label selector to the `volumeClaimTemplate`. Ignored when `master.persistence.selector` is set.
+    ##
+    existingVolume: ""
+    ## @param master.persistence.selector Configure custom selector for existing Persistent Volume. Overwrites `master.persistence.existingVolume`
+    ## selector:
+    ##   matchLabels:
+    ##     volume:
+    ##
+    selector: {}
+    ## @param master.persistence.annotations Persistent Volume Claim annotations
+    ##
+    annotations: {}
+    ## @param master.persistence.accessModes Persistent Volume Access Modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## @param master.persistence.size Persistent Volume Size
+    ##
+    size: 1Gi
+  ## persistentVolumeClaimRetentionPolicy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ## @param master.persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+  ## @param master.persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+  ## @param master.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+  ##
+  persistentVolumeClaimRetentionPolicy:
+    enabled: true
+    whenScaled: Delete
+    whenDeleted: Delete
 ## @section Spark worker parameters
 ##
 
@@ -680,6 +728,55 @@ worker:
     maxReplicas: 5
     targetCPU: 50
     targetMemory: ""
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    ## @param worker.persistence.enabled Enable persistence using a `PersistentVolumeClaim`
+    ##
+    enabled: false
+    ## @param worker.persistence.storageClass Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    storageClass: ""
+    ## @param worker.persistence.existingClaim Existing Persistent Volume Claim
+    ## then accept the value as an existing Persistent Volume Claim to which
+    ## the container should be bound
+    ##
+    existingClaim: ""
+    ## @param worker.persistence.existingVolume Existing Persistent Volume for use as volume match label selector to the `volumeClaimTemplate`. Ignored when `worker.persistence.selector` is set.
+    ##
+    existingVolume: ""
+    ## @param worker.persistence.selector Configure custom selector for existing Persistent Volume. Overwrites `worker.persistence.existingVolume`
+    ## selector:
+    ##   matchLabels:
+    ##     volume:
+    ##
+    selector: {}
+    ## @param worker.persistence.annotations Persistent Volume Claim annotations
+    ##
+    annotations: {}
+    ## @param worker.persistence.accessModes Persistent Volume Access Modes
+    ##
+    accessModes:
+      - ReadWriteOnce
+    ## @param worker.persistence.size Persistent Volume Size
+    ##
+    size: 1Gi
+  ## persistentVolumeClaimRetentionPolicy
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+  ## @param worker.persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+  ## @param worker.persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+  ## @param worker.persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+  ##
+  persistentVolumeClaimRetentionPolicy:
+    enabled: true
+    whenScaled: Delete
+    whenDeleted: Delete
 
 ## @section Security parameters
 ##

@@ -33,7 +33,14 @@ master:
     requests:
       cpu: 4000m
       memory: 16Gi
-
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
 ## @section Spark worker parameters
 ##
 
@@ -78,3 +85,11 @@ worker:
     requests:
       cpu: 4000m
       memory: 16Gi
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
