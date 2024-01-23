@@ -1,0 +1,20 @@
+credential:
+  {{- if (eq .Values.jobmanager.service.type "LoadBalancer") }}
+  - name: JOBMANAGER_EXTERNAL_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: JOBMANAGER_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: JOBMANAGER_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="http")].port }'
