@@ -113,11 +113,11 @@ auth:
   ## @param auth.database Name for a custom database to create
   ## ref: https://github.com/drycc/containers/tree/main/drycc/mysql#creating-a-database-on-first-run
   ##
-  database: "mx_database"
+  database: "mondb"
   ## @param auth.username Name for a custom user to create
   ## ref: https://github.com/drycc/containers/tree/main/drycc/mysql#creating-a-database-user-on-first-run
   ##
-  username: "mx111"
+  username: "administrator"
   ## @param auth.password Password for the new user. Ignored if existing secret is provided
   ##
   password: ""
@@ -127,7 +127,7 @@ auth:
   replicationUser: replicator
   ## @param auth.replicationPassword MySQL replication user password. Ignored if existing secret is provided
   ##
-  replicationPassword: "user4_repUU"
+  replicationPassword: ""
   ## @param auth.existingSecret Use existing secret for password details. The secret has to contain the keys `mysql-root-password`, `mysql-replication-password` and `mysql-password`
   ## NOTE: When it's set the auth.rootPassword, auth.password, auth.replicationPassword are ignored.
   ##
@@ -244,6 +244,7 @@ primary:
     disabled_storage_engines="MyISAM,BLACKHOLE,FEDERATED,ARCHIVE,MEMORY"
     sql_require_primary_key=ON
     log_error_suppression_list='MY-013360'
+    binlog_transaction_dependency_tracking=WRITESET
     # Replication
   
     log_bin=mysql-bin
@@ -602,6 +603,7 @@ cluster:
     tag: 8.0.34
     digest: ""
     pullPolicy: IfNotPresent 
+
 
 router:
   ## @param router.name Name of the router 
