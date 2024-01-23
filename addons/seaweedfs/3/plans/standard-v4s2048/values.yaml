@@ -1,0 +1,47 @@
+fullnameOverride: hb-seaweedfs-standard-v4s2048
+
+master:
+  resources:
+    limits:
+      cpu: 3000m
+      memory: 10Gi
+    requests:
+      cpu: 200m
+      memory: 5Gi
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: ""
+
+filer:
+  resources:
+    limits:
+      cpu: 3000m
+      memory: 10Gi
+    requests:
+      cpu: 300m
+      memory: 5Gi
+  persistence:
+    enabled: true
+    size: 128Gi
+    storageClass: ""
+
+volume:
+  replicas: 4
+  resources:
+    limits:
+      cpu: 3000m
+      memory: 10Gi
+    requests:
+      cpu: 300m
+      memory: 5Gi
+  persistence:
+    meta:
+      enabled: true
+      size: 2Gi
+      storageClass: ""
+    data:
+      enabled: true
+      size: 2048Gi
+      storageClass: ""
+  compactionMBps: 50
