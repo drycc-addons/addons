@@ -42,6 +42,7 @@ spec:
         args:
         - weed
         - master
+        - -raftHashicorp
         - -mdir=/seaweedfs
         - -ip=$(POD_NAME).{{ include "seaweedfs.master.fullname" . }}.$(NAMESPACE).svc.{{ $clusterDomain }}
         - -port={{ .Values.master.ports.http }}
