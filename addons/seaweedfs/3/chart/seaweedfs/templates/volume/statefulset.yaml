@@ -69,6 +69,7 @@ spec:
             -dataCenter=${DATA_CENTER} \
             -mserver={{ include "seaweedfs.master.peers" . }} \
             -compactionMBps={{ .Values.volume.compactionMBps }} \
+            -index=leveldb \
             -dir=/seaweedfs/data \
             -dir.idx=/seaweedfs/meta
         env:
