@@ -1,0 +1,6 @@
+name: "standard-2c4g5w"
+id: 675c826c-dd9c-4e1d-8300-3258736f026e
+description: "ZooKeeper standard-2c4g5w plan which limit resources 2 cores 4G memory 5 node."
+displayName: "standard-2c4g5w"
+bindable: true
+maximum_polling_duration: 1800
