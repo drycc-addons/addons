@@ -1,17 +1,16 @@
 credential:
 {{- if (eq .Values.router.service.type "LoadBalancer") }}
-  - name: HOST
+  - name: EXTRANET_HOST
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.router.service.type "ClusterIP") }}
+{{- end }}
   - name: HOST
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}-router
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }} 
   - name: PASSWORD
     valueFrom:
       secretKeyRef:
