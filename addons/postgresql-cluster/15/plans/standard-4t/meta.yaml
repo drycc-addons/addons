@@ -1,0 +1,6 @@
+name: "standard-4t"
+id: 138f8059-a3f6-4efe-a210-09d9ff00f9a9
+description: "PostgreSQL Cluster standard-4t plan: Disk 4Ti ,vCPUs 32 , RAM 64G , DB MAX Connection 2000"
+displayName: "standard-4t"
+bindable: true
+maximum_polling_duration: 1800

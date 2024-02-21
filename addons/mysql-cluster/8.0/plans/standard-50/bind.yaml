@@ -1,39 +1,33 @@
 credential:
 {{- if (eq .Values.router.service.type "LoadBalancer") }}
-  - name: HOST
+  - name: EXTRANET_HOST
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- else if (eq .Values.router.service.type "ClusterIP") }}
+{{- end }}
   - name: HOST
     valueFrom:
       serviceRef:
-        name: {{ include "common.names.fullname" . }}
+        name: {{ include "common.names.fullname" . }}-router
         jsonpath: '{ .spec.clusterIP }'
-  {{- end }}
-  - name: DADABASE
-    valueFrom:
-      secretKeyRef:
-        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
-        jsonpath: '{ .data.database }' 
   - name: PASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
-        jsonpath: '{ .data.username }' 
+        name: {{ template "common.names.fullname" . }}-svcbind-administrator-user
+        jsonpath: '{ .data.password }' 
   - name: USERNAME
     valueFrom:
       secretKeyRef:
-        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        name: {{ template "common.names.fullname" . }}-svcbind-administrator-user
         jsonpath: '{ .data.username }' 
   - name: READONLY_PORT
     valueFrom:
       secretKeyRef:
-        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        name: {{ template "common.names.fullname" . }}-svcbind-administrator-user
         jsonpath: '{ .data.portro }'
   - name: READWRITE_PORT
     valueFrom:
       secretKeyRef:
-        name: {{ template "common.names.fullname" . }}-svcbind-custom-user
+        name: {{ template "common.names.fullname" . }}-svcbind-administrator-user
         jsonpath: '{ .data.portrw }' 

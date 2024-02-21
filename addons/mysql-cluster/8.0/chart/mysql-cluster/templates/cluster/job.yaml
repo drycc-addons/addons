@@ -67,7 +67,8 @@ spec:
               " > /tmp/slave.sql 
               mysql -h${HOST_1} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD}  < /tmp/slave.sql
               mysql -h${HOST_2} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD}  < /tmp/slave.sql
-    
+              mysql -h${HOST_0} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO administrator@'%' WITH GRANT OPTION;flush privileges;"
+              
           env:
             - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
