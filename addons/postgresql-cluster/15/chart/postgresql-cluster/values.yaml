@@ -57,6 +57,7 @@ preInitScript: |
       loop_wait: 10
       retry_timeout: 10
       maximum_lag_on_failover: 1048576
+      failsafe_mode: true
       postgresql:
         use_pg_rewind: true
         use_slots: true
@@ -74,6 +75,7 @@ preInitScript: |
           max_worker_processes: 8
           max_wal_senders: 10
           max_replication_slots: 10
+          hot_standby_feedback: on
           max_prepared_transactions: 0
           max_locks_per_transaction: 64
           wal_log_hints: "on"
@@ -120,7 +122,7 @@ postInitScript: |
   #!/bin/bash
   set -Eeu
   # Create monitor user
-  psql -w -c  "CREATE USER tea_mon WITH ROLE pg_monitor;create extension pg_stat_statements;create extension pg_buffercache ;"
+  psql -w -c  "CREATE USER tea_mon ;GRANT pg_monitor TO tea_mon ;create extension pg_stat_statements;create extension pg_buffercache ;"
   # Create admin  user 
   if [[( -n "$ADMIN_USER") &&  ( -n "$ADMIN_PASSWORD")]]; then
 
