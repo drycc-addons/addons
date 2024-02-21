@@ -1,0 +1,48 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: "hb-zookeeper-standard-2c4g5w"
+
+## @param replicaCount Number of ZooKeeper nodes
+##
+replicaCount: 5
+
+## ZooKeeper resource requests and limits
+## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+## @param resources.limits The resources limits for the ZooKeeper containers
+## @param resources.requests.memory The requested memory for the ZooKeeper containers
+## @param resources.requests.cpu The requested cpu for the ZooKeeper containers
+##
+resources:
+  limits: 
+    memory: 4Gi
+    cpu: 2000m
+  requests:
+    memory: 2Gi
+    cpu: 200m
+## @section Persistence parameters
+
+## Enable persistence using Persistent Volume Claims
+## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+##
+persistence:
+  ## @param persistence.enabled Enable ZooKeeper data persistence using PVC. If false, use emptyDir
+  ##
+  enabled: true
+  ## @param persistence.existingClaim Name of an existing PVC to use (only when deploying a single replica)
+  ##
+  existingClaim: ""
+  ## @param persistence.storageClass PVC Storage Class for ZooKeeper data volume
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  ## @param persistence.accessModes PVC Access modes
+  ##
+  accessModes:
+    - ReadWriteOnce
+  ## @param persistence.size PVC Storage Request for ZooKeeper data volume
+  ##
+  size: 240Gi

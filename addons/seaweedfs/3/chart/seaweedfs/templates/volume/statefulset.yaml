@@ -64,11 +64,12 @@ spec:
             -port={{ .Values.volume.ports.http }} \
             -port.grpc={{ .Values.volume.ports.grpc }} \
             -metricsPort={{ .Values.volume.ports.metrics }} \
-            -max=100 \
+            -max=0 \
             -rack=${RACK} \
             -dataCenter=${DATA_CENTER} \
             -mserver={{ include "seaweedfs.master.peers" . }} \
             -compactionMBps={{ .Values.volume.compactionMBps }} \
+            -index=leveldb \
             -dir=/seaweedfs/data \
             -dir.idx=/seaweedfs/meta
         env:

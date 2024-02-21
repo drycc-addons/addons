@@ -1,0 +1,47 @@
+## @param fullnameOverride String to fully override common.names.fullname
+##
+fullnameOverride: hb-flink-standard-4c8g
+## @section Jobmanager deployment parameters
+##
+
+jobmanager:
+  ## @param jobmanager.replicaCount Number of Apache Flink Jobmanager replicas
+  ##
+  replicaCount: 1
+  ## Apache Flink pods' resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## Minimum memory for development is 4GB and 2 CPU cores
+  ## Minimum memory for production is 8GB and 4 CPU cores
+  ## ref: http://docs.datastax.com/en/archived/flink/2.0/flink/architecture/architecturePlanningHardware_c.html
+  resources:
+    limits:
+      cpu: 4
+      memory: 8Gi
+    requests:
+      cpu: 400m
+      memory: 8Gi
+  ## Apache Flink jobmanager.service parameters
+  ##
+  service:
+    ## @param jobmanager.service.type Apache Flink service type
+    ##
+    type: ClusterIP
+## @section TaskManager deployment parameters
+##
+
+taskmanager:
+  ## @param taskmanager.replicaCount Number of Apache Flink replicas
+  ##
+  replicaCount: 2
+  ## Apache Flink pods' resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## Minimum memory for development is 4GB and 2 CPU cores
+  ## Minimum memory for production is 8GB and 4 CPU cores
+  ## ref: http://docs.datastax.com/en/archived/flink/2.0/flink/architecture/architecturePlanningHardware_c.html
+  resources:
+    limits:
+      cpu: 4
+      memory: 8Gi
+    requests:
+      cpu: 400m
+      memory: 8Gi

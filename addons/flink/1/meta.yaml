@@ -1,0 +1,24 @@
+name: flink
+version: 1
+id: 9ce3c3ba-33b5-4e4e-a5e9-a338a83d5070
+description: "flink"
+displayName: "flink"
+metadata:
+  displayName: "flink"
+  provider:
+    name: drycc
+    supportURL: https://flink.apache.org/
+  documentationURL: https://flink.apache.org/
+tags: flink
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: false
+allow_parameters:
+- name: "jobmanager.service.type"
+  required: false
+  description: "jobmanager service type config for values.yaml"
+- name: "taskmanager.service.type"
+  required: false
+  description: "taskmanager service type config for values.yaml"
+archive: false

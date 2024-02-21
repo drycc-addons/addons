@@ -279,9 +279,9 @@ spec:
             exec:
               command:
                 - init-stack
-                - /bin/bash
+                - sh
                 - -ec
-                - rabbitmq-diagnostics -q ping
+                - test "$(curl -f --user {{ .Values.auth.username }}:$RABBITMQ_PASSWORD 127.0.0.1:{{ .Values.containerPorts.manager }}/api/health/checks/port-listener/{{ .Values.containerPorts.amqp }})" = '{"status":"ok","port":{{ .Values.containerPorts.amqp }}}'
           {{- end }}
           {{- if .Values.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customReadinessProbe "context" $) | nindent 12 }}
@@ -290,9 +290,9 @@ spec:
             exec:
               command:
                 - init-stack
-                - /bin/bash
+                - sh
                 - -ec
-                - rabbitmq-diagnostics -q check_running && rabbitmq-diagnostics -q check_local_alarms
+                - test "$(curl -f --user {{ .Values.auth.username }}:$RABBITMQ_PASSWORD 127.0.0.1:{{ .Values.containerPorts.manager }}/api/health/checks/local-alarms)" = '{"status":"ok"}'
           {{- end }}
           {{- if .Values.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customStartupProbe "context" $) | nindent 12 }}

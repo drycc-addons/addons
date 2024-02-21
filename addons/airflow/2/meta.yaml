@@ -24,9 +24,9 @@ allow_parameters:
 - name: "git"
   required: false
   description: "git config for values.yaml"
-- name: "master.image"
+- name: "web.image"
   required: false
-  description: "master image config for values.yaml"
+  description: "web image config for values.yaml"
 - name: "scheduler.image"
   required: false
   description: "scheduler image config for values.yaml"
@@ -39,12 +39,18 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
-- name: "statsd.enable"
+- name: "statsd.enabled"
   required: false
-  description: "statsd enable or not config for values.yaml"
+  description: "statsd enabled or not config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
+- name: pip
+  required: false
+  description: "pip config for values.yaml"
+- name: requirements
+  required: false
+  description: "requirements config for values.yaml"
 - name: "externalDatabase"
   required: true
   description: "externalDatabase config for values.yaml"
