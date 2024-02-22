@@ -1,0 +1,27 @@
+name: kafka
+version: 3.6
+id: 412e368f-bf78-4798-92cc-43343119a57d
+description: "kafka."
+displayName: "kafka"
+metadata:
+  displayName: "kafka"
+  provider:
+    name: drycc
+    supportURL: https://kafka.apache.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/kafka
+tags: kafka
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "metrics.kafka.enable"
+  required: false
+  description: "metrics kafka enable or not config for values.yaml"
+archive: false

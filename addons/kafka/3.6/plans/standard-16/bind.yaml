@@ -1,0 +1,48 @@
+credential:
+  {{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: EXTERNAL_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+  
+  - name: CLIENT_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: CLIENT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+
+  {{- if .Values.externalAccess.enabled }}
+  - name: EXTERNAL_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-external")].port }'
+  {{- end }}
+
+
+  {{- if (include "kafka.createSaslSecret" .) }}
+  {{- if (include "kafka.saslUserPasswordsEnabled" .) }}
+  - name: CLIENT_USERS
+    value: {{ join "," .Values.sasl.client.users | quote }}
+
+  - name: CLIENT_PASSPORTS
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.client-passwords }'
+
+  - name: SYSTEM_USER_PASSPORT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.system-user-password }'
+  {{- end }}
+  {{- end }}

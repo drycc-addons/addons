@@ -1,0 +1,6 @@
+name: "standard-256"
+id: 22c8101b-5f85-4468-ab8d-2ac09d8d51f3
+description: "Kafka standard-256 plan which limit persistence size 256Gi."
+displayName: "standard-256"
+bindable: true
+maximum_polling_duration: 1800
