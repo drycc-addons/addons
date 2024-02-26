@@ -186,11 +186,7 @@ spec:
                 - /bin/bash
                 - -ec
                 - |
-                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
-                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
-                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
-                  fi
-                  mysqladmin status -uroot -h127.0.0.1 -P6446 -p"${password_aux}"
+                  mysqladmin ping -uroot -h127.0.0.1 -P6446 -p"${MYSQL_ROOT_PASSWORD}"
           {{- end }}
           {{- if .Values.router.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.router.customReadinessProbe "context" $) | nindent 12 }}
@@ -201,11 +197,7 @@ spec:
                 - /bin/bash
                 - -ec
                 - |
-                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
-                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
-                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
-                  fi
-                  mysqladmin status -uroot -h127.0.0.1 -P6446 -p"${password_aux}"
+                  mysqladmin ping -uroot -h127.0.0.1 -P6446 -p"${MYSQL_ROOT_PASSWORD}"
           {{- end }}
           {{- if .Values.router.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.router.customStartupProbe "context" $) | nindent 12 }}
@@ -216,11 +208,7 @@ spec:
                 - /bin/bash
                 - -ec
                 - |
-                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
-                  if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
-                      password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
-                  fi
-                  mysqladmin status -uroot -h127.0.0.1 -P6446 -p"${password_aux}"
+                  mysqladmin ping -uroot -h127.0.0.1 -P6446 -p"${MYSQL_ROOT_PASSWORD}"
           {{- end }}
           {{- end }}
           {{- if .Values.router.resources }}

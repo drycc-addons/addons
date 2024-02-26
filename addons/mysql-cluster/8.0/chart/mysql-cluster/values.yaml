@@ -408,7 +408,7 @@ primary:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     failureThreshold: 3
     successThreshold: 1
   ## Configure extra options for readiness probe
@@ -424,7 +424,7 @@ primary:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     failureThreshold: 3
     successThreshold: 1
   ## Configure extra options for startupProbe probe
@@ -440,7 +440,7 @@ primary:
     enabled: true
     initialDelaySeconds: 15
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     failureThreshold: 10
     successThreshold: 1
   ## @param primary.customLivenessProbe Override default liveness probe for MySQL primary containers
@@ -743,7 +743,7 @@ router:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     failureThreshold: 3
     successThreshold: 1
   ## Configure extra options for readiness probe
@@ -759,7 +759,7 @@ router:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     failureThreshold: 3
     successThreshold: 1
   ## Configure extra options for startupProbe probe
@@ -775,7 +775,7 @@ router:
     enabled: true
     initialDelaySeconds: 15
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     failureThreshold: 15
     successThreshold: 1
   ## @param secondary.customLivenessProbe Override default liveness probe for MySQL secondary containers
@@ -1154,7 +1154,7 @@ metrics:
     enabled: true
     initialDelaySeconds: 120
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 3
   ## Mysqld Prometheus exporter readiness probe
@@ -1170,7 +1170,7 @@ metrics:
     enabled: true
     initialDelaySeconds: 30
     periodSeconds: 10
-    timeoutSeconds: 1
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 3
   ## Prometheus Service Monitor

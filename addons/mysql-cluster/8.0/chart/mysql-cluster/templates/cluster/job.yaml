@@ -103,8 +103,13 @@ spec:
             - -ec
             - |
               export HOST_0=${MYSQL_MASTER_HOST}-0.${MYSQL_MASTER_HOST}
-              echo 'Y' |  mysqlsh --uri=${MYSQL_MASTER_ROOT_USER}@${HOST_0}:${MYSQL_MASTER_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -e'var c=dba.createCluster("MXMGR");'
+              export HOST_1=${MYSQL_MASTER_HOST}-1.${MYSQL_MASTER_HOST}
+              export HOST_2=${MYSQL_MASTER_HOST}-2.${MYSQL_MASTER_HOST}
 
+              echo 'Y' |  mysqlsh --uri=${MYSQL_MASTER_ROOT_USER}@${HOST_0}:${MYSQL_MASTER_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -e'var c=dba.createCluster("MXMGR");'
+              mysql -h${HOST_0} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD} -e "select  @group_replication_group_name:= attributes ->  '$.group_replication_group_name' from mysql_innodb_cluster_metadata.clusters; SET @sql = CONCAT('SET GLOBAL group_replication_group_name = "', @group_replication_group_name, '"');";
+              mysql -h${HOST_1} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD} -e "select  @group_replication_group_name:= attributes ->  '$.group_replication_group_name' from mysql_innodb_cluster_metadata.clusters; SET @sql = CONCAT('SET GLOBAL group_replication_group_name = "', @group_replication_group_name, '"');";
+              mysql -h${HOST_2} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD} -e "select  @group_replication_group_name:= attributes ->  '$.group_replication_group_name' from mysql_innodb_cluster_metadata.clusters; SET @sql = CONCAT('SET GLOBAL group_replication_group_name = "', @group_replication_group_name, '"');";
           env:
             - name: MYSQL_MASTER_HOST
               value: {{ include "mysql.primary.fullname" . }}
