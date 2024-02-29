@@ -434,6 +434,11 @@ spec:
             claimName: {{ printf "%s" (tpl .Values.controller.logPersistence.existingClaim .) }}
         {{- end }}
   {{- if or (and .Values.controller.persistence.enabled (not .Values.controller.persistence.existingClaim)) (and .Values.controller.logPersistence.enabled (not .Values.controller.logPersistence.existingClaim)) }}
+  {{- if .Values.controller.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.controller.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.controller.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
   volumeClaimTemplates:
     {{- if and .Values.controller.persistence.enabled (not .Values.controller.persistence.existingClaim) }}
     - apiVersion: v1
