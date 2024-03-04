@@ -21,4 +21,7 @@ allow_parameters:
 - name: "taskmanager.service.type"
   required: false
   description: "taskmanager service type config for values.yaml"
+- name: "taskmanager.extraEnvVars"
+  required: false
+  description: "taskmanager extraEnvVars config for values.yaml"
 archive: false

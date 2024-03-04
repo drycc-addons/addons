@@ -45,3 +45,8 @@ taskmanager:
     requests:
       cpu: 400m
       memory: 8Gi
+  ## @param taskmanager.extraEnvVars Extra environment variables to be set on flink container
+  extraEnvVars:
+    # taskmanager.numberOfTaskSlots
+    - name: FLINK_TASK_MANAGER_NUMBER_OF_TASK_SLOTS
+      value: "4"

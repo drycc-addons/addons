@@ -6,9 +6,9 @@ annotations:
   licenses: Apache-2.0
   images: |
     - name: flink
-      image: registry.drycc.cc/drycc-addons/flink:1
+      image: registry.drycc.cc/drycc-addons/flink:1.17
 apiVersion: v2
-appVersion: 1.18.1
+appVersion: 1.17.2
 dependencies:
   - name: common
     repository: oci://registry.drycc.cc/charts
