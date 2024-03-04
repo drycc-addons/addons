@@ -176,9 +176,9 @@ initdbScripts:
     # Add an offset to avoid reserved server-id=0 value.
     echo server-id=$((100 + $ordinal)) >> $base_conf_file
     # Copy appropriate conf.d files from config-map to emptyDir.
-    echo loose-group_replication_local_address=$mgr_host.$svc_mgr_host:24901 >> $base_conf_file
-    echo report_host=$mgr_host.$svc_mgr_host >> $base_conf_file
-    echo loose-group_replication_group_seeds="$svc_mgr_host-0.$svc_mgr_host:24901,$svc_mgr_host-1.$svc_mgr_host:24901,$svc_mgr_host-2.$svc_mgr_host:24901" >> $base_conf_file 
+    echo loose-group_replication_local_address=$mgr_host:24901 >> $base_conf_file
+    echo report_host=$mgr_host >> $base_conf_file
+    echo loose-group_replication_group_seeds="$svc_mgr_host-0:24901,$svc_mgr_host-1:24901,$svc_mgr_host-2:24901" >> $base_conf_file 
 
     echo plugin_load_add='group_replication.so' >> $base_conf_file
       
@@ -204,7 +204,7 @@ primary:
   ##
   args: []
   ## @param primary.lifecycleHooks for the MySQL Primary container(s) to automate configuration before or after startup
-  ##
+  ##configuration
   lifecycleHooks: {}
   ## @param primary.hostAliases Deployment pod host aliases
   ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
@@ -259,18 +259,11 @@ primary:
 
     # Multi-threaded Replication
     replica_preserve_commit_order=ON 
-    replica_parallel_workers=4
+    replica_parallel_workers=8
+    replica_parallel_type=LOGICAL_CLOCK
 
     # Group Replication Settings 
-    #plugin_load_add="group_replication.so"
-    loose-group_replication_recovery_get_public_key=ON 
-    loose-group_replication_recovery_use_ssl=on
-    loose-group_replication_group_name="{{uuidv4}}"
-    loose-group_replication_ip_allowlist="0.0.0.0/0"
-
-    loose-group_replication_bootstrap_group=OFF
-    loose-group_replication_start_on_boot=OFF
-
+  
     [client]
     port=3306
     socket=/opt/drycc/mysql/tmp/mysql.sock
@@ -689,7 +682,7 @@ router:
   ## @param secondary.podManagementPolicy podManagementPolicy to manage scaling operation of MySQL secondary pods
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies
   ##
-  podManagementPolicy: ""
+  podManagementPolicy: "Parallel"
   ## MySQL secondary Pod security context
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
   ## @param secondary.podSecurityContext.enabled Enable security context for MySQL secondary pods

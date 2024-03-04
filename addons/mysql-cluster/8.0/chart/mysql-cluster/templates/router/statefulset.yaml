@@ -43,6 +43,10 @@ spec:
       {{- if .Values.router.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.router.hostAliases "context" $) | nindent 8 }}
       {{- end }}
+      subdomain: {{ include "mysql.primary.fullname" . }}
+      dnsConfig: 
+        searches:
+          - {{ include "mysql.primary.fullname" . }}.{{ include "common.names.namespace" . }}.svc.cluster.local
       {{- if .Values.router.affinity }}
       affinity: {{- include "common.tplvalues.render" (dict "value" .Values.router.affinity "context" $) | nindent 8 }}
       {{- else }}

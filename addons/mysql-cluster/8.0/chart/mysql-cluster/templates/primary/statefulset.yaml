@@ -46,6 +46,10 @@ spec:
       {{- if .Values.primary.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.primary.hostAliases "context" $) | nindent 8 }}
       {{- end }}
+      subdomain: {{ include "mysql.primary.fullname" . }}
+      dnsConfig: 
+        searches:
+          - {{ include "mysql.primary.fullname" . }}.{{ include "common.names.namespace" . }}.svc.cluster.local
       {{- if .Values.primary.affinity }}
       affinity: {{- include "common.tplvalues.render" (dict "value" .Values.primary.affinity "context" $) | nindent 8 }}
       {{- else }}
@@ -214,7 +218,7 @@ spec:
                   if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
                       password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
                   fi
-                  mysqladmin status -uroot -h127.0.0.1 -p"${password_aux}"
+                  mysqladmin ping -uroot -h127.0.0.1 -p"${password_aux}"
           {{- end }}
           {{- if .Values.primary.customReadinessProbe }}
           readinessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customReadinessProbe "context" $) | nindent 12 }}
@@ -229,7 +233,7 @@ spec:
                   if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
                       password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
                   fi
-                  mysqladmin status -uroot -h127.0.0.1 -p"${password_aux}"
+                  mysqladmin ping -uroot -h127.0.0.1 -p"${password_aux}"
           {{- end }}
           {{- if .Values.primary.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.primary.customStartupProbe "context" $) | nindent 12 }}
@@ -244,7 +248,7 @@ spec:
                   if [[ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]]; then
                       password_aux=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
                   fi
-                  mysqladmin status -uroot -h127.0.0.1 -p"${password_aux}"
+                  mysqladmin ping -uroot -h127.0.0.1 -p"${password_aux}"
           {{- end }}
           {{- end }}
           {{- if .Values.primary.resources }}
