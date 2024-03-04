@@ -55,7 +55,11 @@ postgresql:
     enable_partitionwise_join = on 
     enable_partitionwise_aggregate = on
     jit = on
+<<<<<<< HEAD
     max_slot_wal_keep_size = 100GB
+=======
+    max_slot_wal_keep_size = '1000 MB'
+>>>>>>> 13b64985573dbeb3604907bf1fa5e72ce6e4c14c
     track_wal_io_timing = on
     maintenance_io_concurrency = 100
 

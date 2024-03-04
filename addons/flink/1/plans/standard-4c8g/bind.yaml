@@ -13,8 +13,20 @@ credential:
         name: {{ include "flink.jobmanager.fullname" . }}
         jsonpath: '{ .spec.clusterIP }'
 
-  - name: JOBMANAGER_PORT
+  - name: JOBMANAGER_PORT_HTTP
     valueFrom:
       serviceRef:
         name: {{ include "flink.jobmanager.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="http")].port }'
+
+  - name: JOBMANAGER_PORT_RPC
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-rpc")].port }'
+
+  - name: JOBMANAGER_PORT_BLOB
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-blob")].port }'
