@@ -6,7 +6,7 @@ SPDX-License-Identifier: APACHE-2.0
 apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
 kind: Job
 metadata:
-  name: {{ include "mysql.cluster.fullname" . }} 
+  name: {{ include "mysql.cluster.fullname" . }}-init
   namespace: {{ include "common.names.namespace" . | quote }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
     app.kubernetes.io/component: primary
@@ -21,6 +21,10 @@ spec:
   template:
     spec:
       restartPolicy: Never
+      subdomain: {{ include "mysql.primary.fullname" . }}
+      dnsConfig: 
+        searches:
+          - {{ include "mysql.primary.fullname" . }}.{{ include "common.names.namespace" . }}.svc.cluster.local
       initContainers:
         - name: init-wait
           image: registry.uucin.com/drycc/python-dev:latest
@@ -29,70 +33,16 @@ spec:
           - netcat
           - -v
           - -u
-          - mysql://$(MYSQL_MASTER_HOST)-0.$(MYSQL_MASTER_HOST):$(MYSQL_MASTER_PORT_NUMBER),mysql://$(MYSQL_MASTER_HOST)-1.$(MYSQL_MASTER_HOST):$(MYSQL_MASTER_PORT_NUMBER),mysql://$(MYSQL_MASTER_HOST)-2.$(MYSQL_MASTER_HOST):$(MYSQL_MASTER_PORT_NUMBER)
+          - mysql://$(MYSQL_HOST)-2:$(MYSQL_PORT_NUMBER)
 
           env:
-            - name: MYSQL_MASTER_HOST
+            - name: MYSQL_HOST
               value: {{ include "mysql.primary.fullname" . }}
-            - name: MYSQL_MASTER_PORT_NUMBER
+            - name: MYSQL_PORT_NUMBER
               value: {{ .Values.primary.service.ports.mysql | quote }}
-
-        - name: mgr
-          image: {{ include "mysql.image" . }}
-          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
-          {{- if .Values.primary.containerSecurityContext.enabled }}
-          securityContext: {{- omit .Values.primary.containerSecurityContext "enabled" | toYaml | nindent 12 }}
-          {{- end }}
-          command: 
-            - /bin/bash
-            - -ec
-            - |
-              export HOST_0=${MYSQL_MASTER_HOST}-0.${MYSQL_MASTER_HOST}
-              export HOST_1=${MYSQL_MASTER_HOST}-1.${MYSQL_MASTER_HOST}
-              export HOST_2=${MYSQL_MASTER_HOST}-2.${MYSQL_MASTER_HOST}
-              
-              echo "
-                set global group_replication_bootstrap_group=on;
-                start group_replication;
-                select * from performance_schema.replication_group_members;
-                set global group_replication_bootstrap_group=off;
-              " > /tmp/master.sql
-              mysql -h${HOST_0} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD} < /tmp/master.sql
-              
-              echo "
-              reset master;
-              change master to master_user='$(MYSQL_REPLICATION_USER)',master_password='$(MYSQL_REPLICATION_PASSWORD)' for channel 'group_replication_recovery';
-              start group_replication;
-              select * from performance_schema.replication_group_members;
-              " > /tmp/slave.sql 
-              mysql -h${HOST_1} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD}  < /tmp/slave.sql
-              mysql -h${HOST_2} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD}  < /tmp/slave.sql
-              mysql -h${HOST_0} -P${MYSQL_MASTER_PORT_NUMBER} -uroot -p${MYSQL_ROOT_PASSWORD} -e "GRANT ALL PRIVILEGES ON *.* TO administrator@'%' WITH GRANT OPTION;flush privileges;"
-              
-          env:
-            - name: DRYCC_DEBUG
-              value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
-            - name: MYSQL_MASTER_HOST
-              value: {{ include "mysql.primary.fullname" . }}
-            - name: MYSQL_MASTER_PORT_NUMBER
-              value: {{ .Values.primary.service.ports.mysql | quote }}
-            - name: MYSQL_MASTER_ROOT_USER
-              value: "root"
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "mysql.secretName" . }}
-                  key: mysql-root-password
-            - name: MYSQL_REPLICATION_USER
-              value: {{ .Values.auth.replicationUser | quote }}
-            - name: MYSQL_REPLICATION_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "mysql.secretName" . }}
-                  key: mysql-replication-password
                   
       containers:         
-        - name: cluster
+        - name: init-cluster
           image: {{ include "cluster.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           {{- if .Values.primary.containerSecurityContext.enabled }}
@@ -102,15 +52,32 @@ spec:
             - /bin/bash
             - -ec
             - |
-              export HOST_0=${MYSQL_MASTER_HOST}-0.${MYSQL_MASTER_HOST}
-              echo 'Y' |  mysqlsh --uri=${MYSQL_MASTER_ROOT_USER}@${HOST_0}:${MYSQL_MASTER_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -e'var c=dba.createCluster("MXMGR");'
 
+              export HOST_0=${MYSQL_HOST}-0
+              export HOST_1=${MYSQL_HOST}-1
+              export HOST_2=${MYSQL_HOST}-2
+
+              # create mysql cluster  --file
+              echo "
+              shell.options['dba.restartWaitTimeout']=300;
+              dba.createCluster('MXMGR',{disableClone:false});
+              dba.getCluster().addInstance('root@${HOST_1}',{recoveryMethod:'clone'});
+              dba.getCluster().addInstance('root@${HOST_2}',{recoveryMethod:'clone'});
+              dba.getCluster().status();
+              " > /tmp/create_cluster.js
+              mysqlsh --uri=${MYSQL_ROOT_USER}@${HOST_0}:${MYSQL_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -f /tmp/create_cluster.js
+              
+              # init sql --sql
+              echo "
+              GRANT ALL PRIVILEGES ON *.* TO administrator@'%' WITH GRANT OPTION;flush privileges;
+              " > /tmp/init.sql
+              mysqlsh --uri=${MYSQL_ROOT_USER}@${HOST_0}:${MYSQL_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} --sql -f /tmp/init.sql
           env:
-            - name: MYSQL_MASTER_HOST
+            - name: MYSQL_HOST
               value: {{ include "mysql.primary.fullname" . }}
-            - name: MYSQL_MASTER_PORT_NUMBER
+            - name: MYSQL_PORT_NUMBER
               value: {{ .Values.primary.service.ports.mysql | quote }}
-            - name: MYSQL_MASTER_ROOT_USER
+            - name: MYSQL_ROOT_USER
               value: "root"
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:

@@ -3,7 +3,7 @@ credential:
   - name: EXTRANET_HOST
     valueFrom:
       serviceRef:
-        name: {{ include "common.names.fullname" . }}
+        name: {{ include "common.names.fullname" . }}-router
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 {{- end }}
   - name: HOST

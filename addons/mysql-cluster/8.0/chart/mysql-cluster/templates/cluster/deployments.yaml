@@ -6,22 +6,25 @@ SPDX-License-Identifier: APACHE-2.0
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mysql.cluster.fullname" . }}-tools
+  name: {{ include "mysql.cluster.fullname" . }}-manager
   namespace: {{ include "common.names.namespace" . | quote }}
 spec:
   replicas: 1
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
-      app.kubernetes.io/component: mysql-cluster-tools
-  
+      app.kubernetes.io/component: mysql-cluster-manager
   template:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
-        app.kubernetes.io/component:  mysql-cluster-tools
- 
+        app.kubernetes.io/component:  mysql-cluster-manager
     spec:
+      subdomain: {{ include "mysql.primary.fullname" . }}
+      dnsConfig: 
+        searches:
+          - {{ include "mysql.primary.fullname" . }}.{{ include "common.names.namespace" . }}.svc.cluster.local
+
       containers:         
-        - name: cluster-tools
+        - name: cluster-manager
           image: {{ include "cluster.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           command: 
@@ -30,9 +33,11 @@ spec:
             - |
               sleep infinity
           env:
-            - name: MYSQL_MASTER_PORT_NUMBER
+            - name: MYSQL_HOST
+              value: {{ include "mysql.primary.fullname" . }}
+            - name: MYSQL_PORT_NUMBER
               value: {{ .Values.primary.service.ports.mysql | quote }}
-            - name: MYSQL_MASTER_ROOT_USER
+            - name: MYSQL_ROOT_USER
               value: "root"
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
