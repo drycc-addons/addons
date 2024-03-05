@@ -11,18 +11,5 @@ credential:
       serviceRef:
         name: {{ include "pmm.fullname" . }}
         jsonpath: '{ .spec.clusterIP }'
-  - name: PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: {{ include "pmm.fullname" . }}
-        jsonpath: '{ .data.password }' 
-  - name: USERNAME
-    valueFrom:
-      secretKeyRef:
-        name: {{ include "pmm.fullname" . }}
-        jsonpath: '{ .data.username }' 
   - name: PORT
-    valueFrom:
-      secretKeyRef:
-        name: {{ include "pmm.fullname" . }}
-        jsonpath: '{ .data.portro }'
+    value: 80

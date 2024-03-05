@@ -64,19 +64,19 @@ spec:
             - name: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name }}
+                  name: {{ include "pmm.fullname" . }}
                   key: GF_AUTH_GENERIC_OAUTH_CLIENT_ID
                   optional: true
             - name: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name }}
+                  name: {{ include "pmm.fullname" . }}
                   key: GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET
                   optional: true
             - name: GF_SECURITY_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.name }}
+                  name: {{ include "pmm.fullname" . }}
                   key: PMM_ADMIN_PASSWORD
                   optional: true
             - name: PMM_INSTALL_METHOD
