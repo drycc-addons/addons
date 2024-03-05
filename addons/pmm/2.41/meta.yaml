@@ -1,0 +1,21 @@
+name: pmm
+version: 2.41
+id: 1db95161-7193-4544-8c76-e5ad5f6c03f6
+description: "pmm"
+displayName: "pmm"
+metadata:
+  displayName: "pmm"
+  provider:
+    name: drycc
+    supportURL: https://www.percona.com/software/database-tools/percona-monitoring-and-management
+  documentationURL: https://www.percona.com/software/database-tools/percona-monitoring-and-management
+tags: pmm
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+archive: false

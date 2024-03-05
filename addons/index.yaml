@@ -51,3 +51,6 @@ entries:
   kafka:
     - version: 3.6
       description: "Apache Kafka is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications."
+  pmm:
+    - version: 2.41
+      description: "Percona Monitoring and Management: an open source database monitoring, observability and management tool ."
