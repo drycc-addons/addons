@@ -33,4 +33,6 @@ allow_parameters:
 - name: "server.rules"
   required: false
   description: "rules config for values.yaml"
+- name: "scrapeNamespaces"
+  required: false
 archive: false

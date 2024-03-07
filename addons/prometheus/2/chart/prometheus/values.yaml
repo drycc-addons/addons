@@ -578,7 +578,7 @@ alertmanager:
 ##
 server:
   username: admin
-  password: To6EJBHPUo
+  password: Sx3EIELCA
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/prometheus
@@ -636,7 +636,7 @@ server:
     {{- end }}
     {{- if .Values.scrapeAddons.enabled }}
       - job_name: addons
-        {{- include "addons.ds_scrape_config"  (dict "context" $) | nindent 4 }}
+        {{- include "addons.ds_scrape_config"  (dict "value" .Values.scrapeNamespaces "context" $) | nindent 4 }}
     {{- end }}  
     {{- if .Values.server.extraScrapeConfigs}}
     {{- include "common.tplvalues.render" (dict "value" .Values.server.extraScrapeConfigs "context" $) | nindent 2 }}
@@ -1558,3 +1558,51 @@ volumePermissions:
 
 scrapeAddons:
   enabled: true
+
+scrapeNamespaces: 
+  - xx1
+  - xx2
+
+configmapReload:
+  prometheus:
+    ## If false, the configmap-reload container will not be deployed
+    ##
+    enabled: true
+
+    ## configmap-reload container name
+    ##
+    name: configmap-reload
+
+    ## configmap-reload container image
+    ##
+    image:
+      repository: jimmidyson/configmap-reload
+      tag: v0.5.0
+      pullPolicy: IfNotPresent
+
+    # containerPort: 9533
+
+    ## Additional configmap-reload container arguments
+    ##
+    extraArgs: {}
+    ## Additional configmap-reload volume directories
+    ##
+    extraVolumeDirs: []
+
+
+    ## Additional configmap-reload mounts
+    ##
+    extraConfigmapMounts: []
+      # - name: prometheus-alerts
+      #   mountPath: /etc/alerts.d
+      #   subPath: ""
+      #   configMap: prometheus-alerts
+      #   readOnly: true
+
+    ## Security context to be added to configmap-reload container
+    containerSecurityContext: {}
+
+    ## configmap-reload resource requests and limits
+    ## Ref: http://kubernetes.io/docs/user-guide/compute-resources/
+    ##
+    resources: {}
