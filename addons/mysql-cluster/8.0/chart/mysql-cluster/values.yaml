@@ -179,9 +179,7 @@ initdbScripts:
     echo loose-group_replication_local_address=$mgr_host:24901 >> $base_conf_file
     echo report_host=$mgr_host >> $base_conf_file
     echo loose-group_replication_group_seeds="$svc_mgr_host-0:24901,$svc_mgr_host-1:24901,$svc_mgr_host-2:24901" >> $base_conf_file 
-
-    echo plugin_load_add='group_replication.so' >> $base_conf_file
-      
+    echo loose-group_replication_start_on_boot='OFF' >> $base_conf_file
     echo max_connections=$MAX_CONNECTION_LIMIT >> $base_conf_file
 
 ## @param initdbScriptsConfigMap ConfigMap with the initdb scripts (Note: Overrides `initdbScripts`)
@@ -218,7 +216,6 @@ primary:
   configuration: |-
     [mysqld]
     # server
-    max_connections=10000
     default_authentication_plugin=caching_sha2_password
     skip-name-resolve
     relay-log=relay-log
@@ -260,7 +257,6 @@ primary:
     # Multi-threaded Replication
     replica_preserve_commit_order=ON 
     replica_parallel_workers=8
-    replica_parallel_type=LOGICAL_CLOCK
 
     # Group Replication Settings 
   
@@ -610,6 +606,10 @@ router:
   ##
   replicaCount: 2
 
+  configuration: |-
+    [routing:bootstrap_rw]
+    max_connections=1000
+
   ## @param primary.existingConfigmap Name of existing ConfigMap with MySQL Primary configuration.
   ## NOTE: When it's set the 'configuration' parameter is ignored
   ##
@@ -716,13 +716,17 @@ router:
     ##    cpu: 250m
     ##    memory: 256Mi
     ##
-    limits: {}
+    limits: 
+      cpu: 250m
+      memory: 256Mi
     ## Examples:
     ## requests:
     ##    cpu: 250m
     ##    memory: 256Mi
     ##
-    requests: {}
+    requests: 
+      cpu: 250m
+      memory: 256Mi
   ## Configure extra options for liveness probe
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
   ## @param secondary.livenessProbe.enabled Enable livenessProbe
@@ -1117,12 +1121,16 @@ metrics:
     ## limits:
     ##    cpu: 100m
     ##    memory: 256Mi
-    limits: {}
+    limits: 
+      cpu: 100m
+      memory: 256Mi
     ## Examples:
     ## requests:
     ##    cpu: 100m
     ##    memory: 256Mi
-    requests: {}
+    requests: 
+      cpu: 100m
+      memory: 256Mi
   containerSecurityContext:
     enabled: true
     runAsUser: 1001
