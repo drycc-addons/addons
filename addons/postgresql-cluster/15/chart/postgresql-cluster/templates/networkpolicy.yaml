@@ -17,15 +17,16 @@ spec:
   podSelector:
     matchLabels:
       {{- include "common.labels.matchLabels" . | nindent 6 }}
+  {{- if eq .Values.service.type "ClusterIP" }}
   ingress:
     # Allow inbound connections
     - ports:
       - port: 5432
       - port: 9000
-      {{- if and .Values.metrics.enabled }}
+    {{- if and .Values.metrics.enabled }}
       - port: {{ .Values.metrics.containerPort }}
-      {{ end }} 
-      {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
+    {{ end }} 
+    {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
       from:
       {{- if .Values.networkPolicy.allowCurrentNamespace }}
         - namespaceSelector:
@@ -33,11 +34,16 @@ spec:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
       {{- end }}
       {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
-      {{- if $namespace }}
+        {{- if $namespace }}
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
       {{- end }}
-      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- if eq .Values.service.type "LoadBalancer" }}
+  ingress:
+    - {}
   {{- end }}
 {{- end }}
