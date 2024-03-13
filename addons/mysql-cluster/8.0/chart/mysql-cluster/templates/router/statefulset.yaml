@@ -157,7 +157,7 @@ spec:
             - -ec
             - |
               ln -sf /dev/stdout /opt/drycc/mysql/conf/router/log/mysqlrouter.log
-              mysqlrouter -c /opt/drycc/mysql/conf/router/mysqlrouter.conf
+              mysqlrouter -c /opt/drycc/mysql/conf/router/mysqlrouter.conf -a /opt/drycc/mysql/conf/router/extra/extra-router.conf
           env:
             - name: MYSQL_HOST
               value: {{ include "mysql.primary.fullname" . }}
@@ -174,7 +174,8 @@ spec:
           volumeMounts:
             - name: router-volume
               mountPath: /opt/drycc/mysql/conf
-
+            - name: extra-config
+              mountPath: /opt/drycc/mysql/conf/router/extra
           ports:
             - name: routerrw
               containerPort: 6446
@@ -222,3 +223,6 @@ spec:
       volumes:
         - name: router-volume
           emptyDir: {}
+        - name: extra-config
+          configMap:
+            name: {{ include "mysql.router.configmapName" . }}

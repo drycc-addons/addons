@@ -100,10 +100,31 @@ Return the configmap with the MySQL Primary configuration
 {{- end -}}
 
 {{/*
+Return the configmap with the MySQL Router configuration
+*/}}
+{{- define "mysql.router.configmapName" -}}
+{{- if .Values.router.existingConfigmap -}}
+    {{- printf "%s" (tpl .Values.router.existingConfigmap $) -}}
+{{- else -}}
+    {{- printf "%s-router" (include "common.names.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return true if a configmap object should be created for MySQL Secondary
 */}}
 {{- define "mysql.primary.createConfigmap" -}}
 {{- if and .Values.primary.configuration (not .Values.primary.existingConfigmap) }}
+    {{- true -}}
+{{- else -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return true if a configmap object should be created for MySQL router
+*/}}
+{{- define "mysql.router.createConfigmap" -}}
+{{- if and .Values.router.configuration (not .Values.router.existingConfigmap) }}
     {{- true -}}
 {{- else -}}
 {{- end -}}

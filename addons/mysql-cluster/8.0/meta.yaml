@@ -21,4 +21,7 @@ allow_parameters:
 - name: "router.service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "router.configuration"
+  required: false
+  description: "router config for values.yaml"
 archive: false
