@@ -1,7 +1,7 @@
 annotations:
   category: monitor
 apiVersion: v2
-appVersion: 2.41
+appVersion: 2.41.0
 dependencies:
   - name: common
     repository: oci://registry.drycc.cc/charts
@@ -24,4 +24,5 @@ name: pmm
 sources:
   - https://github.com/drycc/containers/tree/main/drycc/mysql
   - https://github.com/percona/pmm
-version: 2.41
+version: 2.41.0
+
