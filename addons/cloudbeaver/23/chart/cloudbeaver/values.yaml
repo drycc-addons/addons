@@ -516,8 +516,8 @@ ingress:
   extraRules: []
   ## @section Network Policy
 
-## MySQL Nework Policy configuration
-##
+## Nework Policy configuration
+
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
