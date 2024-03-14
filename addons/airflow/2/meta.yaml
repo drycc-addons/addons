@@ -24,15 +24,30 @@ allow_parameters:
 - name: "git"
   required: false
   description: "git config for values.yaml"
+- name: "configuration"
+  required: false
+  description: "configuration config for values.yaml"
+- name: "extraEnvVars"
+  required: false
+  description: "extraEnvVars config for values.yaml"
 - name: "web.image"
   required: false
   description: "web image config for values.yaml"
+- name: "web.extraEnvVars"
+  required: false
+  description: "web extraEnvVars config for values.yaml"
 - name: "scheduler.image"
   required: false
   description: "scheduler image config for values.yaml"
+- name: "scheduler.extraEnvVars"
+  required: false
+  description: "scheduler extraEnvVars config for values.yaml"
 - name: "worker.image"
   required: false
   description: "worker image config for values.yaml"
+- name: "worker.extraEnvVars"
+  required: false
+  description: "worker extraEnvVars config for values.yaml"
 - name: "worker.persistence"
   required: false
   description: "worker persistence config for values.yaml"

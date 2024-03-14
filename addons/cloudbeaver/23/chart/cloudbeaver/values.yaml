@@ -517,7 +517,7 @@ ingress:
   ## @section Network Policy
 
 ## Nework Policy configuration
-##
+
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
