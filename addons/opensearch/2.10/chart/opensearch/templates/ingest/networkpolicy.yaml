@@ -43,6 +43,9 @@ spec:
     {{- include "common.tplvalues.render" ( dict "value" .Values.ingest.networkPolicy.extraEgress "context" $ ) | nindent 4 }}
     {{- end }}
   ingress:
+    {{- if eq .Values.ingest.service.type "LoadBalancer" }}
+    - {}
+    {{- else }}
     - ports:
         - port: {{ .Values.service.ports.restAPI }}
         - port: {{ .Values.service.ports.transport }}
@@ -80,5 +83,6 @@ spec:
         {{- end }}
     {{- if .Values.ingest.networkPolicy.extraIngress }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.ingest.networkPolicy.extraIngress "context" $ ) | nindent 4 }}
+    {{- end }}
     {{- end }}
 {{- end }}

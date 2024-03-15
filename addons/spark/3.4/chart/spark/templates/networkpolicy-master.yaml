@@ -17,6 +17,9 @@ spec:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
       app.kubernetes.io/component: master
   ingress:
+    {{- if eq .Values.service.type "LoadBalancer" }}
+    - {}
+    {{- else }}
     {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
     - from:
       {{- if .Values.networkPolicy.allowCurrentNamespace }}
@@ -63,5 +66,6 @@ spec:
         - port: {{ .Values.master.containerPorts.http }}
         {{- end }}
         - port: {{ .Values.master.containerPorts.cluster }}
+    {{- end }}
     {{- end }}
 {{- end }}

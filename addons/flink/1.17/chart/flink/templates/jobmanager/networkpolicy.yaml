@@ -59,6 +59,9 @@ spec:
     {{- end }}
   {{- end }}
   ingress:
+    {{- if eq .Values.jobmanager.service.type "LoadBalancer" }}
+    - {}
+    {{- else }}
     - ports:
         - port: {{ .Values.jobmanager.containerPorts.blob }}
         - port: {{ .Values.jobmanager.containerPorts.rpc }}
@@ -90,5 +93,6 @@ spec:
       {{- end }}
     {{- if .Values.jobmanager.networkPolicy.extraIngress }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.jobmanager.networkPolicy.extraIngress "context" $ ) | nindent 4 }}
+    {{- end }}
     {{- end }}
 {{- end }}

@@ -17,6 +17,9 @@ spec:
   policyTypes:
     - Ingress
   ingress:
+    {{- if eq .Values.service.type "LoadBalancer" }}
+    - {}
+    {{- else }}
     # Allow inbound connections to ZooKeeper
     - ports:
         - port: {{ .Values.containerPorts.client }}
@@ -50,4 +53,5 @@ spec:
       from:
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
+    {{- end }}
 {{- end }}
