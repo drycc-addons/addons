@@ -19,6 +19,12 @@ credential:
       serviceRef:
         name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
+
+  - name: REDISPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
   {{- end }}
 
   {{- if and (eq .Values.architecture "replication") (not .Values.sentinel.enabled) }}
@@ -43,14 +49,6 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
   {{- end }}
 
-  {{- if and .Values.auth.enabled (not .Values.auth.existingSecret) }}
-  - name: REDIS_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .data.redis-password }'
-  {{- end }}
-
   {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
   {{ if (eq .Values.sentinel.service.type "LoadBalancer") }}
   - name: EXTERNAL_SENTINELHOST
@@ -71,10 +69,20 @@ credential:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-sentinel")].port }'
+  {{- end }}
 
-  - name: REDISPORT
+  {{- if and .Values.auth.enabled (not .Values.auth.existingSecret) }}
+  - name: REDIS_PASSWORD
     valueFrom:
-      serviceRef:
+      secretKeyRef:
         name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
+        jsonpath: '{ .data.redis-password }'
+  {{- end }}
+
+  {{- if and .Values.auth.enabled .Values.auth.sentinel (not .Values.auth.existingSecret) }}
+  - name: REDIS_SENTINEL_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.redis-password }'
   {{- end }}
