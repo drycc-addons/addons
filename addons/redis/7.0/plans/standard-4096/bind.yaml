@@ -1,26 +1,26 @@
 credential:
   {{- if not .Values.sentinel.enabled }}
   {{ if (eq .Values.master.service.type "LoadBalancer") }}
-  - name: EXTERNAL_MASTERHOST
+  - name: EXTERNAL_MASTER_HOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
-  - name: MASTERHOST
+  - name: MASTER_HOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .spec.clusterIP }'
 
-  - name: MASTERPORT
+  - name: MASTER_PORT
     valueFrom:
       serviceRef:
         name: {{ printf "%s-master" (include "common.names.fullname" .) }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
 
-  - name: REDISPORT
+  - name: REDIS_PORT
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
@@ -29,20 +29,20 @@ credential:
 
   {{- if and (eq .Values.architecture "replication") (not .Values.sentinel.enabled) }}
   {{ if (eq .Values.replica.service.type "LoadBalancer") }}
-  - name: EXTERNAL_REPLICASHOST
+  - name: EXTERNAL_REPLICAS_HOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
-  - name: REPLICASHOST
+  - name: REPLICAS_HOST
     valueFrom:
       serviceRef:
         name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
         jsonpath: '{ .spec.clusterIP }'
 
-  - name: REPLICASPORT
+  - name: REPLICAS_PORT
     valueFrom:
       serviceRef:
         name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
@@ -51,24 +51,32 @@ credential:
 
   {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
   {{ if (eq .Values.sentinel.service.type "LoadBalancer") }}
-  - name: EXTERNAL_SENTINELHOST
+  - name: EXTERNAL_HOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
-  - name: SENTINELHOST
+  - name: HOST
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .spec.clusterIP }'
 
-  - name: SENTINELPORT
+  - name: SENTINEL_PORT
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-sentinel")].port }'
+
+ {{- if.Values.proxy.enabled }}
+  - name: PROXY_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-proxy")].port }'
+  {{- end }}
   {{- end }}
 
   {{- if and .Values.auth.enabled (not .Values.auth.existingSecret) }}

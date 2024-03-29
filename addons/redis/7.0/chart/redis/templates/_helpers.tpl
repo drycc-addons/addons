@@ -15,6 +15,13 @@ Return the proper Redis Sentinel image name
 {{- end -}}
 
 {{/*
+Return the proper Redis Proxy image name
+*/}}
+{{- define "redis.proxy.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.proxy.image "global" .Values.global) }}
+{{- end -}}
+
+{{/*
 Return the proper image name (for the metrics image)
 */}}
 {{- define "redis.metrics.image" -}}

@@ -443,6 +443,90 @@ spec:
             {{- if .Values.sentinel.extraVolumeMounts }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.sentinel.extraVolumeMounts "context" $ ) | nindent 12 }}
             {{- end }}
+        {{- if .Values.proxy.enabled }}
+        - name: proxy
+          image: {{ template "redis.proxy.image" . }}
+          imagePullPolicy: {{ .Values.proxy.image.pullPolicy | quote }}
+          {{- if .Values.diagnosticMode.enabled }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
+          {{- else }}
+          command:
+            - init-stack
+          {{- end }}
+          {{- if .Values.diagnosticMode.enabled }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
+          {{- else }}
+          args:
+            - bash
+            - -ec
+            - |
+              [[ -f "$REDIS_PASSWORD_FILE" ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+              /opt/drycc/redis-sentinel/bin/reids-sentinel-proxy \
+                -listen :{{ .Values.proxy.containerPorts.proxy }} \
+                -master {{ .Values.sentinel.masterSet }} \
+                -sentinel-addr ${POD_IP}:{{ .Values.sentinel.containerPorts.sentinel }} \
+                -sentinel-pass $(REDIS_PASSWORD) \
+                -sentinel-user ""
+          {{- end }}
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            {{- if .Values.auth.enabled }}
+            {{- if .Values.auth.usePasswordFiles }}
+            - name: REDIS_PASSWORD_FILE
+              value: "/opt/drycc/redis/secrets/redis-password"
+            {{- else }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "redis.secretName" . }}
+                  key: {{ template "redis.secretPasswordKey" . }}
+            {{- end }}
+            {{- else }}
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            {{- end }}
+          ports:
+            - name: redis-proxy
+              containerPort: {{ .Values.proxy.containerPorts.proxy }}
+          {{- if not .Values.diagnosticMode.enabled }}
+          {{- if .Values.proxy.startupProbe.enabled }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.sentinel.startupProbe "enabled") "context" $) | nindent 12 }}
+            tcpSocket:
+              port: redis-proxy
+          {{- end }}
+          {{- if .Values.proxy.livenessProbe.enabled }}
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.proxy.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.proxy.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.proxy.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.proxy.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.proxy.livenessProbe.failureThreshold }}
+            tcpSocket:                                
+              port: redis-proxy
+          {{- end }}
+          {{- if .Values.proxy.readinessProbe.enabled }}
+          readinessProbe:
+            initialDelaySeconds: {{ .Values.proxy.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.proxy.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.proxy.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.proxy.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.proxy.readinessProbe.failureThreshold }}
+            tcpSocket:                                
+              port: redis-proxy
+          {{- end }}
+          {{- end }}
+          {{- if .Values.proxy.resources }}
+          resources: {{- toYaml .Values.proxy.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.auth.usePasswordFiles }}
+          volumeMounts:
+            - name: redis-password
+              mountPath: /opt/drycc/redis/secrets/
+          {{- end }}
+        {{- end }}
         {{- if .Values.metrics.enabled }}
         - name: metrics
           image: {{ template "redis.metrics.image" . }}

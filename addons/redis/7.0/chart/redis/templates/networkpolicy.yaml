@@ -30,6 +30,9 @@ spec:
         {{- if .Values.sentinel.enabled }}
         - port: {{ .Values.sentinel.containerPorts.sentinel }}
         {{- end }}
+        {{- if .Values.proxy.enabled }}
+        - port: {{ .Values.proxy.containerPorts.proxy }}
+        {{- end }}
       to:
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
@@ -47,6 +50,9 @@ spec:
         - port: {{ .Values.master.containerPorts.redis }}
         {{- if .Values.sentinel.enabled }}
         - port: {{ .Values.sentinel.containerPorts.sentinel }}
+        {{- end }}
+        {{- if .Values.proxy.enabled }}
+        - port: {{ .Values.proxy.containerPorts.proxy }}
         {{- end }}
       {{- if not .Values.networkPolicy.allowExternal }}
       from:

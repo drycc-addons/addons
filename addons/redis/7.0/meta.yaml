@@ -33,6 +33,9 @@ allow_parameters:
 - name: "sentinel.enabled"
   required: false
   description: "sentinel enabled type config for values.yaml"
+- name: "proxy.enabled"
+  required: false
+  description: "proxy enabled type config for values.yaml"
 - name: "metrics.enable"
   required: false
   description: "metrics enable or not config for values.yaml"
