@@ -11,6 +11,95 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
+  {{- if .Values.proxy.enabled }}
+  redis-proxy-default.yaml: |-
+    overload_manager:
+      resource_monitors:
+      - name: "envoy.resource_monitors.global_downstream_max_connections"
+        typed_config:
+          "@type": type.googleapis.com/envoy.extensions.resource_monitors.downstream_connections.v3.DownstreamConnectionsConfig
+          max_active_downstream_connections: 10000
+    static_resources:
+      listeners:
+      - name: redis_listener
+        address:
+          socket_address:
+            address: 0.0.0.0
+            port_value: {{ .Values.proxy.containerPorts.proxy }}
+        filter_chains:
+        - filters:
+          - name: envoy.filters.network.redis_proxy
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.network.redis_proxy.v3.RedisProxy
+              stat_prefix: egress_redis
+              settings:
+                op_timeout: 5s
+              prefix_routes:
+                catch_all_route:
+                  cluster: redis_cluster
+              downstream_auth_username:
+                inline_string: "default"
+              downstream_auth_passwords:
+              - inline_string: {REDIS_PASSWORD}
+          {{- if .Values.tls.enabled }}
+          transport_socket:
+            name: envoy.transport_sockets.tls
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+              require_client_certificate: true
+              common_tls_context:
+                tls_certificates:
+                - certificate_chain:
+                    filename: {{ template "redis-cluster.tlsCert" . }}
+                  private_key:
+                    filename: {{ template "redis-cluster.tlsCertKey" . }}
+                validation_context:
+                  trusted_ca:
+                    filename: {{ template "redis-cluster.tlsCACert" . }}
+          {{- end }}
+      clusters:
+      - name: redis_cluster
+        cluster_type:
+          name: envoy.clusters.redis
+          typed_config:
+            "@type": type.googleapis.com/google.protobuf.Struct
+            value:
+              cluster_refresh_rate: 10s
+              cluster_refresh_timeout: 4s
+        connect_timeout: 4s
+        dns_lookup_family: V4_ONLY
+        lb_policy: CLUSTER_PROVIDED
+        load_assignment:
+          cluster_name: redis_cluster
+          endpoints:
+            lb_endpoints:
+              endpoint:
+                address:
+                  socket_address: { address: 127.0.0.1, port_value: {{ .Values.redis.containerPorts.redis | quote }} }
+        typed_extension_protocol_options:
+          envoy.filters.network.redis_proxy:
+            "@type": type.googleapis.com/google.protobuf.Struct
+            value:
+              auth_username:
+                inline_string: "default"
+              auth_password:
+                inline_string: {REDIS_PASSWORD}
+        {{- if .Values.tls.enabled }}
+        transport_socket:
+          name: envoy.transport_sockets.tls
+          typed_config:
+            "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
+            common_tls_context:
+              tls_certificates:
+                certificate_chain: 
+                  filename: {{ template "redis-cluster.tlsCert" . }}
+                private_key:
+                  filename: {{ template "redis-cluster.tlsCertKey" . }}
+              validation_context:
+                trusted_ca:
+                  filename: {{ template "redis-cluster.tlsCACert" . }}
+        {{- end }}
+  {{- end }}
   redis-default.conf: |-
     # Redis configuration file example.
     #

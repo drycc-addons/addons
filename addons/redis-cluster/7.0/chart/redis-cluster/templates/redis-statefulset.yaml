@@ -287,6 +287,94 @@ spec:
             {{- if .Values.redis.extraVolumeMounts }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.redis.extraVolumeMounts "context" $ ) | nindent 12 }}
             {{- end }}
+        {{- if .Values.proxy.enabled }}
+        - name: proxy
+          image: {{ include "redis-cluster.proxy.image" . }}
+          imagePullPolicy: {{ .Values.proxy.image.pullPolicy | quote }}
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.diagnosticMode.enabled }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
+          {{- else }}
+          command: ['init-stack', '/bin/bash', '-c']
+          args:
+            - |
+              # Start envoy redis proxy
+              {{- if .Values.usePasswordFile }}
+              export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
+              {{- end }}
+              sed s/{REDIS_PASSWORD}/${REDIS_PASSWORD}/g /opt/drycc/redis/etc/redis-proxy-default.yaml > /opt/drycc/redis/etc/redis-proxy.yaml
+              envoy -c /opt/drycc/redis/etc/redis-proxy.yaml --log-level error --concurrency 0
+          {{- end }}
+          env:
+            {{- if and .Values.usePassword (not .Values.usePasswordFile) }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "redis-cluster.secretName" . }}
+                  key: {{ template "redis-cluster.secretPasswordKey" . }}
+            {{- end }}
+            {{- if .Values.usePasswordFile }}
+            - name: REDIS_PASSWORD_FILE
+              value: "/opt/drycc/redis/secrets/redis-password"
+            {{- end }}
+          ports:
+            - name: tcp-proxy
+              containerPort: {{ .Values.proxy.containerPorts.proxy }}
+          {{- if not .Values.diagnosticMode.enabled }}
+          {{- if .Values.proxy.livenessProbe.enabled }}
+          livenessProbe:
+            tcpSocket:
+              port: tcp-proxy
+            initialDelaySeconds: {{ .Values.proxy.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.proxy.livenessProbe.periodSeconds }}
+            # One second longer than command timeout should prevent generation of zombie processes.
+            timeoutSeconds: {{ add1 .Values.proxy.livenessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.proxy.livenessProbe.successThreshold }}
+            failureThreshold: {{ .Values.proxy.livenessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.proxy.readinessProbe.enabled }}
+          readinessProbe:
+            tcpSocket:
+              port: tcp-proxy
+            initialDelaySeconds: {{ .Values.proxy.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.proxy.readinessProbe.periodSeconds }}
+            # One second longer than command timeout should prevent generation of zombie processes.
+            timeoutSeconds: {{ add1 .Values.proxy.readinessProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.proxy.readinessProbe.successThreshold }}
+            failureThreshold: {{ .Values.proxy.readinessProbe.failureThreshold }}
+          {{- end }}
+          {{- if .Values.proxy.startupProbe.enabled }}
+          startupProbe:
+            tcpSocket:
+              port: tcp-proxy
+            initialDelaySeconds: {{ .Values.proxy.startupProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.proxy.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.proxy.startupProbe.timeoutSeconds }}
+            successThreshold: {{ .Values.proxy.startupProbe.successThreshold }}
+            failureThreshold: {{ .Values.proxy.startupProbe.failureThreshold }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.proxy.resources }}
+          resources:
+          {{- include "common.tplvalues.render" (dict "value" .Values.proxy.resources "context" $) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: default-config
+              mountPath: /opt/drycc/redis/etc/redis-proxy-default.yaml
+              subPath: redis-proxy-default.yaml
+            {{- if .Values.usePasswordFile }}
+            - name: redis-password
+              mountPath: /opt/drycc/redis/secrets/
+            {{- end }}
+            {{- if .Values.tls.enabled }}
+            - name: redis-certificates
+              mountPath: /opt/drycc/redis/certs
+              readOnly: true
+            {{- end }}
+        {{- end }}
         {{- if .Values.metrics.enabled }}
         - name: metrics
           image: {{ template "redis-cluster.metrics.image" . }}

@@ -28,6 +28,7 @@ spec:
     - ports:
         - port: {{ .Values.redis.containerPorts.redis }}
         - port: {{ .Values.redis.containerPorts.bus }}
+        - port: {{ .Values.proxy.containerPorts.proxy }}
       to:
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}

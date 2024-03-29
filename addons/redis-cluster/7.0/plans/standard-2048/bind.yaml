@@ -19,6 +19,12 @@ credential:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
 
+  - name: PROXY_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-proxy")].port }'
+
   {{- if and .Values.usePassword (not .Values.existingSecret) }}
   - name: REDIS_PASSWORD
     valueFrom:

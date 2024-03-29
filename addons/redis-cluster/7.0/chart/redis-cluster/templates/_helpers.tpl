@@ -8,6 +8,13 @@ Return the proper Redis&reg; image name
 {{- end -}}
 
 {{/*
+Return the proper Redis&reg; image name
+*/}}
+{{- define "redis-cluster.proxy.image" -}}
+{{ include "common.images.image" (dict "imageRoot" .Values.proxy.image "global" .Values.global) }}
+{{- end -}}
+
+{{/*
 Return the proper image name (for the metrics image)
 */}}
 {{- define "redis-cluster.metrics.image" -}}
