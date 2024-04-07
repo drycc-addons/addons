@@ -158,6 +158,9 @@ master:
     ## - 10.10.10.0/24
     ##
     loadBalancerSourceRanges: []
+  ## @param master.podAnnotations Annotations for pods in StatefulSet
+  ##
+  podAnnotations: {}
   affinity: {}
   podAffinityPreset: ""
   ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
@@ -246,6 +249,9 @@ filer:
     ## - 10.10.10.0/24
     ##
     loadBalancerSourceRanges: []
+  ## @param filer.podAnnotations Annotations for pods in StatefulSet
+  ##
+  podAnnotations: {}
   affinity: {}
   podAffinityPreset: ""
   ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`
@@ -328,6 +334,9 @@ volume:
     ## - 10.10.10.0/24
     ##
     loadBalancerSourceRanges: []
+  ## @param volume.podAnnotations Annotations for pods in StatefulSet
+  ##
+  podAnnotations: {}
   affinity: {}
   podAffinityPreset: ""
   ## @param ingest.podAntiAffinityPreset Pod anti-affinity preset. Ignored if `ingest.affinity` is set. Allowed values: `soft` or `hard`

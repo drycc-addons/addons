@@ -100,12 +100,12 @@ Usage:
       . /opt/drycc/scripts/libfs.sh
     {{- if .context.Values.git.dags.enabled }}
       {{- range .context.Values.git.dags.repositories }}
-      is_dir_empty "/dags/{{ include "airflow.git.repository.name" . }}" && git clone {{ .repository }} --branch {{ .branch }} /dags/{{ include "airflow.git.repository.name" . }}
+      is_dir_empty "/dags/{{ include "airflow.git.repository.name" . }}" && git clone {{ .repository }} --branch {{ .branch }} /dags/{{ include "airflow.git.repository.name" . }} && cd /dags/{{ include "airflow.git.repository.name" . }} &&  git config pull.rebase true
       {{- end }}
     {{- end }}
     {{- if .context.Values.git.plugins.enabled }}
       {{- range .context.Values.git.plugins.repositories }}
-      is_dir_empty "/plugins/{{ include "airflow.git.repository.name" . }}" && git clone {{ .repository }} --branch {{ .branch }} /plugins/{{ include "airflow.git.repository.name" . }}
+      is_dir_empty "/plugins/{{ include "airflow.git.repository.name" . }}" && git clone {{ .repository }} --branch {{ .branch }} /plugins/{{ include "airflow.git.repository.name" . }} cd /plugins/{{ include "airflow.git.repository.name" . }} &&  git config pull.rebase true
       {{- end }}
     {{- end }}
 {{- end }}

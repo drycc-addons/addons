@@ -5,9 +5,11 @@
 {{ $portsmap := (lookup "v1" "ConfigMap" $.Release.Namespace (printf "%s-%s" ( include "common.names.fullname" . ) "ports-configmap")).data }}
 
 {{ $sentinelport := 0}}
+{{ $proxyport := 0}}
 {{ $redisport := 0}}
 {{- if $portsmap }}
 {{ $sentinelport = index $portsmap (printf "%s-%s" (include "common.names.fullname" $) "sentinel") }}
+{{ $proxyport = index $portsmap (printf "%s-%s" (include "common.names.fullname" $) "proxy") }}
 {{ $redisport = index $portsmap (printf "%s-%s" (include "common.names.fullname" $) "redis") }}
 {{- else }}
 {{- end }}
@@ -77,6 +79,22 @@ spec:
       nodePort: null
       {{- else if eq .Values.sentinel.service.type "NodePort" }}
       nodePort:  {{ $sentinelport }}
+      {{- end }}
+    - name: tcp-proxy
+      {{- if and (or (eq .Values.sentinel.service.type "NodePort") (eq .Values.sentinel.service.type "LoadBalancer")) .Values.sentinel.service.nodePorts.proxy }}
+      port: {{ .Values.sentinel.service.nodePorts.proxy }}
+      {{- else if eq .Values.sentinel.service.type "NodePort" }}
+      port:  {{ $proxyport }}
+      {{- else }}
+      port: {{ .Values.sentinel.service.ports.proxy }}
+      {{- end }}
+      targetPort: {{ .Values.proxy.containerPorts.proxy }}
+      {{- if and (or (eq .Values.sentinel.service.type "NodePort") (eq .Values.sentinel.service.type "LoadBalancer")) .Values.sentinel.service.nodePorts.proxy }}
+      nodePort: {{ .Values.sentinel.service.nodePorts.proxy }}
+      {{- else if eq .Values.sentinel.service.type "ClusterIP" }}
+      nodePort: null
+      {{- else if eq .Values.sentinel.service.type "NodePort" }}
+      nodePort:  {{ $proxyport }}
       {{- end }}
     {{- if eq .Values.sentinel.service.type "NodePort" }}
     - name: sentinel-internal

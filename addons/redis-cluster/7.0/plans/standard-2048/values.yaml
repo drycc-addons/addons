@@ -31,3 +31,19 @@ redis:
     requests:
       cpu: 30m
       memory: 1Gi
+
+## @section Proxy&reg; statefulset parameters
+##
+proxy:
+  ## Proxy&reg; resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## @param proxy.resources.limits The resources limits for the container
+  ## @param proxy.resources.requests The requested resources for the container
+  ##
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 10m
+      memory: 64Mi

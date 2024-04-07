@@ -28,10 +28,14 @@ spec:
     - ports:
         - port: {{ .Values.redis.containerPorts.redis }}
         - port: {{ .Values.redis.containerPorts.bus }}
+        - port: {{ .Values.proxy.containerPorts.proxy }}
       to:
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
   ingress:
+    {{- if eq .Values.service.type "LoadBalancer" }}
+    - {}
+    {{- else }}
     # Allow inbound connections
     - ports:
         - port: {{ .Values.redis.containerPorts.redis }}
@@ -74,5 +78,6 @@ spec:
     # Allow prometheus scrapes for metrics
     - ports:
         - port: 9121
+    {{- end }}
     {{- end }}
 {{- end }}

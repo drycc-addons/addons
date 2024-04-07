@@ -6,9 +6,11 @@
 
 {{ $sentinelport := 0}}
 {{ $redisport := 0}}
+{{ $proxyport := 0}}
 {{- if $portsmap }}
 {{ $sentinelport = index $portsmap (printf "%s-node-%s-%s" (include "common.names.fullname" $) (toString $i) "sentinel") }}
 {{ $redisport = index $portsmap (printf "%s-node-%s-%s" (include "common.names.fullname" $) (toString $i) "redis") }}
+{{ $proxyport = index $portsmap (printf "%s-node-%s-%s" (include "common.names.fullname" $) (toString $i) "proxy") }}
 {{- else }}
 {{- end }}
 
@@ -45,6 +47,16 @@ spec:
     {{- end }}
     protocol: TCP
     targetPort: {{ $.Values.sentinel.containerPorts.sentinel }}
+  - name: proxy
+    {{- if $.Values.sentinel.service.nodePorts.proxy  }}
+    nodePort: {{ (add $.Values.sentinel.service.nodePorts.proxy $i 1) }}
+    port: {{ (add $.Values.sentinel.service.nodePorts.proxy $i 1) }}
+    {{- else }}
+    nodePort: {{ $proxyport }}
+    port: {{ $proxyport }}
+    {{- end }}
+    protocol: TCP
+    targetPort: {{ $.Values.proxy.containerPorts.proxy }}
   - name: redis
     {{- if $.Values.sentinel.service.nodePorts.redis }}
     nodePort: {{ (add $.Values.sentinel.service.nodePorts.redis $i 1) }}
@@ -60,6 +72,11 @@ spec:
     port: {{ $.Values.sentinel.containerPorts.sentinel }}
     protocol: TCP
     targetPort: {{ $.Values.sentinel.containerPorts.sentinel }}
+  - name: proxy-internal
+    nodePort: null
+    port: {{ $.Values.proxy.containerPorts.proxy }}
+    protocol: TCP
+    targetPort: {{ $.Values.proxy.containerPorts.proxy }}
   - name: redis-internal
     nodePort: null
     port: {{ $.Values.replica.containerPorts.redis }}

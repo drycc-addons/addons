@@ -13,11 +13,11 @@ fullnameOverride: hb-minio-standard-10
 ##
 resources:
   limits:
-    cpu: 2000m
-    memory: 8192Mi
+    cpu: 4000m
+    memory: 16Gi
   requests:
-    cpu: 200m
-    memory: 4096Mi
+    cpu: 400m
+    memory: 8Gi
 
 ## @section Persistence parameters
 

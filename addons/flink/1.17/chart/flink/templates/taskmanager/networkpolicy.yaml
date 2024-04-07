@@ -59,6 +59,9 @@ spec:
     {{- end }}
   {{- end }}
   ingress:
+    {{- if eq .Values.taskmanager.service.type "LoadBalancer" }}
+    - {}
+    {{- else }}
     - ports:
         - port: {{ .Values.taskmanager.containerPorts.data }}
         - port: {{ .Values.taskmanager.containerPorts.rpc }}
@@ -89,5 +92,6 @@ spec:
       {{- end }}
     {{- if .Values.taskmanager.networkPolicy.extraIngress }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.taskmanager.networkPolicy.extraIngress "context" $ ) | nindent 4 }}
+    {{- end }}
     {{- end }}
 {{- end }}

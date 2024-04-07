@@ -30,6 +30,9 @@ spec:
         {{- if .Values.sentinel.enabled }}
         - port: {{ .Values.sentinel.containerPorts.sentinel }}
         {{- end }}
+        {{- if .Values.proxy.enabled }}
+        - port: {{ .Values.proxy.containerPorts.proxy }}
+        {{- end }}
       to:
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
@@ -39,11 +42,17 @@ spec:
     {{- end }}
   {{- end }}
   ingress:
+    {{- if or (eq .Values.sentinel.service.type "LoadBalancer") (eq .Values.master.service.type "LoadBalancer") (eq .Values.replica.service.type "LoadBalancer") }}
+    - {}
+    {{- else }}
     # Allow inbound connections
     - ports:
         - port: {{ .Values.master.containerPorts.redis }}
         {{- if .Values.sentinel.enabled }}
         - port: {{ .Values.sentinel.containerPorts.sentinel }}
+        {{- end }}
+        {{- if .Values.proxy.enabled }}
+        - port: {{ .Values.proxy.containerPorts.proxy }}
         {{- end }}
       {{- if not .Values.networkPolicy.allowExternal }}
       from:
@@ -86,5 +95,6 @@ spec:
     {{- end }}
     {{- if .Values.networkPolicy.extraIngress }}
     {{- include "common.tplvalues.render" ( dict "value" .Values.networkPolicy.extraIngress "context" $ ) | nindent 4 }}
+    {{- end }}
     {{- end }}
 {{- end }}
