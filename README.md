@@ -22,3 +22,16 @@ The repository has the following structure:
   ├── docs                        # Documentation source files
   └── scripts                     # Scripts and tools which check and create addons
 ```
+
+## Plan design
+
+The design of the plan follows certain principles, and the minimum recommended number of installation nodes for k8s is usually 4. Therefore, our addons design plans according to this standard, and they follow the following principles:
+
+* The number of CPUs is allocated according to the principle of `2 * * n`
+* The minimum allocation ratio of CPU and memory is `1 : 1`, and the maximum is `1 : 8`
+* The allocation ratio of limits and requests is:
+  * `1 : 1` for database
+  * `1 : 2` for others addon
+* Due to cluster size limitations, we usually design a maximum number of replicas of `4`
+
+If these designs do not match your hardware and scale, we suggest forking this project and customizing it.
