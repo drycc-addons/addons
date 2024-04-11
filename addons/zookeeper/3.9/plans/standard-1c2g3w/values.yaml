@@ -1,10 +1,10 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: "hb-zookeeper-standard-2c4g5w"
+fullnameOverride: "hb-zookeeper-standard-1c2g3w"
 
 ## @param replicaCount Number of ZooKeeper nodes
 ##
-replicaCount: 5
+replicaCount: 3
 
 ## ZooKeeper resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -14,11 +14,11 @@ replicaCount: 5
 ##
 resources:
   limits: 
-    memory: 4Gi
-    cpu: 2
-  requests:
     memory: 2Gi
     cpu: 1
+  requests:
+    memory: 1Gi
+    cpu: 500m
 ## @section Persistence parameters
 
 ## Enable persistence using Persistent Volume Claims
@@ -45,4 +45,4 @@ persistence:
     - ReadWriteOnce
   ## @param persistence.size PVC Storage Request for ZooKeeper data volume
   ##
-  size: 240Gi
+  size: 4Gi

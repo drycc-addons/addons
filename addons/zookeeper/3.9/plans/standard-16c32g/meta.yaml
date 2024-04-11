@@ -1,6 +1,0 @@
-name: "standard-16c32g"
-id: b859846e-a724-4bc0-b4aa-d816cc3169cc
-description: "ZooKeeper standard-16c32g plan which limit resources 16 cores 32G memory."
-displayName: "standard-16c32g"
-bindable: true
-maximum_polling_duration: 1800
