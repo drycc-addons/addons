@@ -1,6 +1,0 @@
-name: "standard-2c4g"
-id: d822988d-0659-4ab8-a85d-185959920716
-description: "ZooKeeper standard-2c4g plan which limit resources 2 cores 4G memory."
-displayName: "standard-2c4g"
-bindable: true
-maximum_polling_duration: 1800

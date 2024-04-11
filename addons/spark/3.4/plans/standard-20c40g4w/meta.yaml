@@ -1,6 +1,0 @@
-name: "standard-20c40g4w"
-id: e820a7a1-ba61-403a-987e-b85dd8d57297
-description: "Spark standard-20c40g4w plan which limit resources 20 cores 40G memory 4 workers."
-displayName: "standard-20c40g4w"
-bindable: true
-maximum_polling_duration: 1800

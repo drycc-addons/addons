@@ -18,6 +18,9 @@ allow_parameters:
 - name: "auth.password"
   required: false
   description: "auth.password config for values.yaml"
+- name: "commonConfiguration"
+  required: false
+  description: "commonConfiguration config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"

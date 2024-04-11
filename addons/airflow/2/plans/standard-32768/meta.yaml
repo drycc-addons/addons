@@ -1,6 +1,0 @@
-name: "standard-32768"
-id: 91db9e7c-1a6d-458b-ae2f-b86124e3d938
-description: "airflow standard-32768 plan which limit resources memory size 32768Mi."
-displayName: "standard-32768"
-bindable: true
-maximum_polling_duration: 1800
