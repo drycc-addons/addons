@@ -1,0 +1,6 @@
+name: "standard-1c2g10"
+id: 83c3b52e-2685-4362-9ea1-42e170060c78
+description: "Postgresql Cluster standard-10 plan: Disk 10Gi ,vCPUs 1 , RAM 2G , DB MAX Connection 600"
+displayName: "standard-1c2g10"
+bindable: true
+maximum_polling_duration: 1800

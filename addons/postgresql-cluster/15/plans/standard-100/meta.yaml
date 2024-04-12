@@ -1,6 +1,0 @@
-name: "standard-100"
-id: c44160a6-5ec4-49e5-af1e-a1c1676871cf
-description: "PostgreSQL Cluster standard-100 plan: Disk 100Gi ,vCPUs 4 , RAM 16G , DB MAX Connection 2000"
-displayName: "standard-100"
-bindable: true
-maximum_polling_duration: 1800

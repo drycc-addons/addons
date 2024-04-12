@@ -1,0 +1,6 @@
+name: "standard-2c2g10"
+id: d4d9338c-4958-4203-8e7d-bdfcb0d81945
+description: "pmm standard-2c2g10 plan: Disk 10Gi ,vCPUs 2 , RAM 2G"
+displayName: "standard-2c2g10"
+bindable: true
+maximum_polling_duration: 1800

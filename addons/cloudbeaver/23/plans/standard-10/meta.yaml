@@ -1,6 +1,6 @@
-name: "standard-10"
+name: "standard-1c2g10"
 id: 9d92b94d-c63e-47a8-ac91-352f511ef0a9
-description: "Cloudbeaver standard-10 plan: Disk 10Gi ,vCPUs 1 , RAM 2G"
-displayName: "standard-10"
+description: "Cloudbeaver standard-1c2g10 plan: Disk 10Gi ,vCPUs 1 , RAM 2G"
+displayName: "standard-1c2g10"
 bindable: true
 maximum_polling_duration: 1800
