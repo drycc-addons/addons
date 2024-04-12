@@ -1,0 +1,6 @@
+name: "standard-1g2g10"
+id: 2b455154-8725-482a-95b2-a193c180d9b5
+description: "Mysql Cluster standard-1c2g10 plan: Disk 10Gi ,vCPUs 1 , RAM 2G , DB MAX Connection 600"
+displayName: "standard-1c2g10"
+bindable: true
+maximum_polling_duration: 1800

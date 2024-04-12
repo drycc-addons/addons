@@ -1,6 +1,0 @@
-name: "standard-10"
-id: d4d9338c-4958-4203-8e7d-bdfcb0d81945
-description: "pmm standard-10 plan: Disk 10Gi ,vCPUs 2 , RAM 2G"
-displayName: "standard-10"
-bindable: true
-maximum_polling_duration: 1800

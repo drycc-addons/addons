@@ -1,6 +1,0 @@
-name: "standard-200"
-id: 8205e5d3-a954-4c68-a570-efa8c607c1d7
-description: "Mysql Cluster standard-200 plan: Disk 200Gi ,vCPUs 8 , RAM 32G , DB MAX Connection 8000"
-displayName: "standard-200"
-bindable: true
-maximum_polling_duration: 1800
