@@ -308,7 +308,7 @@ enableJournal: true
 ##   #replication:
 ##     #replSetName: replicaset
 ##     #enableMajorityReadConcern: true
-##   # process management options
+##   # process management optionsT
 ##   processManagement:
 ##      fork: false
 ##      pidFilePath: /opt/drycc/mongodb/tmp/mongodb.pid
@@ -2050,4 +2050,4 @@ networkPolicy:
   ## (with the correct destination port).
   ##
   allowCurrentNamespace: true
-  allowNamespaces: 
+  allowNamespaces: []
