@@ -1,10 +1,10 @@
 {{- /*
-Copyright Drycc Community.
+Copyright VMware, Inc.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
-apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
-kind: Deployment
+apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+kind: StatefulSet
 metadata:
   name:  {{ include "flink.taskmanager.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
@@ -15,15 +15,15 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
+  replicas: {{ .Values.taskmanager.replicaCount }}
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.taskmanager.podLabels .Values.commonLabels ) "context" . ) }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
       app.kubernetes.io/part-of: flink
       app.kubernetes.io/component: taskmanager
-  replicas: {{ .Values.taskmanager.replicaCount }}
-  {{- if .Values.taskmanager.updateStrategy }}
-  strategy: {{- toYaml .Values.taskmanager.updateStrategy | nindent 4 }}
-  {{- end }}
+  podManagementPolicy: {{ .Values.taskmanager.podManagementPolicy }}
+  serviceName: {{ printf "%s-headless" (include "flink.taskmanager.fullname" .) | trunc 63 | trimSuffix "-" }}
+  updateStrategy: {{- toYaml .Values.taskmanager.updateStrategy | nindent 4 }}
   template:
     metadata:
       labels: {{- include "common.labels.standard" ( dict "customLabels" $podLabels "context" $ ) | nindent 8 }}
@@ -72,7 +72,7 @@ spec:
           image: {{ include "flink.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           {{- if .Values.taskmanager.containerSecurityContext.enabled }}
-          securityContext: {{- omit .Values.taskmanager.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          securityContext: {{- omit .Values.taskmanager.podSecurityContext "enabled" | toYaml | nindent 12 }}
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}
           command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
@@ -93,6 +93,10 @@ spec:
             - name: tcp-rpc
               containerPort: {{ .Values.taskmanager.containerPorts.rpc }}
           env:
+            - name: MY_POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
             - name: FLINK_MODE
               value: taskmanager
             # Hosts and addresses are determined by the service full name, which maps to flink.*§.fullname
@@ -104,8 +108,15 @@ spec:
               value: 0.0.0.0
             - name: FLINK_CFG_TASKMANAGER_RPC_PORT
               value: {{ .Values.taskmanager.containerPorts.rpc | quote }}
+            {{- $releaseNamespace := include "common.names.namespace" . }}
+            {{- $headlessServiceName := printf "%s-headless" (include "flink.taskmanager.fullname" .) | trunc 63 | trimSuffix "-" }}
+            {{- $clusterDomain := .Values.clusterDomain }}
+            - name: FLINK_CFG_TASKMANAGER_HOST
+              value: "$(MY_POD_NAME).{{ $headlessServiceName }}.{{ $releaseNamespace }}.svc.{{ $clusterDomain }}"
             - name: FLINK_CFG_TASKMANAGER_BIND__HOST
               value: 0.0.0.0
+            - name: FLINK_CFG_PROCESS_TASKMANAGER_WORKING__DIR
+              value: /data
             - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" .Values.image.debug | quote }}
             {{- if .Values.taskmanager.extraEnvVars }}
@@ -146,13 +157,53 @@ spec:
           {{- if .Values.taskmanager.resources }}
           resources: {{- toYaml .Values.taskmanager.resources | nindent 12 }}
           {{- end }}
-          {{- if .Values.taskmanager.extraVolumeMounts }}
-          volumeMounts: {{- include "common.tplvalues.render" ( dict "value" .Values.taskmanager.extraVolumeMounts "context" $) | nindent 12 }}
-          {{- end }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            {{- if .Values.taskmanager.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" ( dict "value" .Values.taskmanager.extraVolumeMounts "context" $) | nindent 12 }}
+            {{- end }}
         {{- if .Values.taskmanager.sidecars }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.taskmanager.sidecars "context" $) | nindent 8 }}
         {{- end }}
       volumes:
-        {{- if .Values.taskmanager.extraVolumes }}
-        {{- include "common.tplvalues.render" ( dict "value" .Values.taskmanager.extraVolumes "context" $) | nindent 8 }}
+  {{- if not .Values.taskmanager.persistence.enabled }}
+        - name: "data"
+          emptyDir: {}
+  {{- else if .Values.taskmanager.persistence.existingClaim }}
+        - name: "data"
+          persistentVolumeClaim:
+            claimName: {{ .Values.taskmanager.persistence.existingClaim }}
+  {{- else }}
+  {{- if .Values.taskmanager.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.taskmanager.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.taskmanager.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: "data"
+        {{- if or .Values.taskmanager.persistence.annotations .Values.commonAnnotations }}
+        {{- $claimAnnotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.taskmanager.persistence.annotations .Values.commonAnnotations ) "context" . ) }}
+        annotations: {{- include "common.tplvalues.render" ( dict "value" $claimAnnotations "context" $) | nindent 4 }}
         {{- end }}
+        {{- if .Values.commonLabels }}
+        labels: {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+          {{- range .Values.taskmanager.persistence.accessModes }}
+          - {{ . | quote }}
+          {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.taskmanager.persistence.size | quote }}
+        {{- if .Values.taskmanager.persistence.selector }}
+        selector: {{- include "common.tplvalues.render" (dict "value" .Values.taskmanager.persistence.selector "context" $) | nindent 10 }}
+        {{- else if .Values.taskmanager.persistence.existingVolume }}
+        selector:
+          matchLabels:
+            volume: {{ .Values.taskmanager.persistence.existingVolume }}
+        {{- end }}
+        {{- include "common.storage.class" (dict "persistence" .Values.taskmanager.persistence "global" .Values.global) | nindent 8 }}
+  {{- end }}

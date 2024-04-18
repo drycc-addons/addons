@@ -18,8 +18,8 @@ jobmanager:
       cpu: 4
       memory: 8Gi
     requests:
-      cpu: 400m
-      memory: 8Gi
+      cpu: 2
+      memory: 4Gi
   ## Apache Flink jobmanager.service parameters
   ##
   service:
@@ -43,10 +43,20 @@ taskmanager:
       cpu: 4
       memory: 8Gi
     requests:
-      cpu: 400m
-      memory: 8Gi
+      cpu: 2
+      memory: 4Gi
   ## @param taskmanager.extraEnvVars Extra environment variables to be set on flink container
   extraEnvVars:
     # taskmanager.numberOfTaskSlots
     - name: FLINK_TASK_MANAGER_NUMBER_OF_TASK_SLOTS
       value: "4"
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    ## @param taskmanager.persistence.enabled Enable persistence using a `PersistentVolumeClaim`
+    ##
+    enabled: true
+    ## @param taskmanager.persistence.size Persistent Volume Size
+    ##
+    size: 8Gi
