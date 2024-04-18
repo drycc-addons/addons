@@ -1,0 +1,21 @@
+name: mongodb
+version: 7.0
+id: 383f7316-84f3-4955-8491-1d4b02b749c8
+description: "mongodb"
+displayName: "mongodb"
+metadata:
+  displayName: "mongodb"
+  provider:
+    name: drycc
+    supportURL: https://www.mongodb.com/docs/manual/
+  documentationURL: https://www.mongodb.com/docs/manual/
+tags: mongodb
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+archive: false

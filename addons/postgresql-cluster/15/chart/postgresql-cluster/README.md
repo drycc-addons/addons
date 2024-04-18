@@ -162,3 +162,5 @@ You can modify multiple content at once, there is no need to modify part of it e
 ```
 # drycc resources:destroy `my_pg_001`
 ```
+# 修改pg在容器中分配的动态共享内存不足的问题
+https://www.cnblogs.com/daniel-hutao/p/17903993.html

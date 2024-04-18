@@ -54,3 +54,6 @@ entries:
   pmm:
     - version: 2.41
       description: "Percona Monitoring and Management: an open source database monitoring, observability and management tool ."
+  mongodb: 
+    - version: 7.0
+      description: "MongoDB is a document database designed for ease of application development and scaling."
