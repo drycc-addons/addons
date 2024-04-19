@@ -1,0 +1,6 @@
+name: "standard-4c8g3w"
+id: 22c8101b-5f85-4468-ab8d-2ac09d8d51f3
+description: "Kafka standard-4c8g3w plan which limit resources 3 workers per worker 4 cores, memory size 8Gi and persistence size 256Gi."
+displayName: "standard-4c8g3w"
+bindable: true
+maximum_polling_duration: 1800

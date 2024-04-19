@@ -1,6 +1,6 @@
 name: "standard-16c32g"
 id: 2c036b60-e5d0-4a29-a868-3cd5f8626480
-description: "RabbitMQ standard-16c32g plan which limit resources 16 cores 32G memory."
+description: "RabbitMQ standard-16c32g plan which limit resources 16 cores 32G memory and 3 workers."
 displayName: "standard-16c32g"
 bindable: true
 maximum_polling_duration: 1800

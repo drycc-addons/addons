@@ -1,0 +1,6 @@
+name: "standard-24c64g3w"
+id: c45fb0c2-fa55-4b57-9f44-eb6e50436ffd
+description: "Kafka standard-24c64g3w plan which limit resources 3 workers per worker 24 cores, memory size 64Gi persistence size 1Ti."
+displayName: "standard-24c64g3w"
+bindable: true
+maximum_polling_duration: 1800

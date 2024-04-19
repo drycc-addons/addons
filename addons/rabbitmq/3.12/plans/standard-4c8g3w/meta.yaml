@@ -1,6 +1,6 @@
 name: "standard-4c8g"
 id: cec940ac-46e2-4b11-b8aa-5d5855b5b8bf
-description: "RabbitMQ standard-4c8g plan which limit resources 4 cores 8G memory."
+description: "RabbitMQ standard-4c8g plan which limit resources 4 cores 8G memory and 3 workers."
 displayName: "standard-4c8g"
 bindable: true
 maximum_polling_duration: 1800

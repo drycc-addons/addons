@@ -1,6 +1,0 @@
-name: "standard-1024"
-id: c45fb0c2-fa55-4b57-9f44-eb6e50436ffd
-description: "Kafka standard-1024 plan which limit persistence size 1Ti."
-displayName: "standard-1024"
-bindable: true
-maximum_polling_duration: 1800

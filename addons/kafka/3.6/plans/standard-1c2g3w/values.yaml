@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: hb-kafka-standard-16
+fullnameOverride: hb-kafka-standard-1c2g3w
 
 ## @section Controller-eligible statefulset parameters
 ##
@@ -15,10 +15,10 @@ controller:
   resources:
     limits:
       cpu: 1000m
-      memory: 1024Mi
+      memory: 2Gi
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 500m
+      memory: 1Gi
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
   ##
