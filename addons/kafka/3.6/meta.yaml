@@ -21,7 +21,7 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
-- name: "metrics.kafka.enable"
+- name: "metrics.kafka.enabled"
   required: false
-  description: "metrics kafka enable or not config for values.yaml"
+  description: "metrics kafka enabled or not config for values.yaml"
 archive: false
