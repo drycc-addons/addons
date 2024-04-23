@@ -1,6 +1,0 @@
-name: "standard-512"
-id: 9717e82e-ff8b-4455-91c4-10e5141b2d93
-description: "Opensearch standard-512 plan which limit persistence size 512Gi."
-displayName: "standard-512"
-bindable: true
-maximum_polling_duration: 1800

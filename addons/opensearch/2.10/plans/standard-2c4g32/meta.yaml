@@ -1,0 +1,6 @@
+name: "standard-2c4g32"
+id: 278b07be-4bd3-4618-b97e-6fa6d471709d
+description: "Opensearch standard-2c4g32 plan which limit resources 2 cores 4Gi memory and persistence size 32Gi."
+displayName: "standard-2c4g32"
+bindable: true
+maximum_polling_duration: 1800

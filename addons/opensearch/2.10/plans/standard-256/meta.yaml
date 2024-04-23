@@ -1,6 +1,0 @@
-name: "standard-256"
-id: 07f6ea7a-6198-4b5e-99a0-31d0bd313089
-description: "Opensearch standard-256 plan which limit persistence size 256Gi."
-displayName: "standard-256"
-bindable: true
-maximum_polling_duration: 1800

@@ -1,0 +1,6 @@
+name: "standard-8c32g768"
+id: 9be63dae-d30e-4737-b676-94cbdb715eae
+description: "Opensearch standard-8c32g768 plan which limit resources 8 cores 32Gi memory and persistence size 768Gi."
+displayName: "standard-8c32g768"
+bindable: true
+maximum_polling_duration: 1800
