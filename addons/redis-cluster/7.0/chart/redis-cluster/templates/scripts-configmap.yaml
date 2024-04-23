@@ -26,7 +26,7 @@ data:
     response=$(
       timeout -s 3 $1 \
       redis-cli \
-        -h localhost \
+        -h 127.0.0.1 \
 {{- if .Values.tls.enabled }}
         -p $REDIS_TLS_PORT \
         --tls \
@@ -51,7 +51,7 @@ data:
       response=$(
         timeout -s 3 $1 \
         redis-cli \
-          -h localhost \
+          -h 127.0.0.1 \
   {{- if .Values.tls.enabled }}
           -p $REDIS_TLS_PORT \
           --tls \
@@ -88,7 +88,7 @@ data:
     response=$(
       timeout -s 3 $1 \
       redis-cli \
-        -h localhost \
+        -h 127.0.0.1 \
 {{- if .Values.tls.enabled }}
         -p $REDIS_TLS_PORT \
         --tls \

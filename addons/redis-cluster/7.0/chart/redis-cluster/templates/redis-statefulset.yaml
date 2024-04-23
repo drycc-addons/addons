@@ -301,12 +301,19 @@ spec:
           command: ['init-stack', '/bin/bash', '-c']
           args:
             - |
-              # Start envoy redis proxy
+              while true; do
+                sleep 1
+                /scripts/ping_readiness_local.sh 1
+                if [ $? -eq 0 ]; then
+                  break
+                fi
+              done
+              # Start redis cluster proxy
               {{- if .Values.usePasswordFile }}
               export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
               {{- end }}
-              sed s/{REDIS_PASSWORD}/${REDIS_PASSWORD}/g /opt/drycc/redis/etc/redis-proxy-default.yaml > /opt/drycc/redis/etc/redis-proxy.yaml
-              envoy -c /opt/drycc/redis/etc/redis-proxy.yaml --log-level error --concurrency 0
+              sed s/{REDIS_PASSWORD}/\"${REDIS_PASSWORD}\"/g /opt/drycc/redis/etc/redis-proxy-default.toml > /opt/drycc/redis/etc/redis-proxy.toml
+              redis-cluster-proxy /opt/drycc/redis/etc/redis-proxy.toml
           {{- end }}
           env:
             {{- if and .Values.usePassword (not .Values.usePasswordFile) }}
@@ -320,6 +327,8 @@ spec:
             - name: REDIS_PASSWORD_FILE
               value: "/opt/drycc/redis/secrets/redis-password"
             {{- end }}
+            - name: REDIS_PORT
+              value: {{ .Values.redis.containerPorts.redis | quote }}
           ports:
             - name: tcp-proxy
               containerPort: {{ .Values.proxy.containerPorts.proxy }}
@@ -362,9 +371,11 @@ spec:
           {{- include "common.tplvalues.render" (dict "value" .Values.proxy.resources "context" $) | nindent 12 }}
           {{- end }}
           volumeMounts:
+            - name: scripts
+              mountPath: /scripts
             - name: default-config
-              mountPath: /opt/drycc/redis/etc/redis-proxy-default.yaml
-              subPath: redis-proxy-default.yaml
+              mountPath: /opt/drycc/redis/etc/redis-proxy-default.toml
+              subPath: redis-proxy-default.toml
             {{- if .Values.usePasswordFile }}
             - name: redis-password
               mountPath: /opt/drycc/redis/secrets/
