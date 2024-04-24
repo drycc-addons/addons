@@ -27,4 +27,7 @@ allow_parameters:
 - name: "taskmanager.extraEnvVars"
   required: false
   description: "taskmanager extraEnvVars config for values.yaml"
+- name: "taskmanager.persistence.size"
+  required: false
+  description: "taskmanager persistence size config for values.yaml"
 archive: false
