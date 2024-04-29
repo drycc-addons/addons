@@ -94,9 +94,6 @@ kubernetes_sd_configs:
       own_namespace: true
       names: 
       - {{ include "common.names.namespace" .context }}
-      {{- range .value }}
-      - {{ include "common.tplvalues.render" (dict "value" . "context" $) }}
-      {{- end }}
 
 relabel_configs:
   - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
