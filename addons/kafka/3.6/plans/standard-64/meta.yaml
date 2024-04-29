@@ -1,6 +1,0 @@
-name: "standard-64"
-id: a340aab7-dbe0-4aa0-a9ca-806ccdd5e6bd
-description: "Kafka standard-64 plan which limit persistence size 64Gi."
-displayName: "standard-64"
-bindable: true
-maximum_polling_duration: 1800

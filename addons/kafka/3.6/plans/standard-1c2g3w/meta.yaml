@@ -1,0 +1,6 @@
+name: "standard-1c2g3w"
+id: 1c6057d7-ae6e-40f5-b065-c7d364778f7b
+description: "Kafka standard-1c2g3w plan which limit resources 3 workers per worker 1 core, memory size 2Gi and persistence size 16Gi."
+displayName: "standard-1c2g3w"
+bindable: true
+maximum_polling_duration: 1800

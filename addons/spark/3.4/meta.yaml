@@ -33,7 +33,7 @@ allow_parameters:
 - name: "worker.persistence"
   required: false
   description: "worker persistence config for values.yaml"
-- name: "metrics.enable"
+- name: "metrics.enabled"
   required: false
-  description: "metrics enable or not config for values.yaml"
+  description: "metrics enabled or not config for values.yaml"
 archive: false

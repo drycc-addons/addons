@@ -21,4 +21,7 @@ spec:
     - name: tcp-redis-bus
       port: {{ .Values.redis.containerPorts.bus }}
       targetPort: tcp-redis-bus
+    - name: tcp-redis-proxy
+      port: {{ .Values.proxy.containerPorts.proxy }}
+      targetPort: tcp-redis-proxy
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}

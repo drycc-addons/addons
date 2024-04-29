@@ -1,5 +1,5 @@
 name: flink
-version: 1
+version: 1.17
 id: 9ce3c3ba-33b5-4e4e-a5e9-a338a83d5070
 description: "flink"
 displayName: "flink"
@@ -18,10 +18,16 @@ allow_parameters:
 - name: "jobmanager.service.type"
   required: false
   description: "jobmanager service type config for values.yaml"
+- name: "jobmanager.extraEnvVars"
+  required: false
+  description: "jobmanager extraEnvVars config for values.yaml"
 - name: "taskmanager.service.type"
   required: false
   description: "taskmanager service type config for values.yaml"
 - name: "taskmanager.extraEnvVars"
   required: false
   description: "taskmanager extraEnvVars config for values.yaml"
+- name: "taskmanager.persistence.size"
+  required: false
+  description: "taskmanager persistence size config for values.yaml"
 archive: false

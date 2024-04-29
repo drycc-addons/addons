@@ -83,6 +83,7 @@ spec:
           command: {{- include "common.tplvalues.render" (dict "value" .Values.metrics.kafka.command "context" $) | nindent 12 }}
           {{- else }}
           command:
+            - init-stack
             - bash
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}

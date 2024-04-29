@@ -1,0 +1,28 @@
+## @param fullnameOverride String to fully override common.names.fullname
+##
+fullnameOverride: hb-kafka-standard-2c4g3w
+
+## @section Controller-eligible statefulset parameters
+##
+controller:
+  ## @param controller.replicaCount Number of Kafka controller-eligible nodes
+  ## Ignore this section if running in Zookeeper mode.
+  ##
+  replicaCount: 3
+  ## @param controller.heapOpts Kafka Java Heap size for controller-eligible nodes
+  ##
+  heapOpts: -Xmx2048m -Xms2048m
+  resources:
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests:
+      cpu: 1000m
+      memory: 2Gi
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+  ##
+  persistence:
+    ## @param controller.persistence.size PVC Storage Request for Kafka data volume
+    ##
+    size: 64Gi
