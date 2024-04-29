@@ -1,5 +1,5 @@
 credential:
-type
+{{- if (eq .Values.router.service.type "LoadBalancer") }}
   - name: EXTRANET_HOST
     valueFrom:
       serviceRef:
