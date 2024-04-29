@@ -636,7 +636,7 @@ server:
     {{- end }}
     {{- if .Values.scrapeAddons.enabled }}
       - job_name: addons
-        {{- include "addons.ds_scrape_config"  (dict "value" .Values.scrapeNamespaces "context" $) | nindent 4 }}
+        {{- include "addons.ds_scrape_config"  (dict "context" $) | nindent 4 }}
     {{- end }}  
     {{- if .Values.server.extraScrapeConfigs}}
     {{- include "common.tplvalues.render" (dict "value" .Values.server.extraScrapeConfigs "context" $) | nindent 2 }}
@@ -654,8 +654,6 @@ server:
           static_configs:
             - targets: [ "{{ printf "%s.%s.svc.%s:%d" (include "prometheus.alertmanager.fullname" .) (include "common.names.namespace" .) .Values.clusterDomain (int .Values.alertmanager.service.ports.http) }}" ]
     {{- end }}
-    rule_files:
-      - rules.yaml
     
   ## @param server.alertingRules Prometheus alerting rules. This content will be stored in the the rules.yaml file and the content can be a template.
   ## ref: <https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/>

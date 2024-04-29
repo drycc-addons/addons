@@ -3,20 +3,22 @@ Copyright Drycc Community.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
-kind: ClusterRoleBinding
+kind: RoleBinding
 apiVersion: {{ include "common.capabilities.rbac.apiVersion" . }}
 metadata:
-  name: {{ template "common.names.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  name: {{ template "prometheus.server.fullname.namespace" . }}
   labels: {{- include "common.labels.standard" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 4 }}
-    app.kubernetes.io/component: %%COMPONENT_NAME%%
+    app.kubernetes.io/part-of: prometheus
+    app.kubernetes.io/component: server
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: {{ template "common.names.fullname" . }}
+  kind: Role
+  name: {{ template "prometheus.server.fullname.namespace" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ template "%%TEMPLATE_NAME%%.serviceAccountName" . }}
+    name: {{ template "prometheus.server.serviceAccountName" . }}
     namespace: {{ include "common.names.namespace" . | quote }}
