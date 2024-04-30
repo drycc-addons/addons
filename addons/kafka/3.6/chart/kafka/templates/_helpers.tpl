@@ -956,6 +956,7 @@ Init container definition for waiting for Kubernetes autodiscovery
   image: {{ include "kafka.externalAccess.autoDiscovery.image" .context }}
   imagePullPolicy: {{ .context.Values.externalAccess.autoDiscovery.image.pullPolicy | quote }}
   command:
+    - init-stack
     - /scripts/auto-discovery.sh
   env:
     - name: MY_POD_NAME
