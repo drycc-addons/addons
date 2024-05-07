@@ -1,5 +1,5 @@
 {{- /*
-Copyright VMware, Inc.
+Copyright Drycc Community.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
@@ -49,6 +49,7 @@ spec:
     - ports:
         - port: {{ .Values.taskmanager.containerPorts.data }}
         - port: {{ .Values.taskmanager.containerPorts.rpc }}
+        - port: {{ .Values.taskmanager.containerPorts.internalMetrics }}
       to:
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
@@ -62,16 +63,25 @@ spec:
     {{- if eq .Values.taskmanager.service.type "LoadBalancer" }}
     - {}
     {{- else }}
-    - ports:
-        - port: {{ .Values.taskmanager.containerPorts.data }}
-        - port: {{ .Values.taskmanager.containerPorts.rpc }}
-      {{- if not .Values.taskmanager.networkPolicy.allowExternal }}
-      from:
+    - from:
+        {{- if not .Values.taskmanager.networkPolicy.allowExternal }}
         - podSelector:
             matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
         - podSelector:
             matchLabels:
               {{ template "flink.taskmanager.fullname" . }}-client: "true"
+        {{- if .Values.taskmanager.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
+        {{- range $namespace := .Values.taskmanager.networkPolicy.allowNamespaces }}
+        {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.taskmanager.networkPolicy.ingressNSMatchLabels }}
         - namespaceSelector:
             matchLabels:

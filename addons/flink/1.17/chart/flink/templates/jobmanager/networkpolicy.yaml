@@ -73,6 +73,18 @@ spec:
         - podSelector:
             matchLabels:
               {{ template "flink.jobmanager.fullname" . }}-client: "true"
+        {{- if .Values.jobmanager.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
+        {{- range $namespace := .Values.jobmanager.networkPolicy.allowNamespaces }}
+        {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.jobmanager.networkPolicy.ingressNSMatchLabels }}
         - namespaceSelector:
             matchLabels:
