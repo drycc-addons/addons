@@ -576,6 +576,20 @@ Returns the zookeeper.connect setting value
 {{- end -}}
 
 {{/*
+Returns the internel listeners based on the number of controller-eligible nodes
+*/}}
+{{- define "kafka.kraft.internelListeners" -}}
+  {{- $internelListeners := list -}}
+  {{- $fullname := include "common.names.fullname" . -}}
+  {{- $releaseNamespace := include "common.names.namespace" . -}}
+  {{- range $i := until (int .Values.controller.replicaCount) -}}
+  {{- $nodeAddress := printf "%s-controller-%d.%s-controller-headless.%s.svc.%s:%d" $fullname (int $i) $fullname $releaseNamespace $.Values.clusterDomain (int $.Values.listeners.interbroker.containerPort) -}}
+  {{- $internelListeners = append $internelListeners (printf "%s" $nodeAddress ) -}}
+  {{- end -}}
+  {{- join "," $internelListeners -}}
+{{- end -}}
+
+{{/*
 Returns the controller quorum voters based on the number of controller-eligible nodes
 */}}
 {{- define "kafka.kraft.controllerQuorumVoters" -}}
