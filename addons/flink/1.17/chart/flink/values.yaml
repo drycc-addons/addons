@@ -303,10 +303,12 @@ jobmanager:
     ## on. When true, server will accept connections from any source
     ## (with the correct destination port).
     ##
-    allowExternal: true
+    allowExternal: false
     ## @param jobmanager.networkPolicy.allowExternalEgress Allow the pod to access any range of port and all destinations.
     ##
     allowExternalEgress: true
+    allowCurrentNamespace: true
+    allowNamespaces: []
     ## @param jobmanager.networkPolicy.extraIngress [array] Add extra ingress rules to the NetworkPolice
     ## e.g:
     ## extraIngress:
@@ -672,10 +674,12 @@ taskmanager:
     ## on. When true, server will accept connections from any source
     ## (with the correct destination port).
     ##
-    allowExternal: true
+    allowExternal: false
     ## @param taskmanager.networkPolicy.allowExternalEgress Allow the pod to access any range of port and all destinations.
     ##
     allowExternalEgress: true
+    allowCurrentNamespace: true
+    allowNamespaces: []
     ## @param taskmanager.networkPolicy.extraIngress [array] Add extra ingress rules to the NetworkPolice
     ## e.g:
     ## extraIngress:

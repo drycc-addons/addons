@@ -15,12 +15,33 @@ instances_retrievable: true
 bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
+- name: "listeners.client.protocol"
+  required: false
+  description: "listeners client protocol config for values.yaml"
+- name: "listeners.controller.protocol"
+  required: false
+  description: "listeners controller protocol config for values.yaml"
+- name: "listeners.interbroker.protocol"
+  required: false
+  description: "listeners interbroker protocol config for values.yaml"
+- name: "listeners.external.protocol"
+  required: false
+  description: "listeners external protocol config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "metrics.kafka.enabled"
+  required: false
+  description: "metrics kafka enabled or not config for values.yaml"
+- name: "externalAccess.enabled"
+  required: false
+  description: "externalAccess enabled or not config for values.yaml"
+- name: "listeners.advertisedListeners"
+  required: false
+  description: "listeners advertisedListeners or not config for values.yaml"
 - name: "metrics.kafka.enabled"
   required: false
   description: "metrics kafka enabled or not config for values.yaml"
