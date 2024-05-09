@@ -1,0 +1,6 @@
+name: "standard-2c4g10"
+id: 837227d2-1522-45b9-abfe-7b631bd3bc91
+description: "grafana plan standard-2c4g10 which limit 2c4g ,default persistence size 10Gi."
+displayName: "2c4g10"
+bindable: true
+maximum_polling_duration: 1800

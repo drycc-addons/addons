@@ -1,0 +1,6 @@
+name: "standard-4c8g15"
+id: bb2f6e62-b279-40a4-967b-20aa5c12e770
+description: "grafana plan standard-4c8g15 which limit 4c8g ,default persistence size 15Gi."
+displayName: "4c8g15"
+bindable: true
+maximum_polling_duration: 1800
