@@ -1,0 +1,6 @@
+name: "standard-4c8g100"
+id: 118aada0-4826-4dba-83d8-989fbf47c55a
+description: "Prometheus server plan standard-4c8g100."
+displayName: "100Gi"
+bindable: true
+maximum_polling_duration: 1800

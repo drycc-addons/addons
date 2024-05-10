@@ -22,5 +22,4 @@ data:
   {{- include "common.tplvalues.render" (dict "value" .Values.server.webconfig "context" $) | toYaml | nindent 4 }}
   rules.yaml: 
     {{- include "common.tplvalues.render" (dict "value" .Values.server.rules "context" $) | toYaml | nindent 4 }}
-  
 {{- end }}

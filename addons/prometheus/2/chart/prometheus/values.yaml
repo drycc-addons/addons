@@ -564,7 +564,10 @@ alertmanager:
     ##     app: my-app
     ##
     selector: {}
-
+drycc:
+  token: xxxxx
+  url: xxxx
+  scheme: https
 ## @section Prometheus server Parameters
 ##
 ## Drycc Prometheus image
@@ -577,8 +580,8 @@ alertmanager:
 ## @param server.image.pullSecrets Prometheus image pull secrets
 ##
 server:
-  username: admin
-  password: Sx3EIELCA
+  username: xxxx
+  password: xxxx
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/prometheus
@@ -658,26 +661,20 @@ server:
   ## @param server.alertingRules Prometheus alerting rules. This content will be stored in the the rules.yaml file and the content can be a template.
   ## ref: <https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/>
   ## 
-  rules: |
-    {{`
-    groups:
-    - name: PG数据库-监控告警
-      rules:
-      - alert: PostgresqlDown
-        expr: pg_up == 0
-        for: 0m
-        labels:
-          severity: critical
-        annotations:
-          summary: Postgresql down (instance {{ $labels.instance }})
-          description: "Postgresql instance is down\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
-     `}}
+  rules: ""
 
   ## @param server.extraScrapeConfigs Promethus configuration, useful to declare new scrape_configs. This content will be merged with the 'server.configuration' value and stored in the the prometheus.yaml file.
   ## ref: <https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config>
   ##
-  extraScrapeConfigs: [] 
+  extraScrapeConfigs: 
+    - job_name: 'containers'
+      scheme: '{{ .Values.drycc.scheme }}'
+      metrics_path: /v2/apps/{{ include "common.names.namespace" .  }}/metrics
+      authorization:
+        type: Token
+        credentials: '{{ .Values.drycc.token }}'
+      static_configs:
+        - targets: [ '{{ .Values.drycc.url }}' ]
  
   ## @param server.replicaCount Number of Prometheus replicas to deploy
   ##
@@ -1503,8 +1500,7 @@ networkPolicy:
   ## (with the correct destination port).
   ##
   allowCurrentNamespace: true
-  allowNamespaces: 
-    - traefik
+  allowNamespaces: []
 ## @section Init Container Parameters
 ##
 
@@ -1556,10 +1552,6 @@ volumePermissions:
 
 scrapeAddons:
   enabled: true
-
-scrapeNamespaces: 
-  - xx1
-  - xx2
 
 configmapReload:
   prometheus:

@@ -24,15 +24,22 @@ allow_parameters:
 - name: "alertmanager.enabled"
   required: false
   description: "alertmanager config for values.yaml"
-- name: "server.retentionDays"
+- name: "server.username"
   required: false
-  description: "retentionDays config for values.yaml default 15d"
-- name: "server.retentionSize"
+  description: "prometheus administor username"
+- name: "server.password"
   required: false
-  description: "retentionSize config for values.yaml default 0, unit  MB, GB, TB"
+  description: "prometheus administor password"
+- name: "drycc.token"
+  required: false
+  description: "drycc user token"
+- name: "drycc.url"
+  required: false
+  description: "drycc url"
+- name: "drycc.scheme"
+  required: false
+  description: "drycc scheme"
 - name: "server.rules"
   required: false
   description: "rules config for values.yaml"
-- name: "scrapeNamespaces"
-  required: false
 archive: false

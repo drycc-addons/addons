@@ -1,6 +1,6 @@
-name: "standard-200"
+name: "standard-8c16g200"
 id: be99a35d-dbb4-4e17-8b27-1f00c5bca057
-description: "Prometheus Cluster standard-200 plan persistence size 200Gi."
+description: "Prometheus server plan standard-8c16g200."
 displayName: "200Gi"
 bindable: true
 maximum_polling_duration: 1800

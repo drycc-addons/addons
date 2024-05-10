@@ -3,6 +3,13 @@
 fullnameOverride: hb-prometheus-standard-50
 
 server:
+  resources: 
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+    requests: 
+      cpu: 2000m
+      memory: 4Gi
   persistence:
     size: 50Gi
-  # retentionSize: 48GBi
+  retentionSize: 48GB

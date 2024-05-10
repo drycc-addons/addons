@@ -1,8 +1,0 @@
-## @param fullnameOverride String to fully override common.names.fullname template
-##
-fullnameOverride: hb-prometheus-standard-10
-
-server:
-  persistence:
-    size: 10Gi
-  # retentionSize: 8GBi
