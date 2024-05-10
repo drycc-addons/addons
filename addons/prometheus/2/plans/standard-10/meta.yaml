@@ -1,6 +1,0 @@
-name: "standard-10"
-id: c0a84136-5799-4267-b7bd-7b4398bcff72
-description: "Prometheus Cluster standard-10 plan persistence size 10Gi."
-displayName: "10Gi"
-bindable: true
-maximum_polling_duration: 1800

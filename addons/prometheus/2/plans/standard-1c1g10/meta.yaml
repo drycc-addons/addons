@@ -1,0 +1,6 @@
+name: "standard-1c1g10"
+id: c0a84136-5799-4267-b7bd-7b4398bcff72
+description: "Prometheus server plan standard-1c1g10."
+displayName: "1c1g10"
+bindable: true
+maximum_polling_duration: 1800

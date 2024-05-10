@@ -1,0 +1,15 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: hb-prometheus-standard-8c16g200
+
+server:
+  resources: 
+    limits:
+      cpu: 8000m
+      memory: 16Gi
+    requests: 
+      cpu: 8000m
+      memory: 16Gi
+  persistence:
+    size: 200Gi
+  retentionSize: 198GB
