@@ -22,34 +22,37 @@ spec:
     {{- if eq .Values.service.type "LoadBalancer" }}
     - {}
     {{- else }}
-    # Allow client connections
     - ports:
+        # Allow client connections
         - port: {{ .Values.listeners.client.containerPort }}
+        # Allow communication controller
+        - port: {{ .Values.listeners.controller.containerPort }}
+        # Allow communication inter-broker
+        - port: {{ .Values.listeners.interbroker.containerPort }}
+        # Allow communication external
+        - port: {{ .Values.listeners.external.containerPort }}
       {{- if not .Values.networkPolicy.allowExternal }}
       from:
-        - podSelector:
+        {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
+        {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
             matchLabels:
-              {{ template "common.names.fullname" . }}-client: "true"
-          {{- if .Values.networkPolicy.explicitNamespacesSelector }}
-          namespaceSelector: {{- toYaml .Values.networkPolicy.explicitNamespacesSelector | nindent 12 }}
-          {{- end }}
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
+        {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+        {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
       {{- end }}
-    # Allow communication controller
-    - ports:
-        - port: {{ .Values.listeners.controller.containerPort }}
-      from:
-        - podSelector:
-            matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
-    # Allow communication inter-broker
-    - ports:
-        - port: {{ .Values.listeners.interbroker.containerPort }}
-      from:
-        - podSelector:
-            matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" .Values.commonLabels "context" $ ) | nindent 14 }}
     # Allow External connection
     {{- if .Values.externalAccess.enabled }}
     - ports:
         - port: {{ .Values.listeners.external.containerPort }}
+        - port: {{ .Values.externalAccess.controller.service.ports.external }}
     {{- if .Values.networkPolicy.externalAccess.from }}
       from: {{- include "common.tplvalues.render" ( dict "value" .Values.networkPolicy.externalAccess.from "context" $ ) | nindent 8 }}
     {{- end }}

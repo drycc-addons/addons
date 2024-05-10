@@ -184,7 +184,8 @@ daemonset:
           DB                  /data/containers.pos.db
           DB.locking          true
           Offset_Key          offset
-          Tag                 kubernetes.*
+          Tag                 kubernetes.<namespace_name>.<pod_name>.<container_name>.<container_id>
+          Tag_Regex           (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
           Read_from_Head      false
           multiline.parser    docker,cri
     ## https://docs.fluentbit.io/manual/pipeline/outputs

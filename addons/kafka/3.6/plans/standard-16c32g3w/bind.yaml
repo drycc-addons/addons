@@ -1,35 +1,12 @@
 credential:
-  {{- if (eq .Values.service.type "LoadBalancer") }}
-  - name: EXTERNAL_HOST
-    valueFrom:
-      serviceRef:
-        name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- end }}
-  
-  - name: CLIENT_HOST
-    valueFrom:
-      serviceRef:
-        name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .spec.clusterIP }'
+  - name: INTERNAL_LISTENERS
+    value: {{ include "kafka.kraft.internelListeners" . }}
 
-  - name: CLIENT_PORT
-    valueFrom:
-      serviceRef:
-        name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+  - name: PROTOCOL_MAP
+    value: {{ include "kafka.securityProtocolMap" . }}
 
-  {{- if .Values.externalAccess.enabled }}
-  - name: EXTERNAL_PORT
-    valueFrom:
-      serviceRef:
-        name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.name=="tcp-external")].port }'
-  {{- end }}
-
-
-  {{- if (include "kafka.createSaslSecret" .) }}
   {{- if (include "kafka.saslUserPasswordsEnabled" .) }}
+  {{- if (include "kafka.client.saslEnabled" .) }}
   - name: CLIENT_USERS
     value: {{ join "," .Values.sasl.client.users | quote }}
 
@@ -45,4 +22,36 @@ credential:
         name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
         jsonpath: '{ .data.system-user-password }'
   {{- end }}
+
+  {{- if regexFind "SASL" (upper .Values.listeners.interbroker.protocol) }}
+  - name: INTER_BROKER_PASSPORTS
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.inter-broker-password }'
   {{- end }}
+
+  {{- if regexFind "SASL" (upper .Values.listeners.controller.protocol) }}
+  - name: CONTROLLER_PASSPORTS
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
+        jsonpath: '{ .data.controller-password }'
+  {{- end }}
+  {{- end }}
+
+{{- if .Values.externalAccess.enabled }}
+{{- $fullname := include "common.names.fullname" . }}
+{{- $replicaCount := .Values.controller.replicaCount | int }}
+{{- range $i := until $replicaCount }}
+{{- $targetPod := printf "%s-broker-%d" (printf "%s" $fullname) $i }}
+  - name: {{ printf "EXTERNAL_%d" $i }}
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-broker-%d-external" (include "common.names.fullname" $) $i | trunc 63 | trimSuffix "-" }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+{{- end }}
+
+  - name: EXTERNAL_PORT
+    value: {{ .Values.externalAccess.controller.service.ports.external }}
+{{- end }}
