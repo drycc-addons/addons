@@ -1834,7 +1834,7 @@ metrics:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc-addons/mongodb_exporterr
+    repository: drycc-addons/mongodb_exporter
     tag: 0
     digest: ""
     pullPolicy: IfNotPresent
