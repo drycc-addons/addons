@@ -2,6 +2,12 @@
 ##
 fullnameOverride: "hb-redis-cluster-standard-65536"
 
+## io-thread
+ioThread:
+  enabled: true
+  doReads:  "yes"
+  counts: 2
+
 ## Enable persistence using Persistent Volume Claims
 ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
 ##

@@ -195,6 +195,11 @@ existingSecretPasswordKey: ""
 ## @param usePasswordFile Mount passwords as files instead of environment variables
 ##
 usePasswordFile: false
+## io-thread
+ioThread:
+  enabled: false
+  doReads:  "yes"
+  counts: 2
 ##
 ## TLS configuration
 ##

@@ -14,11 +14,11 @@ data:
   {{- if .Values.proxy.enabled }}
   redis-proxy-default.toml: |-
     [log]
-    level = "libredis_proxy=warn" # "trace" "info" "debug" "warn" "error"
+    level = "libproxy=error" # "trace" "info" "debug" "warn" "error"
     ansi = true  # support ANSI colors
     stdout = true # print logs to stdout
     directory = "/tmp" # log file directory
-    file_name = "redis-proxy.log" # log file name
+    file_name = "redis-cluster-proxy.log" # log file name
 
     [metrics]
     port = 2110
@@ -27,12 +27,12 @@ data:
     name = "redis-cluster-proxy"
     listen_addr = "0.0.0.0:{{ .Values.proxy.containerPorts.proxy }}"
     hash_tag = "{}"
-    thread = 1
+    thread = 2
     cache_type = "redis_cluster"
     servers = ["127.0.0.1:{{ .Values.redis.containerPorts.redis }}"]
 
-    fetch_interval = 1800000 # 1800s , 30 minutes
-    fetch_since_latest_cmd = 1000 # 3600s , 1 hour
+    fetch_interval = 300000
+    fetch_since_latest_cmd = 300
     read_from_slave = false
 
     ping_fail_limit = 10
