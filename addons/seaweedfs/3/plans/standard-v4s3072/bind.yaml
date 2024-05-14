@@ -1,0 +1,26 @@
+credential:
+  {{- if (eq .Values.filer.service.type "LoadBalancer") }}
+  - name: EXTERNAL_S3_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "seaweedfs.filer.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: S3_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "seaweedfs.filer.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: S3_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "seaweedfs.filer.fullname" . }}
+        jsonpath: '{.spec.ports[?(@.name=="s3")].port}'
+
+  - name: S3_CONFIG
+    valueFrom:
+      configMapRef:
+        name: {{ include "seaweedfs.configuration.configMap" . }}
+        jsonpath: '{.data.s3\.json}'

@@ -44,11 +44,11 @@ credential:
 {{- $fullname := include "common.names.fullname" . }}
 {{- $replicaCount := .Values.controller.replicaCount | int }}
 {{- range $i := until $replicaCount }}
-{{- $targetPod := printf "%s-broker-%d" (printf "%s" $fullname) $i }}
+{{- $targetPod := printf "%s-controller-%d" (printf "%s" $fullname) $i }}
   - name: {{ printf "EXTERNAL_%d" $i }}
     valueFrom:
       serviceRef:
-        name: {{ printf "%s-broker-%d-external" (include "common.names.fullname" $) $i | trunc 63 | trimSuffix "-" }}
+        name: {{ printf "%s-controller-%d-external" (include "common.names.fullname" $) $i | trunc 63 | trimSuffix "-" }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 {{- end }}
 

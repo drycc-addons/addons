@@ -30,12 +30,24 @@ allow_parameters:
 - name: "server.password"
   required: false
   description: "prometheus administor password"
+<<<<<<< HEAD
 - name: "containerScrape"
   required: false
   description: "container scrape"
 - name: "extraScrapeConfigs"
   required: false
   description: "extra scrape configs"
+=======
+- name: "drycc.token"
+  required: false
+  description: "drycc user token"
+- name: "drycc.url"
+  required: false
+  description: "drycc url"
+- name: "drycc.scheme"
+  required: false
+  description: "drycc scheme"
+>>>>>>> 453a91857971275fb746127d5c3d9100c3c8215c
 - name: "server.rules"
   required: false
   description: "rules config for values.yaml"

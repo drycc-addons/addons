@@ -21,6 +21,9 @@ allow_parameters:
 - name: "master.service.type"
   required: false
   description: "master service type config for values.yaml"
+- name: "master.defaultReplication"
+  required: false
+  description: "master defaultReplication config for values.yaml"
 - name: "filer.dataEncryption"
   required: false
   description: "filer encrypt data config for values.yaml"

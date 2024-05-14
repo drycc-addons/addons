@@ -570,6 +570,7 @@ containerScrape:
   url: xxxx
   scheme: https
   namespaces: []
+
 ## @section Prometheus server Parameters
 ##
 ## Drycc Prometheus image
