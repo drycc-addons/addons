@@ -44,7 +44,7 @@ spec:
               kubernetes.io/metadata.name: {{ $namespace }}
       {{- end }}
       {{- end }}
-  {{- end }}
+  {{- end }}  
   {{- end }}
   {{- if eq .Values.server.service.type "LoadBalancer" }}
   ingress:
