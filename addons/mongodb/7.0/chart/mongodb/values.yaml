@@ -1822,7 +1822,7 @@ hidden:
 metrics:
   ## @param metrics.enabled Enable using a sidecar Prometheus exporter
   ##
-  enabled: false
+  enabled: true
   ## Drycc MongoDB(&reg;) Promtheus Exporter image
   ## ref: https://hub.docker.com/r/drycc/mongodb-exporter/tags/
   ## @param metrics.image.registry MongoDB(&reg;) Prometheus exporter image registry
@@ -1833,9 +1833,9 @@ metrics:
   ## @param metrics.image.pullSecrets Specify docker-registry secret names as an array
   ##
   image:
-    registry: docker.io
-    repository: drycc/mongodb-exporter
-    tag: 0.34.0-debian-11-r19
+    registry: registry.drycc.cc
+    repository: drycc-addons/mongodb_exporterr
+    tag: 0
     digest: ""
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
