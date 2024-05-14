@@ -36,9 +36,6 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
-- name: "metrics.kafka.enabled"
-  required: false
-  description: "metrics kafka enabled or not config for values.yaml"
 - name: "externalAccess.enabled"
   required: false
   description: "externalAccess enabled or not config for values.yaml"
