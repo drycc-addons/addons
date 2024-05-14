@@ -1,0 +1,6 @@
+name: "standard-4c8g100"
+id: f0056f40-4cf2-40f1-935c-9d7f6f98ea72
+description: "pmm standard-4c8g100G"
+displayName: "standard-4c8g100"
+bindable: true
+maximum_polling_duration: 1800
