@@ -1,0 +1,6 @@
+name: "standard-v4s3072"
+id: e001c951-5717-42f4-bc1f-96e9ccd203c3
+description: "Seaweedfs standard-v4s3073 plan which limit 4 volumes, each size 3072G."
+displayName: "standard-v4s3072"
+bindable: true
+maximum_polling_duration: 1800
