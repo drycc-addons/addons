@@ -21,6 +21,7 @@ spec:
     # Allow inbound connections
     - ports:
       - port: {{ .Values.service.ports.mongodb }}
+      - port: {{ .Values.metrics.service..ports.metrics }}
     {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
       from:
       {{- if .Values.networkPolicy.allowCurrentNamespace }}
