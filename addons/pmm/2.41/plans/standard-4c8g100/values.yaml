@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: pmm-standard-2c2g10
+fullnameOverride: pmm-standard-4c8g100
 
 ## MinIO&reg; containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -13,12 +13,12 @@ fullnameOverride: pmm-standard-2c2g10
 ##
 pmmResources:
     requests:
-      memory: "2Gi"
-      cpu: "2"
+      memory: "8Gi"
+      cpu: "4"
       hugepages-2Mi: 4Mi
     limits:
-      memory: "2Gi"
-      cpu: "2"
+      memory: "8Gi"
+      cpu: "4"
       hugepages-2Mi: 4Mi
 
 ## @section Persistence parameters
@@ -27,4 +27,4 @@ pmmResources:
 ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
 ##
 storage:
-  size: 10Gi
+  size: 100Gi

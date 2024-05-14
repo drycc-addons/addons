@@ -60,6 +60,7 @@ relabel_configs:
       - __meta_kubernetes_service_name
     target_label: service
   - source_labels:
+  
       - __meta_kubernetes_pod_name
     target_label: pod
   - source_labels:

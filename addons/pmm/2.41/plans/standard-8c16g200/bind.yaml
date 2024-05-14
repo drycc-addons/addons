@@ -1,0 +1,15 @@
+credential:
+{{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: EXTRANET_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "pmm.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+{{- end }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "pmm.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  - name: PORT
+    value: 80

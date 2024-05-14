@@ -2,13 +2,14 @@
 ##
 fullnameOverride: hb-grafana-standard-5
 
-resources:
-  limits:
-    cpu: 1000m
-    memory: 1024Mi
-  requests:
-    cpu: 1000m
-    memory: 1024Mi
+grafana:
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 1000m
+      memory: 1Gi
 
 persistence:
     size: 5Gi

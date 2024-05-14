@@ -1,0 +1,6 @@
+name: "standard-8c16g200"
+id: 8059d78d-8ed1-4dd2-8f05-80dc63b321c3
+description: "pmm standard-8c16g200 "
+displayName: "standard-8c16g200"
+bindable: true
+maximum_polling_duration: 1800
