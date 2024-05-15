@@ -1873,18 +1873,12 @@ metrics:
   ## @param metrics.resources.requests The requested resources for Prometheus exporter containers
   ##
   resources:
-    ## Example:
-    ## limits:
-    ##    cpu: 100m
-    ##    memory: 128Mi
-    ##
-    limits: {}
-    ## Examples:
-    ## requests:
-    ##    cpu: 100m
-    ##    memory: 128Mi
-    ##
-    requests: {}
+    limits: 
+      cpu: 500m
+      memory: 512Mi
+    requests: 
+      cpu: 100m
+      memory: 128Mi
   ## @param metrics.containerPort Port of the Prometheus metrics container
   ##
   containerPort: 9216

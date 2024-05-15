@@ -1,0 +1,6 @@
+name: "standard-32c128g800"
+id: 3d08527b-4ed9-46e5-8f29-dd38a8b12513
+description: "mongodb standard-32c128g800 plan: Disk 800Gi ,vCPUs 32 , RAM 128G "
+displayName: "standard-32c128g800"
+bindable: true
+maximum_polling_duration: 1800

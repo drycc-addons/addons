@@ -1,0 +1,6 @@
+name: "standard-16c64g400"
+id: ae0a6495-8a57-4282-ba6c-7887078bc36a
+description: "mongodb standard-16c64g400 plan: Disk 400Gi ,vCPUs 16 , RAM 64G "
+displayName: "standard-16c64g400"
+bindable: true
+maximum_polling_duration: 1800
