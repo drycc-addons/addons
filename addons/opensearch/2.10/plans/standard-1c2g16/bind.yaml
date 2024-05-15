@@ -1,4 +1,6 @@
 credential:
+{{- $releaseNamespace := include "common.names.namespace" . }}
+{{- $clusterDomain := .Values.clusterDomain }}
   {{- if (eq .Values.service.type "LoadBalancer") }}
   - name: EXTERNAL_OPENSEARCH_HOST
     valueFrom:
@@ -66,4 +68,53 @@ credential:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.logstash-password }'
+  {{- end }}
+
+
+  {{- if (include "opensearch.createTlsSecret" .) }}
+  {{ if not (include "opensearch.coordinating.enabled" .) }}
+  - name: OPENSEARCH_DOMAIN
+    value: {{ (printf "%s.%s.svc.%s" (include "opensearch.service.name" .) $releaseNamespace $clusterDomain) }}
+
+  - name: OPESEARCH_MASTER_CA_CRT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-crt" (include "opensearch.master.fullname" .) }}
+        jsonpath: '{ .data.ca\.crt }'
+  {{- end }}
+
+  {{- if and (include "opensearch.data.enabled" .) (not .Values.security.tls.data.existingSecret) }}
+  {{- $serviceName := include "opensearch.data.servicename" . }}
+  - name: OPENSEARCH_DATA_DOMAIN
+    value: {{ (printf "%s.%s.svc.%s" $serviceName $releaseNamespace $clusterDomain) }}
+
+  - name: OPESEARCH_DATA_CA_CRT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-crt" (include "opensearch.data.fullname" .) }}
+        jsonpath: '{ .data.ca\.crt }'
+  {{- end }}
+
+  {{- if and (include "opensearch.coordinating.enabled" .) (not .Values.security.tls.coordinating.existingSecret) }}
+  - name: OPENSEARCH_DOMAIN
+    value: {{ (printf "%s.%s.svc.%s" (include "opensearch.service.name" .) $releaseNamespace $clusterDomain) }}
+
+  - name: OPESEARCH_COORDINATING_CA_CRT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-crt" (include "opensearch.coordinating.fullname" .) }}
+        jsonpath: '{ .data.ca\.crt }'
+  {{- end }}
+
+  {{- if and (include "opensearch.ingest.enabled" .) (not .Values.security.tls.ingest.existingSecret) }}
+  {{- $serviceName := include "opensearch.ingest.servicename" . }}
+  - name: OPENSEARCH_INGEST_DOMAIN
+    value: {{ (printf "%s.%s.svc.%s" $serviceName $releaseNamespace $clusterDomain)  }}
+
+  - name: OPESEARCH_INGEST_CA_CRT
+    valueFrom:
+      secretKeyRef:
+        name: {{ printf "%s-crt" (include "opensearch.ingest.fullname" .) }}
+        jsonpath: '{ .data.ca\.crt }'
+  {{- end }}
   {{- end }}
