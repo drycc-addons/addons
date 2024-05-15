@@ -1,0 +1,6 @@
+name: "standard-8c32g200"
+id: 5d77eae9-03d4-4642-a583-964563d9b456
+description: "mongodb standard-8c32g200 plan: Disk 200Gi ,vCPUs 8 , RAM 32G "
+displayName: "standard-8c32g200"
+bindable: true
+maximum_polling_duration: 1800
