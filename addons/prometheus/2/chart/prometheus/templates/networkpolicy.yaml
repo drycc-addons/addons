@@ -46,10 +46,6 @@ spec:
       {{- end }}
   {{- end }}  
   {{- end }}
-<<<<<<< HEAD
-=======
-  {{- end }}
->>>>>>> 453a91857971275fb746127d5c3d9100c3c8215c
   {{- if eq .Values.server.service.type "LoadBalancer" }}
   ingress:
     - {}
