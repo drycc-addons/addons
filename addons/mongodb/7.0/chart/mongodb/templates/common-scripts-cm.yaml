@@ -93,7 +93,7 @@ data:
     #Create the client/server cert
     openssl req -new -key /certs/mongo.key -out /certs/mongo.csr -subj "/C=US/O=My Organisations/OU=IT/CN=$my_hostname" -config /certs/openssl.cnf
     #Signing the server cert with the CA cert and key
-    openssl x509 -req -in /certs/mongo.csr -CA /certs/mongodb-ca-cert -CAkey /certs/mongodb-ca-key -CAcreateserial -out /certs/mongo.crt -days 3650 -extensions v3_req -extfile /certs/openssl.cnf
+    openssl x509 -req -in /certs/mongo.csr -CA /certs/mongodb-ca-cert -CAkey /certs/mongodb-ca-key -CAcreateserial -out /certs/mongo.crt -days 36500 -extensions v3_req -extfile /certs/openssl.cnf
     rm /certs/mongo.csr
     #Concatenate to a pem file for use as the client PEM file which can be used for both member and client authentication.
     cat /certs/mongo.crt /certs/mongo.key > /certs/mongodb.pem
