@@ -18,6 +18,15 @@ allow_parameters:
 - name: "extraEnvVars"
   required: false
   description: "extraEnvVars config for values.yaml"
+- name: "extraConfig"
+  required: false
+  description: "extraConfig config for values.yaml"
+- name: "controller.extraConfig"
+  required: false
+  description: "controller.extraConfig config for values.yaml"
+- name: "broker.extraConfig"
+  required: false
+  description: "broker.extraConfig config for values.yaml"
 - name: "listeners.client.protocol"
   required: false
   description: "listeners client protocol config for values.yaml"
