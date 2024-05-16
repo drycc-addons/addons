@@ -1849,7 +1849,7 @@ metrics:
 
   ## @param metrics.username String with username for the metrics exporter
   ## If undefined the root user will be used for the metrics exporter
-  username: ""
+  username: "user_exporter"
   ## @param metrics.password String with password for the metrics exporter
   ## If undefined but metrics.username is defined, a random password will be generated
   password: ""
