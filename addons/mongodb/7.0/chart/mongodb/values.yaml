@@ -1913,10 +1913,10 @@ metrics:
   ##
   livenessProbe:
     enabled: true
-    initialDelaySeconds: 15
-    periodSeconds: 5
+    initialDelaySeconds: 60
+    periodSeconds: 30
     timeoutSeconds: 5
-    failureThreshold: 3
+    failureThreshold: 5
     successThreshold: 1
   ## Metrics exporter readiness probe
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
@@ -1929,10 +1929,10 @@ metrics:
   ##
   readinessProbe:
     enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 5
-    timeoutSeconds: 1
-    failureThreshold: 3
+    initialDelaySeconds: 60
+    periodSeconds: 30
+    timeoutSeconds: 5
+    failureThreshold: 5
     successThreshold: 1
   ## Slow starting containers can be protected through startup probes
   ## Startup probes are available in Kubernetes version 1.16 and above
@@ -1946,8 +1946,8 @@ metrics:
   ##
   startupProbe:
     enabled: false
-    initialDelaySeconds: 5
-    periodSeconds: 10
+    initialDelaySeconds: 60
+    periodSeconds: 30
     timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 30
