@@ -506,7 +506,7 @@ ingress:
   ## NOTE: 'key' and 'certificate' are expected in PEM format
   ## NOTE: 'name' should line up with a 'secretName' set further up
   ## If it is not set and you're using cert-manager, this is unneeded, as it will create a secret for you with valid certificates
-  ## If it is not set and you're NOT using cert-manager either, self-signed certificates will be created valid for 365 days
+  ## If it is not set and you're NOT using cert-manager either, self-signed certificates will be created valid for 36500 days
   ## It is also possible to create and manage the certificates outside of this helm chart
   ## Please see README.md for more information
   ## e.g:

@@ -21,6 +21,9 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "auth.rootPassword"
+  required: false
+  description: "auth rootPassword config for values.yaml"
 - name: "metrics.enabled"
   required: false
   description: "metrics enabled or not config for values.yaml"
