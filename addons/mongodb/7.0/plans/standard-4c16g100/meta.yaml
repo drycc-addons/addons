@@ -1,6 +1,6 @@
-name: "standard-1c2g10"
-id: 8e0ff3e6-f633-4c25-8ff1-6d25cdc2ed98
-description: "mongodb standard-1c2g10 plan: Disk 10Gi ,vCPUs 1 , RAM 2G "
-displayName: "standard-1c2g10"
+name: "standard-4c16g100"
+id: a7409cf8-dc92-42ff-95e8-8223d849afe4
+description: "mongodb standard-4c16g100 plan: Disk 100Gi ,vCPUs c , RAM 16G "
+displayName: "standard-4c16g100"
 bindable: true
 maximum_polling_duration: 1800

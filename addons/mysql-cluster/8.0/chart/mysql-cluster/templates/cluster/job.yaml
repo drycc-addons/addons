@@ -27,7 +27,7 @@ spec:
           - {{ include "mysql.primary.fullname" . }}.{{ include "common.names.namespace" . }}.svc.cluster.local
       initContainers:
         - name: init-wait
-          image: registry.uucin.com/drycc/python-dev:latest
+          image: registry.drycc.cc/drycc/python-dev:latest
           imagePullPolicy: {{.Values.imagePullPolicy}}
           args:
           - netcat
