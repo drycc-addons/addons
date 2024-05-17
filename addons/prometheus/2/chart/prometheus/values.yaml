@@ -565,11 +565,11 @@ alertmanager:
     ##
     selector: {}
 
-containerScrape:
+drycc:
   token: xxxxx
-  url: xxxx
-  scheme: https
-  namespaces: []
+  endpoint: drycc-controller-api.drycc.svc.cluster.local
+  scheme: http
+  apps: []
 
 ## @section Prometheus server Parameters
 ##
@@ -583,8 +583,8 @@ containerScrape:
 ## @param server.image.pullSecrets Prometheus image pull secrets
 ##
 server:
-  username: xxxx
-  password: xxxx
+  username: admin
+  password: admin
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/prometheus
@@ -641,24 +641,30 @@ server:
         {{- include "prometheus.scrape_config" (dict "component" "alertmanager" "context" $) | nindent 4 }}
     {{- end }}
     {{- if .Values.scrapeAddons.enabled }}
-      - job_name: addons
-        {{- include "addons.ds_scrape_config"  (dict "context" $) | nindent 4 }}
+      - job_name: kubernetes-service-endpoints
+        {{- include "addons.kubernetes-service-endpoints"  (dict "context" $) | nindent 4 }}
+      - job_name: kubernetes-service-endpoints-slow
+        {{- include "addons.kubernetes-service-endpoints-slow"  (dict "context" $) | nindent 4 }}
+      - job_name: kubernetes-pods
+        {{- include "addons.kubernetes-pods"  (dict "context" $) | nindent 4 }}
+      - job_name: kubernetes-pods-slow
+        {{- include "addons.kubernetes-pods-slow"  (dict "context" $) | nindent 4 }}
     {{- end }}  
     
-    {{ $scheme := .Values.containerScrape.scheme }}
-    {{ $token := .Values.containerScrape.token }}
-    {{ $url := .Values.containerScrape.url }}
-    {{- range $namespace := .Values.containerScrape.namespaces }}
+    {{ $scheme := .Values.drycc.scheme }}
+    {{ $token := .Values.drycc.token }}
+    {{ $endpoint := .Values.drycc.endpoint }}
+    {{- range $app := .Values.drycc.apps }}
     
-    {{- if $namespace }}
-      - job_name: 'jobns-%s {{ $namespace }}'
+    {{- if $app }}
+      - job_name: 'drycc-apps-{{ $app }}'
         scheme: {{ $scheme }}
-        metrics_path: /v2/apps/{{ $namespace }}/metrics
+        metrics_path: /v2/apps/{{ $app }}/metrics
         authorization:
           type: Token
           credentials: {{ $token  }}
         static_configs:
-          - targets: [ {{ $url }} ]
+          - targets: [ {{ $endpoint }} ]
     {{- end }}
     {{- end }}
 
