@@ -74,3 +74,6 @@ resources:
 persistentVolume:
   enabled: true
   size: 50Gi
+
+shmVolume:
+  sizeLimit: "4Gi"

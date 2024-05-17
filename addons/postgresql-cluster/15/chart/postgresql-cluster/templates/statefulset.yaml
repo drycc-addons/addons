@@ -109,6 +109,8 @@ spec:
           # readOnly: true
         - mountPath: "/opt/drycc/postgresql/backup/"
           name: backup-config
+        - name: dshm
+          mountPath: /dev/shm
           # readOnly: true
         resources:
 {{ toYaml .Values.resources | indent 10 }}
@@ -196,7 +198,7 @@ spec:
           mountPath: "{{ .Values.persistentVolume.mountPath }}" 
         - mountPath: "/opt/drycc/postgresql/backup/"
           name: backup-config
-      
+
      {{- with .Values.nodeSelector }} 
       nodeSelector:
 {{ toYaml . | indent 8 }}
@@ -229,6 +231,15 @@ spec:
       - name: storage-volume
         emptyDir: {}
       {{- end }}
+      {{- if .Values.shmVolume.enabled }}
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          {{- if .Values.shmVolume.sizeLimit }}
+          sizeLimit: {{ .Values.shmVolume.sizeLimit }}
+          {{- end }}
+      {{- end }}
+
   {{- if .Values.persistentVolumeClaimRetentionPolicy.enabled }}
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: {{ .Values.persistentVolumeClaimRetentionPolicy.whenDeleted }}

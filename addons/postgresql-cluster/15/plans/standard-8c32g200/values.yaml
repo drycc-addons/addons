@@ -73,3 +73,6 @@ resources:
 persistentVolume:
   enabled: true
   size: 200Gi
+
+shmVolume:
+  sizeLimit: "16Gi"
