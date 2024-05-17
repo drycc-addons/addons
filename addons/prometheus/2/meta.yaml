@@ -30,7 +30,7 @@ allow_parameters:
 - name: "server.password"
   required: false
   description: "prometheus administor password"
-- name: "containerScrape"
+- name: "drycc"
   required: false
   description: "container scrape"
 - name: "extraScrapeConfigs"
