@@ -759,6 +759,7 @@ Init container definition for Kafka initialization
   resources: {{- toYaml $roleSettings.initContainerResources | nindent 4 }}  
   {{- end }} 
   command:
+    - init-stack
     - /bin/bash
   args:
     - -ec
