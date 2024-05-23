@@ -51,6 +51,9 @@ allow_parameters:
 - name: "listeners.advertisedListeners"
   required: false
   description: "listeners advertisedListeners or not config for values.yaml"
+- name: "metrics.jmx.enabled"
+  required: false
+  description: "metrics jmx enabled or not config for values.yaml"
 - name: "metrics.kafka.enabled"
   required: false
   description: "metrics kafka enabled or not config for values.yaml"

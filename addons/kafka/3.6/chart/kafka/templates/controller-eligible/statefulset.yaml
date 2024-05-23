@@ -331,6 +331,7 @@ spec:
           args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
           {{- else }}
           command:
+            - init-stack
             - java
           args:
             - -XX:MaxRAMPercentage=100

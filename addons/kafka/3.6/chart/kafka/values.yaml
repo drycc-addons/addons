@@ -2083,9 +2083,9 @@ metrics:
     ## @param metrics.jmx.image.pullSecrets Specify docker-registry secret names as an array
     ##
     image:
-      registry: docker.io
-      repository: bitnami/jmx-exporter
-      tag: 0.20.0-debian-11-r6
+      registry: registry.drycc.cc
+      repository: drycc-addons/jmx-exporter
+      tag: "0"
       digest: ""
       ## Specify a imagePullPolicy
       ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
