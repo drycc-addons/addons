@@ -24,6 +24,9 @@ allow_parameters:
 - name: "alertmanager.enabled"
   required: false
   description: "alertmanager config for values.yaml"
+- name: "alertmanager.configuration"
+  required: false
+  description: "alertmanager config for values.yaml"
 - name: "server.username"
   required: false
   description: "prometheus administor username"
@@ -33,7 +36,7 @@ allow_parameters:
 - name: "drycc"
   required: false
   description: "container scrape"
-- name: "extraScrapeConfigs"
+- name: "server.extraScrapeConfigs"
   required: false
   description: "extra scrape configs"
 - name: "server.rules"
