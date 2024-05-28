@@ -180,7 +180,7 @@ daemonset:
     inputs: |
       [INPUT]
           Name                tail
-          Path                /var/log/containers/{{ .Release.Namespace }}-*.log
+          Path                /var/log/containers/*_{{ .Release.Namespace }}_*.log
           DB                  /data/containers.pos.db
           DB.locking          true
           Offset_Key          offset
