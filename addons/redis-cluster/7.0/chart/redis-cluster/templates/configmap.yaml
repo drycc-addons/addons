@@ -11,41 +11,6 @@ metadata:
   annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 data:
-  {{- if .Values.proxy.enabled }}
-  redis-proxy-default.toml: |-
-    [log]
-    level = "libproxy=error" # "trace" "info" "debug" "warn" "error"
-    ansi = true  # support ANSI colors
-    stdout = true # print logs to stdout
-    directory = "/tmp" # log file directory
-    file_name = "redis-cluster-proxy.log" # log file name
-
-    [metrics]
-    port = 2110
-
-    [[clusters]]
-    name = "redis-cluster-proxy"
-    listen_addr = "0.0.0.0:{{ .Values.proxy.containerPorts.proxy }}"
-    hash_tag = "{}"
-    thread = 2
-    cache_type = "redis_cluster"
-    servers = ["127.0.0.1:{{ .Values.redis.containerPorts.redis }}"]
-
-    fetch_interval = 300000
-    fetch_since_latest_cmd = 300
-    read_from_slave = false
-
-    ping_fail_limit = 10
-    ping_interval = 300
-
-    read_timeout = 1000
-    write_timeout = 1000
-    dial_timeout = 500
-    listen_proto = "tcp"
-    node_connections = 1
-
-    auth = {REDIS_PASSWORD}
-  {{- end }}
   redis-default.conf: |-
     # Redis configuration file example.
     #
