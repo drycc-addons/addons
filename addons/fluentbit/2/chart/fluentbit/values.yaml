@@ -195,12 +195,12 @@ daemonset:
           call                append_tag
           code                function append_tag(tag, timestamp, record) new_record = record local namespace, pod_name, container_name, container_id = string.match(tag, "kubernetes%.([^%.]+)%.([^%.]+)%.([^%.]+)%.(.+)") if namespace and pod_name and container_name and container_id then new_record["pod_name"] = pod_name new_record["namespace"] = namespace new_record["container_name"] = container_name new_record["container_id"] = container_id end return 1, timestamp, new_record end
 
-      [FILTER]
-          name                multiline
-          match               kubernetes.*
-          multiline.parser    python_multiline,java_multiline,go_multiline
-          multiline.key_content log
-          buffer              on
+      # [FILTER]
+      #     name                multiline
+      #     match               kubernetes.*
+      #     multiline.parser    python_multiline,java_multiline,go_multiline
+      #     multiline.key_content log
+      #     buffer              on
     ## https://docs.fluentbit.io/manual/pipeline/outputs
     outputs: |
       [OUTPUT]
