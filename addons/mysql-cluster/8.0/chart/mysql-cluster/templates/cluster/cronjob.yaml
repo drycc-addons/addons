@@ -1,0 +1,96 @@
+{{- /*
+Copyright Drycc Community.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+{{- if .Values.backup.enabled }}
+apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
+kind: CronJob
+metadata:
+  name: {{ include "mysql.cluster.fullname" . }}-backup
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: primary
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+
+spec:
+  schedule: {{ .Values.backup.schedule| quote }}
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    metadata:
+    spec:
+      template:
+        spec: 
+          restartPolicy: OnFailure
+          initContainers:
+            - name: backup-wait
+              image: registry.drycc.cc/drycc/python-dev:latest
+              imagePullPolicy: {{.Values.imagePullPolicy}}
+              args:
+              - netcat
+              - -v
+              - -u
+              - mysql://$(MYSQL_HOST):$(MYSQL_PORT_NUMBER)
+
+              env:
+                - name: MYSQL_HOST
+                  value: {{ include "mysql.router.fullname" . }}
+                - name: MYSQL_PORT_NUMBER
+                  value: {{ .Values.router.service.portro | quote }}
+                      
+          containers:         
+            - name: backup-cron
+              image: {{ include "cluster.image" . }}
+              imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+              {{- if .Values.primary.containerSecurityContext.enabled }}
+              securityContext: {{- omit .Values.primary.containerSecurityContext "enabled" | toYaml | nindent 14 }}
+              {{- end }}
+              command: 
+                - /bin/bash
+                - -ec
+                - |   
+                  # create file
+                  echo "
+                  import os
+                  from datetime import datetime, timezone, timedelta
+
+                  now_utc = datetime.now(timezone.utc)
+                  cst_timezone = timezone(timedelta(hours=8))
+                  now_cst = now_utc.astimezone(cst_timezone)
+                  now_str =  now_cst.strftime('%Y%m%d%H%M')
+                  endpoint=os.getenv('AWS_ENDPOINT_URL')
+                  bucket_name=os.getenv('AWS_BUCKET_NAME')
+
+                  util.dump_instance(now_str, {'s3BucketName': bucket_name, 's3EndpointOverride': endpoint, 'threads': 4, 'compatibility': ['strip_restricted_grants', 'strip_definers', 'ignore_missing_pks'] ,'excludeSchemas': ['mysql_innodb_cluster_metadata','sys','information_schema','performance_schema','mondb'],'compatibility':['strip_restricted_grants', 'strip_definers', 'ignore_missing_pks'] })
+                  " > /tmp/dump_instance.py
+
+                  mysqlsh --uri=${MYSQL_ROOT_USER}@${MYSQL_HOST}:${MYSQL_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} --py < /tmp/dump_instance.py
+
+              env:
+                - name: MYSQL_HOST
+                  value: {{ include "mysql.router.fullname" . }}
+                - name: MYSQL_PORT_NUMBER
+                  value: {{ .Values.router.service.portro | quote }}
+                - name: MYSQL_ROOT_USER
+                  value: "root"
+                - name: MYSQL_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "mysql.secretName" . }}
+                      key: mysql-root-password
+                - name: AWS_ENDPOINT_URL
+                  value: {{ .Values.backup.s3.endpoint | quote }}
+                - name: AWS_BUCKET_NAME
+                  value: {{ .Values.backup.s3.bucketName | quote }}
+                - name: AWS_ACCESS_KEY_ID
+                  value: {{ .Values.backup.s3.accessKey | quote }}
+                - name: AWS_SECRET_ACCESS_KEY
+                  value: {{ .Values.backup.s3.secretKey | quote }}
+                - name: AWS_DEFAULT_REGION
+                  value: {{ .Values.backup.s3.region | quote }}
+{{- end }}
