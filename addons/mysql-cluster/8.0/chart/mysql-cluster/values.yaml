@@ -592,8 +592,8 @@ cluster:
 
   image:
     registry: registry.drycc.cc
-    repository: drycc-addons/mysqlshell   
-    tag: 8.0.34
+    repository: drycc-addons/mysql-shell   
+    tag: "8.0"
     digest: ""
     pullPolicy: IfNotPresent 
 
@@ -1245,3 +1245,13 @@ metrics:
     ##      summary: MariaDB instance is down
     ##
     rules: []
+    
+backup:
+  enabled: false 
+  schedule: ""
+  s3: 
+    endpoint: ""
+    bucketName: ""
+    accessKey: "" 
+    secretKey: "" 
+    region: us-west-1

@@ -24,4 +24,7 @@ allow_parameters:
 - name: "router.configuration"
   required: false
   description: "router config for values.yaml"
+- name: "backup"
+  required: false
+  description: "backup config for values.yaml"
 archive: false
