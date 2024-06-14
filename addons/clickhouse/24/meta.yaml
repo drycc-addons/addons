@@ -1,0 +1,24 @@
+name: clickhouse
+version: 23
+id: 5606a4c8-d0b6-4ad0-98d2-3e4fde3055f6
+description: "clickhouse"
+displayName: "clickhouse"
+metadata:
+  displayName: "clickhouse"
+  provider:
+    name: drycc
+    supportURL: http://clickhouse.io/
+  documentationURL: https://github.com/drycc-addons/
+tags: clickhouse
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+archive: false
