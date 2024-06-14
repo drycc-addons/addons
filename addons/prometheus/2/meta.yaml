@@ -42,4 +42,13 @@ allow_parameters:
 - name: "server.rules"
   required: false
   description: "rules config for values.yaml"
+- name: "server.scrapeInterval"
+  required: false
+  description: "scrapeInterval values.yaml"
+- name: "server.scrapeTimeout"
+  required: false
+  description: "scrapeTimeout values.yaml"
+- name: "server.evaluationInterval"
+  required: false
+  description: "evaluationInterval values.yaml"
 archive: false
