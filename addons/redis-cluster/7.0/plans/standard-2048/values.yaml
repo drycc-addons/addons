@@ -26,10 +26,10 @@ redis:
   ##
   resources:
     limits:
-      cpu: 300m
+      cpu: 500m
       memory: 2Gi
     requests:
-      cpu: 30m
+      cpu: 250m
       memory: 1Gi
 
 ## @section Proxy&reg; statefulset parameters
@@ -42,8 +42,8 @@ proxy:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 300m
+      memory: 512Mi
     requests:
-      cpu: 10m
-      memory: 64Mi
+      cpu: 150m
+      memory: 256Mi

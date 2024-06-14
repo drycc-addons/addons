@@ -322,8 +322,10 @@ spec:
               {{- if .Values.usePasswordFile }}
               export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
               {{- end }}
-              sed s/{REDIS_PASSWORD}/\"${REDIS_PASSWORD}\"/g /opt/drycc/redis/etc/redis-proxy-default.toml > /opt/drycc/redis/etc/redis-proxy.toml
-              redis-cluster-proxy /opt/drycc/redis/etc/redis-proxy.toml
+              redis-cluster-proxy \
+                -startup-nodes=127.0.0.1:{{ .Values.redis.containerPorts.redis }} \
+                -addr=0.0.0.0:{{ .Values.proxy.containerPorts.proxy }} \
+                -password=$(REDIS_PASSWORD)
           {{- end }}
           env:
             {{- if and .Values.usePassword (not .Values.usePasswordFile) }}
@@ -384,8 +386,6 @@ spec:
             - name: scripts
               mountPath: /scripts
             - name: default-config
-              mountPath: /opt/drycc/redis/etc/redis-proxy-default.toml
-              subPath: redis-proxy-default.toml
             {{- if .Values.usePasswordFile }}
             - name: redis-password
               mountPath: /opt/drycc/redis/secrets/
