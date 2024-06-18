@@ -21,4 +21,4 @@ name: clickhouse
 sources:
   - https://github.com/drycc/containers/tree/main/drycc/clickhouse
   - https://github.com/ClickHouse/ClickHouse
-version: 24.0
+version: 24.0.1
