@@ -461,7 +461,7 @@ spec:
             - -ec
             - |
               [[ -f "$REDIS_PASSWORD_FILE" ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
-              /opt/drycc/redis-sentinel/bin/reids-sentinel-proxy \
+              /opt/drycc/redis-sentinel/bin/redis-sentinel-proxy \
                 -listen :{{ .Values.proxy.containerPorts.proxy }} \
                 -master {{ .Values.sentinel.masterSet }} \
                 -sentinel-addr ${POD_IP}:{{ .Values.sentinel.containerPorts.sentinel }} \
