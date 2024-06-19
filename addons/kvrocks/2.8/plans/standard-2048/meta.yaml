@@ -1,0 +1,6 @@
+name: "standard-2048"
+id: 7cbfc5ae-b350-4c1f-80e3-fdae43b54452
+description: "Kvrocks standard-2048 plan which limit resources memory size 2Gi."
+displayName: "standard-2048"
+bindable: true
+maximum_polling_duration: 1800

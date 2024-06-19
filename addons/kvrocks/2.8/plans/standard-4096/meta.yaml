@@ -1,0 +1,6 @@
+name: "standard-4096"
+id: c779a829-73d1-4c4c-8e18-b88588b726cc
+description: "Kvrocks standard-4096 plan which limit resources memory size 4Gi."
+displayName: "standard-4096"
+bindable: true
+maximum_polling_duration: 1800

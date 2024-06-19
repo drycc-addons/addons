@@ -1,0 +1,6 @@
+name: "standard-32768"
+id: fd35f828-aa0e-45c5-a710-f0b7eb7e556c
+description: "Kvrocks standard-32768 plan which limit resources memory size 32Gi."
+displayName: "standard-32768"
+bindable: true
+maximum_polling_duration: 1800

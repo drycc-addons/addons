@@ -1,0 +1,23 @@
+annotations:
+  category: Database
+apiVersion: v2
+appVersion: "2"
+dependencies:
+  - name: common
+    repository: oci://registry.drycc.cc/charts
+    version: ~1.1.3
+description: Apache Kvrocks is a distributed key value NoSQL database that uses RocksDB as storage engine and is compatible with Redis protocol. Kvrocks intends to decrease the cost of memory and increase the capacity while compared to Redis. The design of replication and storage was inspired by rocksplicator and blackwidow.
+engine: gotpl
+home: https://github.com/apache/kvrocks
+icon: https://camo.githubusercontent.com/afe4ab77c3cf0ef991e1dd7aa9f25b9ff96651a6b1cc0b055eda16567dc9d8be/68747470733a2f2f6b76726f636b732e6170616368652e6f72672f696d672f6b76726f636b732d66656174757265642e706e67
+keywords:
+  - kvrocks
+  - keyvalue
+  - database
+maintainers:
+  - email: drycc@drycc.cc
+    name: drycc
+name: kvrocks
+sources:
+  - https://github.com/apache/kvrocks
+version: 2.8.0
