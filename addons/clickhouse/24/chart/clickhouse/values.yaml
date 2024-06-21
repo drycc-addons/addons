@@ -212,7 +212,7 @@ containerSecurityContext:
 ## @param auth.existingSecretKey Name of the key inside the existing secret
 ##
 auth:
-  username: default
+  username: administrator
   password: ""
   existingSecret: ""
   existingSecretKey: ""
@@ -898,7 +898,7 @@ serviceAccount:
 metrics:
   ## @param metrics.enabled Enable the export of Prometheus metrics
   ##
-  enabled: false
+  enabled: true
   ## @param metrics.podAnnotations [object] Annotations for metrics scraping
   ##
   podAnnotations:
