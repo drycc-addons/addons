@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: hb-kvrocks-standard-65536
+fullnameOverride: hb-kvrocks-standard-2c4g128
 
 ## @section Kvrocks; master configuration parameters
 ##
@@ -13,11 +13,11 @@ master:
   ##
   resources:
     limits:
-      cpu: 2000m
-      memory: 64Gi
+      cpu: 2
+      memory: 4Gi
     requests:
-      cpu: 200m
-      memory: 32Gi
+      cpu: 1
+      memory: 2Gi
   ## Persistence parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -58,11 +58,12 @@ replica:
   ##
   resources:
     limits:
-      cpu: 2000m
-      memory: 64Gi
+      cpu: 2
+      memory: 4Gi
     requests:
-      cpu: 200m
-      memory: 32Gi
+      cpu: 1
+      memory: 2Gi
+
   ## Persistence Parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -108,7 +109,7 @@ sentinel:
       - ReadWriteOnce
     ## @param sentinel.persistence.size Persistent Volume size
     ##
-    size: 128Gi
+    size: 128Mi
 
   ## Kvrocks; Sentinel resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -117,11 +118,11 @@ sentinel:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 10m
-      memory: 128Mi
+      cpu: 250m
+      memory: 256Mi
 
 proxy:
   ## Kvrocks; Sentinel resource requests and limits
@@ -131,8 +132,8 @@ proxy:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 10m
-      memory: 128Mi
+      cpu: 250m
+      memory: 256Mi

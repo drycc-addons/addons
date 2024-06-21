@@ -1,6 +1,0 @@
-name: "standard-65536"
-id: eec97616-10a3-48af-883a-e3fb250ede78
-description: "Kvrocks standard-65536 plan which limit resources memory size 64Gi."
-displayName: "standard-65536"
-bindable: true
-maximum_polling_duration: 1800

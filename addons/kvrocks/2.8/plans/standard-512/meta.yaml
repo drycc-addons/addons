@@ -1,6 +1,0 @@
-name: "standard-512"
-id: fd2da141-6106-402e-8dce-ce911e16009d
-description: "Kvrocks standard-512 plan which limit resources memory size 512Mi."
-displayName: "standard-512"
-bindable: true
-maximum_polling_duration: 1800

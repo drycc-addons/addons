@@ -1,6 +1,0 @@
-name: "standard-1024"
-id: 4f83016a-6150-4e3a-b696-0a38ea313b3e
-description: "Kvrocks standard-1024 plan which limit resources memory size 1Gi."
-displayName: "standard-1024"
-bindable: true
-maximum_polling_duration: 1800

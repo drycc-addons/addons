@@ -380,7 +380,7 @@ data:
     chown -R kvrocks {{ .Values.master.persistence.path }}
     {{- end }}
     #export KVROCKS_BIND="localhost $(get_full_hostname "$HOSTNAME")"
-    exec exec init-stack /opt/drycc/scripts/kvrocks/entrypoint.sh /opt/drycc/scripts/kvrocks/run.sh
+    exec init-stack /opt/drycc/scripts/kvrocks/entrypoint.sh /opt/drycc/scripts/kvrocks/run.sh
   {{- if eq .Values.architecture "replication" }}
   start-replica.sh: |
     #!/bin/bash

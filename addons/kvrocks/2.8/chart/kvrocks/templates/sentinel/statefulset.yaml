@@ -463,7 +463,7 @@ spec:
             - /bin/bash
             - -c
             - |
-              kvrocks_exporter {{- if .Values.auth.enabled }} --kvrocks.password $(KVROCKS_REQUIREPASS){{- end }} {{- range $key, $value := .Values.metrics.extraArgs }} --{{ $key }}={{ $value }}{{- end }}
+              kvrocks_exporter --kvrocks.addr=localhost:$(KVROCKS_PORT) {{- if .Values.auth.enabled }} --kvrocks.password $(KVROCKS_REQUIREPASS){{- end }} {{- range $key, $value := .Values.metrics.extraArgs }} --{{ $key }}={{ $value }}{{- end }}
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}
           args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
@@ -471,6 +471,8 @@ spec:
           env:
             - name: REDIS_ALIAS
               value: {{ template "common.names.fullname" . }}
+            - name: KVROCKS_PORT
+              value: {{ .Values.replica.containerPorts.kvrocks | quote }}
             {{- if .Values.auth.enabled }}
             - name: KVROCKS_REQUIREPASS
               valueFrom:

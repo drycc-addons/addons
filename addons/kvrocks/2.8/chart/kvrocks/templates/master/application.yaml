@@ -126,6 +126,11 @@ spec:
             - name: KVROCKS_CLUSTER_ENABLED
               value: "no"
             {{- if .Values.auth.enabled }}
+            - name: KVROCKS_MASTERAUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }}
             - name: KVROCKS_REQUIREPASS
               valueFrom:
                 secretKeyRef:
@@ -208,8 +213,6 @@ spec:
             - name: kvrocks-data
               mountPath: {{ .Values.master.persistence.path }}
               subPath: {{ .Values.master.persistence.subPath }}
-            - name: config
-              mountPath: /opt/drycc/kvrocks/mounted-etc
             - name: kvrocks-tmp-conf
               mountPath: /opt/drycc/kvrocks/etc/
             - name: tmp
@@ -228,10 +231,11 @@ spec:
           command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
           {{- else }}
           command:
+            - init-stack
             - /bin/bash
             - -c
             - |
-              kvrocks_exporter{{- range $key, $value := .Values.metrics.extraArgs }} --{{ $key }}={{ $value }}{{- end }}
+              kvrocks_exporter --kvrocks.addr=localhost:$(KVROCKS_PORT) {{- if .Values.auth.enabled }} --kvrocks.password $(KVROCKS_REQUIREPASS){{- end }} {{- range $key, $value := .Values.metrics.extraArgs }} --{{ $key }}={{ $value }}{{- end }}
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}
           args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
@@ -239,9 +243,14 @@ spec:
           env:
             - name: REDIS_ALIAS
               value: {{ template "common.names.fullname" . }}
+            - name: KVROCKS_PORT
+              value: {{ .Values.master.containerPorts.kvrocks | quote }}
             {{- if .Values.auth.enabled }}
-            - name: REDIS_USER
-              value: default
+            - name: KVROCKS_REQUIREPASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }}
             {{- end }}
             {{- if .Values.metrics.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.metrics.extraEnvVars "context" $) | nindent 12 }}
@@ -321,9 +330,6 @@ spec:
           configMap:
             name: {{ printf "%s-health" (include "common.names.fullname" .) }}
             defaultMode: 0755
-        - name: config
-          configMap:
-            name: {{ include "kvrocks.configmapName" . }}
         {{- if .Values.sysctl.mountHostSys }}
         - name: host-sys
           hostPath:

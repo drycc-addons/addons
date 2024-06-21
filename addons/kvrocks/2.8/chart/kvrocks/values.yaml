@@ -76,9 +76,9 @@ diagnosticMode:
 ## @param image.debug Enable image debug mode
 ##
 image:
-  registry: harbor.uucin.com
-  repository: lijianguo/kvrocks
-  tag: "2.8.0"
+  registry: registry.drycc.cc
+  repository: drycc-addons/kvrocks
+  tag: "2.8"
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -451,7 +451,7 @@ master:
     ## @param master.service.ports.kvrocks kvrocks; master service port
     ##
     ports:
-      redikvrockss: 6379
+      kvrocks: 6379
     ## @param master.service.nodePorts.kvrocks Node port for kvrocks; master
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     ## NOTE: choose port between <30000-32767>
@@ -887,8 +887,8 @@ sentinel:
   ##
   ## todo: support both of amd64 and arm64
   image:
-    registry: harbor.uucin.com
-    repository: lijianguo/redis-sentinel
+    registry: registry.drycc.cc
+    repository: drycc-addons/redis-sentinel
     tag: "7.0"
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -1160,8 +1160,8 @@ proxy:
   ##
   ## todo: support both of amd64 and arm64
   image:
-    registry: harbor.uucin.com
-    repository: lijianguo/redis-sentinel
+    registry: registry.drycc.cc
+    repository: drycc-addons/redis-sentinel
     tag: "7.0"
     ## Specify a imagePullPolicy
     ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'

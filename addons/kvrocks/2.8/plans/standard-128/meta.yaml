@@ -1,6 +1,0 @@
-name: "standard-128"
-id: 51f9b2d5-d653-4d49-a0cd-1febf5ca19e8
-description: "Kvrocks standard-128 plan which limit resources memory size 128Mi."
-displayName: "standard-128"
-bindable: true
-maximum_polling_duration: 1800

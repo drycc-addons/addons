@@ -1,6 +1,0 @@
-name: "standard-256"
-id: a73bb7e4-aa54-4276-8ddf-765abf4b2b75
-description: "Kvrocks standard-256 plan which limit resources memory size 256Mi."
-displayName: "standard-256"
-bindable: true
-maximum_polling_duration: 1800

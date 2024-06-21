@@ -20,4 +20,4 @@ maintainers:
 name: kvrocks
 sources:
   - https://github.com/apache/kvrocks
-version: 2.8.0
+version: "2.8"

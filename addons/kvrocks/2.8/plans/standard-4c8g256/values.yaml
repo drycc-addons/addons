@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: hb-kvrocks-standard-1024
+fullnameOverride: hb-kvrocks-standard-4c8g256
 
 ## @section Kvrocks; master configuration parameters
 ##
@@ -13,11 +13,11 @@ master:
   ##
   resources:
     limits:
-      cpu: 200m
-      memory: 1024Mi
+      cpu: 4
+      memory: 8Gi
     requests:
-      cpu: 20m
-      memory: 512Mi
+      cpu: 2
+      memory: 4Gi
   ## Persistence parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -41,7 +41,7 @@ master:
       - ReadWriteOnce
     ## @param master.persistence.size Persistent Volume size
     ##
-    size: 2Gi
+    size: 256Gi
 
 ## @section Kvrocks; replicas configuration parameters
 ##
@@ -58,12 +58,11 @@ replica:
   ##
   resources:
     limits:
-      cpu: 200m
-      memory: 1024Mi
+      cpu: 4
+      memory: 8Gi
     requests:
-      cpu: 20m
-      memory: 512Mi
-
+      cpu: 2
+      memory: 4Gi
   ## Persistence Parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -87,7 +86,7 @@ replica:
       - ReadWriteOnce
     ## @param replica.persistence.size Persistent Volume size
     ##
-    size: 2Gi
+    size: 256Gi
 
 sentinel:
   ## Persistence parameters
@@ -109,7 +108,7 @@ sentinel:
       - ReadWriteOnce
     ## @param sentinel.persistence.size Persistent Volume size
     ##
-    size: 2Gi
+    size: 128Mi
 
   ## Kvrocks; Sentinel resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -118,11 +117,11 @@ sentinel:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 10m
-      memory: 128Mi
+      cpu: 250m
+      memory: 256Mi
 
 proxy:
   ## Kvrocks; Sentinel resource requests and limits
@@ -132,8 +131,8 @@ proxy:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 10m
-      memory: 128Mi
+      cpu: 250m
+      memory: 256Mi

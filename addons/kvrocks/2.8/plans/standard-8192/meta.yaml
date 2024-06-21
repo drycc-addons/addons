@@ -1,6 +1,0 @@
-name: "standard-8192"
-id: cef16c00-3b66-4aed-8d84-4f6106c3df57
-description: "Kvrocks standard-8192 plan which limit resources memory size 8Gi."
-displayName: "standard-8192"
-bindable: true
-maximum_polling_duration: 1800
