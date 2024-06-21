@@ -1,4 +1,4 @@
-{{- if or .Release.IsUpgrade (ne .Values.sentinel.service.type "NodePort")  .Values.sentinel.service.nodePorts.redis -}}
+{{- if or .Release.IsUpgrade (ne .Values.sentinel.service.type "NodePort")  .Values.sentinel.service.nodePorts.kvrocks -}}
 {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
 apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
 kind: StatefulSet
@@ -36,7 +36,7 @@ spec:
         {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.podLabels "context" $ ) | nindent 8 }}
         {{- end }}
       annotations:
-        {{- if (include "redis.createConfigmap" .) }}
+        {{- if (include "kvrocks.createConfigmap" .) }}
         checksum/configmap: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         {{- end }}
         checksum/health: {{ include (print $.Template.BasePath "/health-configmap.yaml") . | sha256sum }}
@@ -49,14 +49,14 @@ spec:
         {{- include "common.tplvalues.render" ( dict "value" .Values.metrics.podAnnotations "context" $ ) | nindent 8 }}
         {{- end }}
     spec:
-      {{- include "redis.imagePullSecrets" . | nindent 6 }}
+      {{- include "kvrocks.imagePullSecrets" . | nindent 6 }}
       {{- if .Values.replica.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.replica.hostAliases "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.replica.podSecurityContext.enabled }}
       securityContext: {{- omit .Values.replica.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ template "redis.serviceAccountName" . }}
+      serviceAccountName: {{ template "kvrocks.serviceAccountName" . }}
       {{- if .Values.replica.priorityClassName }}
       priorityClassName: {{ .Values.replica.priorityClassName | quote }}
       {{- end }}
@@ -91,8 +91,8 @@ spec:
       {{- end }}
       terminationGracePeriodSeconds: {{ .Values.sentinel.terminationGracePeriodSeconds }}
       containers:
-        - name: redis
-          image: {{ template "redis.image" . }}
+        - name: kvrocks
+          image: {{ template "kvrocks.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           {{- if not .Values.diagnosticMode.enabled }}
           {{- if .Values.replica.lifecycleHooks }}
@@ -123,58 +123,26 @@ spec:
           env:
             - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
-            - name: REDIS_MASTER_PORT_NUMBER
-              value: {{ .Values.replica.containerPorts.redis | quote }}
-            - name: ALLOW_EMPTY_PASSWORD
-              value: {{ ternary "no" "yes" .Values.auth.enabled | quote }}
+            - name: KVROCKS_CLUSTER_ENABLED
+              value: "no"
+            - name: KVROCKS_PORT
+              value: {{ .Values.replica.containerPorts.kvrocks | quote }}
+            - name: KVROCKS_BIND
+              value: "0.0.0.0"
             {{- if .Values.auth.enabled }}
-            {{- if .Values.auth.usePasswordFiles }}
-            - name: REDIS_PASSWORD_FILE
-              value: "/opt/drycc/redis/secrets/redis-password"
-            - name: REDIS_MASTER_PASSWORD_FILE
-              value: "/opt/drycc/redis/secrets/redis-password"
-            {{- else }}
-            - name: REDIS_PASSWORD
+            - name: KVROCKS_REQUIREPASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "redis.secretName" . }}
-                  key: {{ template "redis.secretPasswordKey" . }}
-            - name: REDIS_MASTER_PASSWORD
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }}
+            - name: KVROCKS_MASTERAUTH
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "redis.secretName" . }}
-                  key: {{ template "redis.secretPasswordKey" . }}
-            {{- end }}
-            {{- end }}
-            - name: REDIS_TLS_ENABLED
-              value: {{ ternary "yes" "no" .Values.tls.enabled | quote }}
-            {{- if .Values.tls.enabled }}
-            - name: REDIS_TLS_PORT
-              value: {{ .Values.replica.containerPorts.redis | quote }}
-            - name:  REDIS_TLS_AUTH_CLIENTS
-              value: {{ ternary "yes" "no" .Values.tls.authClients | quote }}
-            - name:  REDIS_TLS_CERT_FILE
-              value: {{ template "redis.tlsCert" . }}
-            - name:  REDIS_TLS_KEY_FILE
-              value: {{ template "redis.tlsCertKey" . }}
-            - name:  REDIS_TLS_CA_FILE
-              value: {{ template "redis.tlsCACert" . }}
-            {{- if .Values.tls.dhParamsFilename }}
-            - name:  REDIS_TLS_DH_PARAMS_FILE
-              value: {{ template "redis.tlsDHParams" . }}
-            {{- end }}
-            {{- else }}
-            - name: REDIS_PORT
-              value: {{ .Values.replica.containerPorts.redis | quote }}
-            {{- end }}
-            - name: REDIS_DATA_DIR
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }}
+            {{- end }}     
+            - name: KVROCKS_DIR
               value: {{ .Values.replica.persistence.path }}
-            {{- if .Values.replica.externalMaster.enabled }}
-            - name:  REDIS_EXTERNAL_MASTER_HOST
-              value: {{ .Values.replica.externalMaster.host | quote }}
-            - name:  REDIS_EXTERNAL_MASTER_PORT
-              value: {{ .Values.replica.externalMaster.port | quote }}
-            {{- end }}
             {{- if .Values.replica.extraEnvVars }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.replica.extraEnvVars "context" $ ) | nindent 12 }}
             {{- end }}
@@ -190,13 +158,13 @@ spec:
             {{- end }}
           {{- end }}
           ports:
-            - name: redis
-              containerPort: {{ .Values.replica.containerPorts.redis }}
+            - name: kvrocks
+              containerPort: {{ .Values.replica.containerPorts.kvrocks }}
           {{- if not .Values.diagnosticMode.enabled }}
           {{- if .Values.replica.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.replica.startupProbe "enabled") "context" $) | nindent 12 }}
             tcpSocket:
-              port: redis
+              port: kvrocks
           {{- else if .Values.replica.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.replica.customStartupProbe "context" $) | nindent 12 }}
           {{- end }}
@@ -245,24 +213,15 @@ spec:
             - name: sentinel-data
               mountPath: /opt/drycc/redis-sentinel/etc
             {{- end }}
-            {{- if .Values.auth.usePasswordFiles }}
-            - name: redis-password
-              mountPath: /opt/drycc/redis/secrets/
-            {{- end }}
-            - name: redis-data
+            - name: kvrocks-data
               mountPath: {{ .Values.replica.persistence.path }}
               subPath: {{ .Values.replica.persistence.subPath }}
             - name: config
-              mountPath: /opt/drycc/redis/mounted-etc
-            - name: redis-tmp-conf
-              mountPath: /opt/drycc/redis/etc
+              mountPath: /opt/drycc/kvrocks/mounted-etc
+            - name: kvrocks-tmp-conf
+              mountPath: /opt/drycc/kvrocks/etc
             - name: tmp
               mountPath: /tmp
-            {{- if .Values.tls.enabled }}
-            - name: redis-certificates
-              mountPath: /opt/drycc/redis/certs
-              readOnly: true
-            {{- end }}
             {{- if .Values.replica.extraVolumeMounts }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.replica.extraVolumeMounts "context" $ ) | nindent 12 }}
             {{- end }}
@@ -273,9 +232,9 @@ spec:
                   - init-stack
                   - /bin/bash
                   - -c
-                  - /opt/drycc/scripts/start-scripts/prestop-redis.sh
+                  - /opt/drycc/scripts/start-scripts/prestop-kvrocks.sh
         - name: sentinel
-          image: {{ template "redis.sentinel.image" . }}
+          image: {{ template "kvrocks.sentinel.image" . }}
           imagePullPolicy: {{ .Values.sentinel.image.pullPolicy | quote }}
           {{- if .Values.sentinel.lifecycleHooks }}
           lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.sentinel.lifecycleHooks "context" $) | nindent 12 }}
@@ -305,47 +264,24 @@ spec:
             - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" (or .Values.sentinel.image.debug .Values.diagnosticMode.enabled) | quote }}
             {{- if .Values.auth.enabled }}
-            {{- if .Values.auth.usePasswordFiles }}
-            - name: REDIS_PASSWORD_FILE
-              value: "/opt/drycc/redis/secrets/redis-password"
-            {{- else }}
-            - name: REDIS_PASSWORD
+            - name: KVROCKS_REQUIREPASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "redis.secretName" . }}
-                  key: {{ template "redis.secretPasswordKey" . }}
-            {{- end }}
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }}
+            - name: KVROCKS_MASTERAUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }} 
             {{- else }}
             - name: ALLOW_EMPTY_PASSWORD
               value: "yes"
             {{- end }}
-            - name: REDIS_SENTINEL_TLS_ENABLED
-              value: {{ ternary "yes" "no" .Values.tls.enabled | quote }}
-            {{- if .Values.tls.enabled }}
-            - name: REDIS_SENTINEL_TLS_PORT_NUMBER
+            - name: SENTINEL_TLS_ENABLED
+              value: "no"
+            - name: SENTINEL_PORT
               value: {{ .Values.sentinel.containerPorts.sentinel | quote }}
-            - name:  REDIS_SENTINEL_TLS_AUTH_CLIENTS
-              value: {{ ternary "yes" "no" .Values.tls.authClients | quote }}
-            - name:  REDIS_SENTINEL_TLS_CERT_FILE
-              value: {{ template "redis.tlsCert" . }}
-            - name:  REDIS_SENTINEL_TLS_KEY_FILE
-              value: {{ template "redis.tlsCertKey" . }}
-            - name:  REDIS_SENTINEL_TLS_CA_FILE
-              value: {{ template "redis.tlsCACert" . }}
-            {{- if .Values.tls.dhParamsFilename }}
-            - name:  REDIS_SENTINEL_TLS_DH_PARAMS_FILE
-              value: {{ template "redis.tls.dhParamsFilename" . }}
-            {{- end }}
-            {{- else }}
-            - name: REDIS_SENTINEL_PORT
-              value: {{ .Values.sentinel.containerPorts.sentinel | quote }}
-            {{- end }}
-            {{- if .Values.sentinel.externalMaster.enabled }}
-            - name:  REDIS_EXTERNAL_MASTER_HOST
-              value: {{ .Values.sentinel.externalMaster.host | quote }}
-            - name:  REDIS_EXTERNAL_MASTER_PORT
-              value: {{ .Values.sentinel.externalMaster.port | quote }}
-            {{- end }}
             {{- if .Values.sentinel.extraEnvVars }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.sentinel.extraEnvVars "context" $ ) | nindent 12 }}
             {{- end }}
@@ -361,13 +297,13 @@ spec:
             {{- end }}
           {{- end }}
           ports:
-            - name: redis-sentinel
+            - name: sentinel
               containerPort: {{ .Values.sentinel.containerPorts.sentinel }}
           {{- if not .Values.diagnosticMode.enabled }}
           {{- if .Values.sentinel.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.sentinel.startupProbe "enabled") "context" $) | nindent 12 }}
             tcpSocket:
-              port: redis-sentinel
+              port: sentinel
           {{- else if .Values.sentinel.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.sentinel.customStartupProbe "context" $) | nindent 12 }}
           {{- end }}
@@ -426,26 +362,17 @@ spec:
               mountPath: /health
             - name: sentinel-data
               mountPath: /opt/drycc/redis-sentinel/etc
-            {{- if .Values.auth.usePasswordFiles }}
-            - name: redis-password
-              mountPath: /opt/drycc/redis/secrets/
-            {{- end }}
-            - name: redis-data
+            - name: kvrocks-data
               mountPath: {{ .Values.replica.persistence.path }}
               subPath: {{ .Values.replica.persistence.subPath }}
             - name: config
               mountPath: /opt/drycc/redis-sentinel/mounted-etc
-            {{- if .Values.tls.enabled }}
-            - name: redis-certificates
-              mountPath: /opt/drycc/redis/certs
-              readOnly: true
-            {{- end }}
             {{- if .Values.sentinel.extraVolumeMounts }}
             {{- include "common.tplvalues.render" ( dict "value" .Values.sentinel.extraVolumeMounts "context" $ ) | nindent 12 }}
             {{- end }}
         {{- if .Values.proxy.enabled }}
         - name: proxy
-          image: {{ template "redis.proxy.image" . }}
+          image: {{ template "kvrocks.proxy.image" . }}
           imagePullPolicy: {{ .Values.proxy.image.pullPolicy | quote }}
           {{- if .Values.diagnosticMode.enabled }}
           command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
@@ -460,12 +387,11 @@ spec:
             - bash
             - -ec
             - |
-              [[ -f "$REDIS_PASSWORD_FILE" ]] && export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
               /opt/drycc/redis-sentinel/bin/redis-sentinel-proxy \
                 -listen :{{ .Values.proxy.containerPorts.proxy }} \
                 -master {{ .Values.sentinel.masterSet }} \
                 -sentinel-addr ${POD_IP}:{{ .Values.sentinel.containerPorts.sentinel }} \
-                -sentinel-pass $(REDIS_PASSWORD) \
+                -sentinel-pass $(KVROCKS_REQUIREPASS) \
                 -sentinel-user ""
           {{- end }}
           env:
@@ -474,28 +400,28 @@ spec:
                 fieldRef:
                   fieldPath: status.podIP
             {{- if .Values.auth.enabled }}
-            {{- if .Values.auth.usePasswordFiles }}
-            - name: REDIS_PASSWORD_FILE
-              value: "/opt/drycc/redis/secrets/redis-password"
-            {{- else }}
-            - name: REDIS_PASSWORD
+            - name: KVROCKS_REQUIREPASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "redis.secretName" . }}
-                  key: {{ template "redis.secretPasswordKey" . }}
-            {{- end }}
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }}
+            - name: KVROCKS_MASTERAUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }} 
             {{- else }}
             - name: ALLOW_EMPTY_PASSWORD
               value: "yes"
             {{- end }}
           ports:
-            - name: redis-proxy
+            - name: sentinel-proxy
               containerPort: {{ .Values.proxy.containerPorts.proxy }}
           {{- if not .Values.diagnosticMode.enabled }}
           {{- if .Values.proxy.startupProbe.enabled }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" (omit .Values.sentinel.startupProbe "enabled") "context" $) | nindent 12 }}
             tcpSocket:
-              port: redis-proxy
+              port: sentinel-proxy
           {{- end }}
           {{- if .Values.proxy.livenessProbe.enabled }}
           livenessProbe:
@@ -505,7 +431,7 @@ spec:
             successThreshold: {{ .Values.proxy.livenessProbe.successThreshold }}
             failureThreshold: {{ .Values.proxy.livenessProbe.failureThreshold }}
             tcpSocket:                                
-              port: redis-proxy
+              port: sentinel-proxy
           {{- end }}
           {{- if .Values.proxy.readinessProbe.enabled }}
           readinessProbe:
@@ -515,21 +441,16 @@ spec:
             successThreshold: {{ .Values.proxy.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.proxy.readinessProbe.failureThreshold }}
             tcpSocket:                                
-              port: redis-proxy
+              port: sentinel-proxy
           {{- end }}
           {{- end }}
           {{- if .Values.proxy.resources }}
           resources: {{- toYaml .Values.proxy.resources | nindent 12 }}
           {{- end }}
-          {{- if .Values.auth.usePasswordFiles }}
-          volumeMounts:
-            - name: redis-password
-              mountPath: /opt/drycc/redis/secrets/
-          {{- end }}
         {{- end }}
         {{- if .Values.metrics.enabled }}
         - name: metrics
-          image: {{ template "redis.metrics.image" . }}
+          image: {{ template "kvrocks.metrics.image" . }}
           imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
           {{- if .Values.metrics.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.metrics.containerSecurityContext "enabled" | toYaml | nindent 12 }}
@@ -542,10 +463,7 @@ spec:
             - /bin/bash
             - -c
             - |
-              if [[ -f '/secrets/redis-password' ]]; then
-                  export REDIS_PASSWORD=$(cat /secrets/redis-password)
-              fi
-              redis_exporter{{- range $key, $value := .Values.metrics.extraArgs }} --{{ $key }}={{ $value }}{{- end }}
+              kvrocks_exporter --kvrocks.addr=localhost:$(KVROCKS_PORT) {{- if .Values.auth.enabled }} --kvrocks.password $(KVROCKS_REQUIREPASS){{- end }} {{- range $key, $value := .Values.metrics.extraArgs }} --{{ $key }}={{ $value }}{{- end }}
           {{- end }}
           {{- if .Values.diagnosticMode.enabled }}
           args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
@@ -553,28 +471,14 @@ spec:
           env:
             - name: REDIS_ALIAS
               value: {{ template "common.names.fullname" . }}
+            - name: KVROCKS_PORT
+              value: {{ .Values.replica.containerPorts.kvrocks | quote }}
             {{- if .Values.auth.enabled }}
-            - name: REDIS_USER
-              value: default
-            {{- if (not .Values.auth.usePasswordFiles) }}
-            - name: REDIS_PASSWORD
+            - name: KVROCKS_REQUIREPASS
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "redis.secretName" . }}
-                  key: {{ template "redis.secretPasswordKey" . }}
-            {{- end }}
-            {{- end }}
-            {{- if .Values.tls.enabled }}
-            - name: REDIS_ADDR
-              value: rediss://{{ .Values.metrics.redisTargetHost }}:{{ .Values.replica.containerPorts.redis }}
-            {{- if .Values.tls.authClients }}
-            - name: REDIS_EXPORTER_TLS_CLIENT_KEY_FILE
-              value: {{ template "redis.tlsCertKey" . }}
-            - name: REDIS_EXPORTER_TLS_CLIENT_CERT_FILE
-              value: {{ template "redis.tlsCert" . }}
-            {{- end }}
-            - name: REDIS_EXPORTER_TLS_CA_CERT_FILE
-              value: {{ template "redis.tlsCACert" . }}
+                  name: {{ template "kvrocks.secretName" . }}
+                  key: {{ template "kvrocks.secretPasswordKey" . }}
             {{- end }}
           ports:
             - name: metrics
@@ -583,15 +487,6 @@ spec:
           resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
           {{- end }}
           volumeMounts:
-            {{- if .Values.auth.usePasswordFiles }}
-            - name: redis-password
-              mountPath: /secrets/
-            {{- end }}
-            {{- if .Values.tls.enabled }}
-            - name: redis-certificates
-              mountPath: /opt/drycc/redis/certs
-              readOnly: true
-            {{- end }}
         {{- end }}
         {{- if .Values.replica.sidecars }}
         {{- include "common.tplvalues.render" (dict "value" .Values.replica.sidecars "context" $) | nindent 8 }}
@@ -604,7 +499,7 @@ spec:
         {{- end }}
         {{- if $needsVolumePermissions }}
         - name: volume-permissions
-          image: {{ include "redis.volumePermissions.image" . }}
+          image: {{ include "kvrocks.volumePermissions.image" . }}
           imagePullPolicy: {{ .Values.volumePermissions.image.pullPolicy | quote }}
           command:
             - /bin/bash
@@ -624,13 +519,13 @@ spec:
           resources: {{- toYaml .Values.volumePermissions.resources | nindent 12 }}
           {{- end }}
           volumeMounts:
-            - name: redis-data
+            - name: kvrocks-data
               mountPath: {{ .Values.replica.persistence.path }}
               subPath: {{ .Values.replica.persistence.subPath }}
         {{- end }}
         {{- if .Values.sysctl.enabled }}
         - name: init-sysctl
-          image: {{ include "redis.sysctl.image" . }}
+          image: {{ include "kvrocks.sysctl.image" . }}
           imagePullPolicy: {{ default "" .Values.sysctl.image.pullPolicy | quote }}
           securityContext:
             privileged: true
@@ -657,17 +552,9 @@ spec:
           configMap:
             name: {{ printf "%s-health" (include "common.names.fullname" .) }}
             defaultMode: 0755
-        {{- if .Values.auth.usePasswordFiles }}
-        - name: redis-password
-          secret:
-            secretName: {{ template "redis.secretName" . }}
-            items:
-            - key: {{ template "redis.secretPasswordKey" . }}
-              path: redis-password
-        {{- end }}
         - name: config
           configMap:
-            name: {{ include "redis.configmapName" . }}
+            name: {{ include "kvrocks.configmapName" . }}
         {{- if .Values.sysctl.mountHostSys }}
         - name: host-sys
           hostPath:
@@ -683,7 +570,7 @@ spec:
           emptyDir: {}
           {{- end }}
         {{- end }}
-        - name: redis-tmp-conf
+        - name: kvrocks-tmp-conf
           {{- if .Values.replica.persistence.medium }}
           emptyDir: {
             medium: {{ .Values.replica.persistence.medium | quote }}
@@ -705,14 +592,8 @@ spec:
         {{- if .Values.sentinel.extraVolumes }}
         {{- include "common.tplvalues.render" ( dict "value" .Values.sentinel.extraVolumes "context" $ ) | nindent 8 }}
         {{- end }}
-        {{- if .Values.tls.enabled }}
-        - name: redis-certificates
-          secret:
-            secretName: {{ include "redis.tlsSecretName" . }}
-            defaultMode: 256
-        {{- end }}
   {{- if not .Values.replica.persistence.enabled }}
-        - name: redis-data
+        - name: kvrocks-data
           {{- if .Values.replica.persistence.medium }}
           emptyDir: {
             medium: {{ .Values.replica.persistence.medium | quote }}
@@ -728,7 +609,7 @@ spec:
   {{- end }}
   volumeClaimTemplates:
     - metadata:
-        name: redis-data
+        name: kvrocks-data
         labels: {{- include "common.labels.matchLabels" . | nindent 10 }}
           app.kubernetes.io/component: node
         {{- if .Values.replica.persistence.annotations }}

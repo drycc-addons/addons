@@ -1,0 +1,6 @@
+name: "standard-8c16g512"
+id: cef16c00-3b66-4aed-8d84-4f6106c3df57
+description: "Kvrocks standard-4c8g256 plan which limit resources 8 core, memory size 16Gi and persistence size 512Gi."
+displayName: "standard-8c16g512"
+bindable: true
+maximum_polling_duration: 1800
