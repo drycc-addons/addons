@@ -17,7 +17,7 @@ credential:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .data.admin-password }' 
   - name: USERNAME
-    value: 'administrator'
+    value: '{{ .Values.auth.username }}'
   - name: TCP_PORT
     value: 9000
   - name: HTTP_PORT
