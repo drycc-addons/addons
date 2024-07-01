@@ -1,5 +1,5 @@
 name: clickhouse
-version: 23
+version: 24
 id: 5606a4c8-d0b6-4ad0-98d2-3e4fde3055f6
 description: "clickhouse"
 displayName: "clickhouse"
@@ -19,6 +19,12 @@ allow_parameters:
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "shards"
+  required: false
+  description: "service type config for values.yaml"
+- name: "replicaCount"
   required: false
   description: "service type config for values.yaml"
 archive: false

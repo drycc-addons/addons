@@ -1,4 +1,9 @@
 {{/*
+Copyright Broadcom, Inc. All Rights Reserved.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+{{/*
 Return the proper ClickHouse image name
 */}}
 {{- define "clickhouse.image" -}}
@@ -94,6 +99,18 @@ Get the ClickHouse configuration configmap.
 {{- end -}}
 {{- end -}}
 
+
+{{/*
+Get the ClickHouse configuration users configmap.
+*/}}
+{{- define "clickhouse.usersExtraConfigmapName" -}}
+{{- if .Values.usersExtraOverridesConfigmap -}}
+    {{- .Values.usersExtraOverridesConfigmap -}}
+{{- else }}
+    {{- printf "%s-users-extra" (include "common.names.fullname" . ) -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Get the Clickhouse password secret name
 */}}
@@ -185,17 +202,18 @@ Compile all warnings into a single message.
 {{- end -}}
 {{- end -}}
 
-{{/* Validate values of ClickHouse - Zookeeper */}}
+{{/* Validate values of ClickHouse - [Zoo]keeper */}}
 {{- define "clickhouse.validateValues.zookeeper" -}}
-{{- if and .Values.zookeeper.enabled .Values.externalZookeeper.servers -}}
-clickhouse: Multiple Zookeeper
-    You can only use one zookeeper
-    Please choose installing a Zookeeper chart (--set zookeeper.enabled=true) or
+{{- if or (and .Values.keeper.enabled .Values.zookeeper.enabled) (and .Values.keeper.enabled .Values.externalZookeeper.servers) (and .Values.zookeeper.enabled .Values.externalZookeeper.servers) -}}
+clickhouse: Multiple [Zoo]keeper
+    You can only use one [zoo]keeper
+    Please choose use ClickHouse keeper or
+    installing a Zookeeper chart (--set zookeeper.enabled=true) or
     using an external instance (--set zookeeper.servers )
 {{- end -}}
-{{- if and (not .Values.zookeeper.enabled) (not .Values.externalZookeeper.servers) (ne (int .Values.shards) 1) (ne (int .Values.replicaCount) 1) -}}
-clickhouse: No Zookeeper
-    If you are deploying more than one ClickHouse instance, you need to enable Zookeeper. Please choose installing a Zookeeper chart (--set zookeeper.enabled=true) or
+{{- if and (not .Values.keeper.enabled) (not .Values.zookeeper.enabled) (not .Values.externalZookeeper.servers) (ne (int .Values.shards) 1) (ne (int .Values.replicaCount) 1) -}}
+clickhouse: No [Zoo]keeper
+    If you are deploying more than one ClickHouse instance, you need to enable [Zoo]keeper. Please choose installing a [Zoo]keeper (--set keeper.enabled=true) or (--set zookeeper.enabled=true) or
     using an external instance (--set zookeeper.servers )
 {{- end -}}
 {{- end -}}
