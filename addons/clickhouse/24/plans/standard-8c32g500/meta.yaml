@@ -1,0 +1,6 @@
+name: "standard-8c32g500"
+id: 1bca5bdf-0bdc-406b-b3d0-865bdec9184c
+description: "clickhouse standard-8c32g500 plan: Disk 500Gi ,vCPUs 8 , RAM 32G "
+displayName: "standard-8c32g500"
+bindable: true
+maximum_polling_duration: 1800

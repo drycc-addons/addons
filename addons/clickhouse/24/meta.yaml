@@ -21,4 +21,10 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "shards"
+  required: false
+  description: "service type config for values.yaml"
+- name: "replicaCount"
+  required: false
+  description: "service type config for values.yaml"
 archive: false

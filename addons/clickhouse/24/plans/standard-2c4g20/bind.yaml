@@ -22,5 +22,3 @@ credential:
     value: 9000
   - name: HTTP_PORT
     value: 8123
-  - name: MYSQL_PORT
-    value: 9004

@@ -284,7 +284,7 @@ defaultConfigurationOverrides: |
     {{- if or (ne (int .Values.shards) 1) (ne (int .Values.replicaCount) 1)}}
     <!-- Cluster configuration - Any update of the shards and replicas requires helm upgrade -->
     <remote_servers>
-      <default>
+      <cluster>
         {{- $shards := $.Values.shards | int }}
         {{- range $shard, $e := until $shards }}
         <shard>
@@ -299,7 +299,7 @@ defaultConfigurationOverrides: |
             {{- end }}
         </shard>
         {{- end }}
-      </default>
+      </cluster>
     </remote_servers>
     {{- end }}
     {{- if .Values.keeper.enabled }}
@@ -339,7 +339,7 @@ defaultConfigurationOverrides: |
       {{- $nodes := .Values.replicaCount | int }}
       {{- range $node, $e := until $nodes }}
       <node>
-        <host from_env="{{ printf "KEEPER_NODE_%d" $node }}"></host>
+        <host from_env="{{ printf "ZOOKEEPER_NODE_%d" $node }}"></host>
         <port>{{ $.Values.service.ports.keeper }}</port>
       </node>
       {{- end }}
