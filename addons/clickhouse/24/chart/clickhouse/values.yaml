@@ -255,7 +255,7 @@ containerSecurityContext:
 ## @param auth.existingSecretKey Name of the key inside the existing secret
 ##
 auth:
-  username: default
+  username: administrator
   password: ""
   existingSecret: ""
   existingSecretKey: ""
