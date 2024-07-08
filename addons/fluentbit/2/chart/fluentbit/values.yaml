@@ -245,7 +245,7 @@ daemonset:
           Rule                "start_state"   "/^\d{4}-\d{2}-\d{2}/" "cont"
           Rule                "cont"          "/^\s+at /" "cont"
           Rule                "cont"          "/^[a-z]/" "cont"
-          Rule                "cont"          "/^[A-Z]/" "cont"
+          Rule                "cont"          "/^Caused by:/" "cont"
           Rule                "cont"          "/^\s+/" "cont"
 
       [MULTILINE_PARSER]
