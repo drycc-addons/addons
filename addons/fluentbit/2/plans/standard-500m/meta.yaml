@@ -1,0 +1,6 @@
+name: "standard-500m"
+id: b5dccfaa-7e85-472e-9293-9e5e87f41c1f
+description: "Fluentbit standard-500m plan: vCPUs 500m, RAM 512M"
+displayName: "standard-500m"
+bindable: true
+maximum_polling_duration: 1800
