@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: hb-fluentbit-standard-5
+fullnameOverride: hb-fluentbit-standard-500m
 
 ## Fluentbit&reg; containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
