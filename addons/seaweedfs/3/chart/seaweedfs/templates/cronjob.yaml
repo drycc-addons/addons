@@ -12,7 +12,7 @@ metadata:
   {{- end }}
 spec:
   timeZone: "{{ .Values.cronjob.timeZone }}"
-  schedule: "{{ .Values.cronjob.schedule }}"
+  schedule: "{{ (tpl .Values.cronjob.schedule $) }}"
   concurrencyPolicy: "{{ .Values.cronjob.concurrencyPolicy }}"
   successfulJobsHistoryLimit: {{ .Values.cronjob.successfulJobsHistoryLimit }}
   failedJobsHistoryLimit: {{ .Values.cronjob.failedJobsHistoryLimit }}
