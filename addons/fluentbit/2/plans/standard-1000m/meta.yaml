@@ -1,10 +1,6 @@
 name: "standard-1000m"
 id: ac2300db-f5ac-413e-a663-dd13da2034b0
-<<<<<<< HEAD
 description: "Fluentbit standard-1000m plan: vCPUs 1000m, RAM 1G"
-=======
-description: "Fluentbit standard-100m plan: vCPUs 1000m, RAM 1G"
->>>>>>> ad5012ff6d6a918f761d03fc082781f8a8e170de
 displayName: "standard-1000m"
 bindable: true
 maximum_polling_duration: 1800
