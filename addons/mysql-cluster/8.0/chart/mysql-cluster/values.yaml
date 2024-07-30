@@ -1104,8 +1104,14 @@ metrics:
   ## - --collect.heartbeat.database
   ## - --collect.heartbeat.table
   ##
+
+
   extraArgs:
-    primary: []
+    primary: 
+      - --collect.info_schema.processlist 
+      - --collect.perf_schema.replication_group_members
+      - --collect.perf_schema.replication_group_member_stats
+      - --collect.perf_schema.replication_applier_status_by_worker
     secondary: []
   ## Mysqld Prometheus exporter resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
