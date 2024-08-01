@@ -649,6 +649,8 @@ server:
         {{- include "addons.kubernetes-pods"  (dict "context" $) | nindent 4 }}
       - job_name: kubernetes-pods-slow
         {{- include "addons.kubernetes-pods-slow"  (dict "context" $) | nindent 4 }}
+      - job_name: mysql-metrics
+        {{- include "addons.mysql-metrics"  (dict "context" $) | nindent 4 }}
     {{- end }}  
     
     {{ $scheme := .Values.drycc.scheme }}
