@@ -312,6 +312,9 @@ params:
   - performanceSchema.replication_group_members
   - performanceSchema.replication_group_member_stats
   - performanceSchema.replication_applier_status_by_worker
+  - auto_increment.columns
+  - binlog_size
+
 
 relabel_configs:
   - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
