@@ -198,7 +198,7 @@ daemonset:
       [FILTER]
           name                multiline
           match               kubernetes.*
-          multiline.parser    python_multiline,java_multiline,go_multiline
+          multiline.parser    python_multiline,java_multiline,go_multiline,gateway_multiline
           multiline.key_content log
           buffer              on
 
@@ -247,6 +247,7 @@ daemonset:
           Rule                "cont"          "/^[a-z]/" "cont"
           Rule                "cont"          "/^Caused by:/" "cont"
           Rule                "cont"          "/^\s+/" "cont"
+          Rule                "cont"          "/^(?!\d{4}-\d{2}-\d{2})/" "cont"
 
       [MULTILINE_PARSER]
           Name                go_multiline
@@ -256,6 +257,14 @@ daemonset:
           Rule                "start_state"     "/^panic: /" "cont"
           Rule                "cont"            "/^\s+/" "cont"
           Rule                "cont"            "/^goroutine /" "cont"
+
+      [MULTILINE_PARSER]
+          Name                gateway_multiline
+          Type                regex
+          Flush_Timeout       1000
+          key_content         log
+          Rule                "start_state"   "/^\[\d{4}-\d{2}-\d{2}/" "cont"
+          Rule                "cont"          "/^(?!\[\d{4}-\d{2}-\d{2})/" "cont"
 
 ## @section deployment Parameters
 ##
