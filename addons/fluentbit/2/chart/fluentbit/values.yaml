@@ -257,6 +257,19 @@ daemonset:
           Rule                "start_state"     "/^panic: /" "cont"
           Rule                "cont"            "/^\s+/" "cont"
           Rule                "cont"            "/^goroutine /" "cont"
+  ## @param daemonset.extraEnvVars Array with extra environment variables to add to daemonset nodes
+  ## e.g:
+  ## extraEnvVars:
+  ##   - name: FOO
+  ##     value: "bar"
+  ##
+  extraEnvVars: []
+  ## @param daemonset.extraEnvVarsCM Name of existing ConfigMap containing extra env vars for daemonset nodes
+  ##
+  extraEnvVarsCM: ""
+  ## @param daemonset.extraEnvVarsSecret Name of existing Secret containing extra env vars for daemonset nodes
+  ##
+  extraEnvVarsSecret: ""
 
       [MULTILINE_PARSER]
           Name                gateway_multiline

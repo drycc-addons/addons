@@ -61,6 +61,19 @@ spec:
         - fluent-bit
         - -c
         - /opt/drycc/fluent-bit/etc/fluent-bit/fluentbit.conf
+        env:
+          {{- if .Values.daemonset.extraEnvVars }}
+          {{- include "common.tplvalues.render" (dict "value" .Values.daemonset.extraEnvVars "context" $) | nindent 10 }}
+          {{- end }}
+        envFrom:
+          {{- if .Values.daemonset.extraEnvVarsCM }}
+          - configMapRef:
+              name: {{ include "common.tplvalues.render" (dict "value" .Values.daemonset.extraEnvVarsCM "context" $) }}
+          {{- end }}
+          {{- if .Values.daemonset.extraEnvVarsSecret }}
+          - secretRef:
+              name: {{ include "common.tplvalues.render" (dict "value" .Values.daemonset.extraEnvVarsSecret "context" $) }}
+          {{- end }}
         volumeMounts:
         - name: data
           mountPath: /data
