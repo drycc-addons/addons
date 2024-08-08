@@ -10,7 +10,7 @@ credential:
   - name: CLIENT_USERS
     value: {{ join "," .Values.sasl.client.users | quote }}
 
-  - name: CLIENT_PASSPORTS
+  - name: CLIENT_PASSWORDS
     valueFrom:
       secretKeyRef:
         name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
@@ -24,7 +24,7 @@ credential:
   {{- end }}
 
   {{- if regexFind "SASL" (upper .Values.listeners.interbroker.protocol) }}
-  - name: INTER_BROKER_PASSPORTS
+  - name: INTER_BROKER_PASSWORDS
     valueFrom:
       secretKeyRef:
         name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
@@ -32,7 +32,7 @@ credential:
   {{- end }}
 
   {{- if regexFind "SASL" (upper .Values.listeners.controller.protocol) }}
-  - name: CONTROLLER_PASSPORTS
+  - name: CONTROLLER_PASSWORDS
     valueFrom:
       secretKeyRef:
         name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
