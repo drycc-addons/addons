@@ -15,6 +15,9 @@ instances_retrievable: true
 bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
+- name: "daemonset.extraEnvVars"
+  required: false
+  description: "extra environment variables to add to fluentbit"
 - name: "daemonset.config.outputs"
   required: true
   description: "destinations for your data: databases, cloud services and more"
