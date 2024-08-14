@@ -39,6 +39,9 @@ allow_parameters:
 - name: "listeners.external.protocol"
   required: false
   description: "listeners external protocol config for values.yaml"
+- name: "sasl"
+  required: false
+  description: "sasl config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
