@@ -271,6 +271,7 @@ keeper:
 ##
 defaultConfigurationOverrides: |
   <clickhouse>
+    <timezone>Asia/Shanghai</timezone>
     <!-- Macros -->
     <macros>
       <shard from_env="CLICKHOUSE_SHARD_ID"></shard>
