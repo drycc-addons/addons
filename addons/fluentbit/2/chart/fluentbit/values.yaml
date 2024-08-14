@@ -165,6 +165,7 @@ daemonset:
   flush: 1
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
   config:
+    multilines : python_multiline,java_multiline,go_multiline,gateway_multiline
     service: |
       [SERVICE]
           Flush               {{ .Values.daemonset.flush }}
@@ -198,7 +199,7 @@ daemonset:
       [FILTER]
           name                multiline
           match               kubernetes.*
-          multiline.parser    python_multiline,java_multiline,go_multiline,gateway_multiline
+          multiline.parser    {{ .Values.daemonset.config.multilines }}
           multiline.key_content log
           buffer              on
 
@@ -257,6 +258,15 @@ daemonset:
           Rule                "start_state"     "/^panic: /" "cont"
           Rule                "cont"            "/^\s+/" "cont"
           Rule                "cont"            "/^goroutine /" "cont"
+
+      [MULTILINE_PARSER]
+          Name                gateway_multiline
+          Type                regex
+          Flush_Timeout       1000
+          key_content         log
+          Rule                "start_state"   "/^\[\d{4}-\d{2}-\d{2}/" "cont"
+          Rule                "cont"          "/^(?!\[\d{4}-\d{2}-\d{2})/" "cont"
+
   ## @param daemonset.extraEnvVars Array with extra environment variables to add to daemonset nodes
   ## e.g:
   ## extraEnvVars:
@@ -270,14 +280,6 @@ daemonset:
   ## @param daemonset.extraEnvVarsSecret Name of existing Secret containing extra env vars for daemonset nodes
   ##
   extraEnvVarsSecret: ""
-
-      [MULTILINE_PARSER]
-          Name                gateway_multiline
-          Type                regex
-          Flush_Timeout       1000
-          key_content         log
-          Rule                "start_state"   "/^\[\d{4}-\d{2}-\d{2}/" "cont"
-          Rule                "cont"          "/^(?!\[\d{4}-\d{2}-\d{2})/" "cont"
 
 ## @section deployment Parameters
 ##

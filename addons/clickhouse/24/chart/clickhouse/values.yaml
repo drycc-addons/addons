@@ -206,7 +206,13 @@ resourcesPreset: "small"
 ##     cpu: 3
 ##     memory: 1024Mi
 ##
-resources: {}
+resources: 
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 2000m
+    memory: 4Gi
 ## Configure Pods Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enabled ClickHouse pods' Security Context
@@ -271,6 +277,7 @@ keeper:
 ##
 defaultConfigurationOverrides: |
   <clickhouse>
+    <timezone>Asia/Shanghai</timezone>
     <!-- Macros -->
     <macros>
       <shard from_env="CLICKHOUSE_SHARD_ID"></shard>
