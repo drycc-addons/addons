@@ -20,11 +20,11 @@ allow_parameters:
   description: "extra environment variables to add to fluentbit"
 - name: "daemonset.config.outputs"
   required: true
-  description: "destinations for your data: databases, cloud services and more"
-- name: "daemonset.config.multilines"
+  description: "fluentbit outputs config"
+- name: "daemonset.config.filters"
   equired: false
-  description: "destinations multilines"
+  description: "fluentbit filters config"
 - name: "daemonset.config.parsers"
   equired: false
-  description: "destinations parsers"
+  description: "fluentbit parsers config"
 archive: false
