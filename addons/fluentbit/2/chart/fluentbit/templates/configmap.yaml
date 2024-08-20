@@ -14,8 +14,24 @@ metadata:
   {{- end }}
 data:
   parsers.conf: |
+    {{- (tpl .Values.daemonset.config.parsers_base $)  | nindent 4 }}
     {{- (tpl .Values.daemonset.config.parsers $)  | nindent 4 }}
   fluentbit.conf: |
-    {{- (tpl .Values.daemonset.config.service $)  | nindent 4 }}
-    {{- (tpl .Values.daemonset.config.inputs $)   | nindent 4 }}
-    {{- (tpl .Values.daemonset.config.outputs $)  | nindent 4 }}
+    {{- $service := (tpl .Values.daemonset.config.service $) }}
+    {{- if not (contains "[INPUT]" $service) }}
+    {{- $service | nindent 4 }}
+    {{- end }}
+
+    {{- (tpl .Values.daemonset.config.inputs $)  | nindent 4 }}
+    
+    {{- (tpl .Values.daemonset.config.filters_base $)  | nindent 4 }}
+
+    {{- $filters := (tpl .Values.daemonset.config.filters $) }}
+    {{- if not (contains "[INPUT]" $filters) }}
+    {{- $filters | nindent 4 }}
+    {{- end }}
+
+    {{- $outputs := (tpl .Values.daemonset.config.outputs $) }}
+    {{- if not (contains "[INPUT]" $outputs) }}
+    {{- (tpl .Values.daemonset.config.outputs $) | nindent 4 }}
+    {{- end }}

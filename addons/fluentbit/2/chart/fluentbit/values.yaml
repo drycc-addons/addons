@@ -165,107 +165,67 @@ daemonset:
   flush: 1
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
   config:
-    multilines : python_multiline,java_multiline,go_multiline,gateway_multiline
+  
     service: |
       [SERVICE]
-          Flush               {{ .Values.daemonset.flush }}
-          Daemon              Off
-          Log_Level           info
-          HTTP_Server         On
-          HTTP_Listen         127.0.0.1
-          HTTP_PORT           2020
-          Hot_Reload          On
-          Parsers_File        /opt/drycc/fluent-bit/etc/fluent-bit/parsers.conf
+          Flush                   {{ .Values.daemonset.flush }}
+          Daemon                  Off
+          Log_Level               info
+          HTTP_Server             On
+          HTTP_Listen             127.0.0.1
+          HTTP_PORT               2020
+          Hot_Reload              On
+          Parsers_File            /opt/drycc/fluent-bit/etc/fluent-bit/parsers.conf
 
     ## https://docs.fluentbit.io/manual/pipeline/inputs
     inputs: |
       [INPUT]
-          Name                tail
-          Path                /var/log/containers/*_{{ .Release.Namespace }}_*.log
-          DB                  /data/containers.pos.db
-          DB.locking          true
-          Offset_Key          offset
-          Tag                 kubernetes.<namespace_name>.<pod_name>.<container_name>.<container_id>
-          Tag_Regex           (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
-          Read_from_Head      false
-          multiline.parser    docker,cri
+          Name                    tail
+          Path                    /var/log/containers/*_{{ .Release.Namespace }}_*.log
+          DB                      /data/containers.pos.db
+          DB.locking              true
+          Offset_Key              offset
+          Tag                     kubernetes.<namespace_name>.<pod_name>.<container_name>.<container_id>
+          Tag_Regex               (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
+          Read_from_Head          false
+          multiline.parser        docker,cri
 
+    ## https://docs.fluentbit.io/manual/pipeline/filters
+    filters_base: |
       [FILTER]
-          Name                Lua
-          Match               kubernetes.*
-          call                append_tag
-          code                function append_tag(tag, timestamp, record) new_record = record local namespace, pod_name, container_name, container_id = string.match(tag, "kubernetes%.([^%.]+)%.([^%.]+)%.([^%.]+)%.(.+)") if namespace and pod_name and container_name and container_id then new_record["pod_name"] = pod_name new_record["namespace"] = namespace new_record["container_name"] = container_name new_record["container_id"] = container_id end return 1, timestamp, new_record end
-
-      [FILTER]
-          name                multiline
-          match               kubernetes.*
-          multiline.parser    {{ .Values.daemonset.config.multilines }}
-          multiline.key_content log
-          buffer              on
+          Name                    Lua
+          Match                   kubernetes.*
+          call                    append_tag
+          code                    function append_tag(tag, timestamp, record) new_record = record local namespace, pod_name, container_name, container_id = string.match(tag, "kubernetes%.([^%.]+)%.([^%.]+)%.([^%.]+)%.(.+)") if namespace and pod_name and container_name and container_id then new_record["pod_name"] = pod_name new_record["namespace"] = namespace new_record["container_name"] = container_name new_record["container_id"] = container_id end return 1, timestamp, new_record end
+    
+    filters: |
 
     ## https://docs.fluentbit.io/manual/pipeline/outputs
     outputs: |
       [OUTPUT]
-          Name                 stdout
-          Match                kubernetes.*
+          Name                    stdout
+          Match                   kubernetes.*
+
     ## https://docs.fluentbit.io/manual/pipeline/parsers
-    parsers: |
+    parsers_base: |
       [PARSER]
-          Name                docker
-          Format              json
-          Time_Key            time
-          Time_Format         %Y-%m-%dT%H:%M:%S.%L
-          Time_Keep           On
+          Name                    docker
+          Format                  json
+          Time_Key                time
+          Time_Format             %Y-%m-%dT%H:%M:%S.%L
+          Time_Keep               On
 
       [PARSER]
           # http://rubular.com/r/tjUt3Awgg4
-          Name                cri
-          Format              regex
-          Regex               ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
-          Time_Key            time
-          Time_Format         %Y-%m-%dT%H:%M:%S.%L%z
-          Time_Keep           On
-
-      [MULTILINE_PARSER]
-          Name                python_multiline
-          Type                regex
-          Flush_Timeout       1000
-          key_content         log
-          Rule                "start_state"     "/^\[.*ERROR.*-- Internal Server Error: .*$/" "cont"
-          Rule                "cont"            "/^Traceback \(most recent call last\):$/" "cont"
-          Rule                "cont"            "/^\s+File \"/" "cont"
-          Rule                "cont"            "/^\s+raise /" "cont"
-          Rule                "cont"            "/^\s?\w+Error: /" "cont"
-          Rule                "cont"            "/^\s+/" "cont"
-
-      [MULTILINE_PARSER]
-          Name                java_multiline
-          Type                regex
-          Flush_Timeout       1000
-          key_content         log
-          Rule                "start_state"   "/^\d{4}-\d{2}-\d{2}/" "cont"
-          Rule                "cont"          "/^\s+at /" "cont"
-          Rule                "cont"          "/^[a-z]/" "cont"
-          Rule                "cont"          "/^Caused by:/" "cont"
-          Rule                "cont"          "/^\s+/" "cont"
-          Rule                "cont"          "/^(?!\d{4}-\d{2}-\d{2})/" "cont"
-
-      [MULTILINE_PARSER]
-          Name                go_multiline
-          Type                regex
-          Flush_Timeout       1000
-          key_content         log
-          Rule                "start_state"     "/^panic: /" "cont"
-          Rule                "cont"            "/^\s+/" "cont"
-          Rule                "cont"            "/^goroutine /" "cont"
-
-      [MULTILINE_PARSER]
-          Name                gateway_multiline
-          Type                regex
-          Flush_Timeout       1000
-          key_content         log
-          Rule                "start_state"   "/^\[\d{4}-\d{2}-\d{2}/" "cont"
-          Rule                "cont"          "/^(?!\[\d{4}-\d{2}-\d{2})/" "cont"
+          Name                    cri
+          Format                  regex
+          Regex                   ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<message>.*)$
+          Time_Key                time
+          Time_Format             %Y-%m-%dT%H:%M:%S.%L%z
+          Time_Keep               On
+    
+    parsers: |
+      
 
   ## @param daemonset.extraEnvVars Array with extra environment variables to add to daemonset nodes
   ## e.g:

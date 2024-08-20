@@ -21,10 +21,10 @@ allow_parameters:
 - name: "daemonset.config.outputs"
   required: true
   description: "destinations for your data: databases, cloud services and more"
-- name: "daemonset.config.multilines"
-  equired: false
-  description: "destinations multilines"
 - name: "daemonset.config.parsers"
   equired: false
   description: "destinations parsers"
+- name: "daemonset.config.filters"
+  equired: false
+  description: "fluentbit filters config"
 archive: false
