@@ -24,12 +24,18 @@ allow_parameters:
 - name: "master.configOptions"
   required: false
   description: "master configOptions config for values.yaml"
+- name: "master.extraEnvVars"
+  required: false
+  description: "master extraEnvVars config for values.yaml"
 - name: "master.persistence"
   required: false
   description: "master persistence config for values.yaml"
 - name: "worker.configOptions"
   required: false
   description: "worker configOptions config for values.yaml"
+- name: "worker.extraEnvVars"
+  required: false
+  description: "worker extraEnvVars config for values.yaml"
 - name: "worker.persistence"
   required: false
   description: "worker persistence config for values.yaml"
