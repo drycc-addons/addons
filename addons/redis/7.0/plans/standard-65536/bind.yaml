@@ -70,6 +70,9 @@ credential:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-sentinel")].port }'
 
+  - name: MASTER_NAME
+    value: {{ .Values.sentinel.masterSet }}
+
  {{- if.Values.proxy.enabled }}
   - name: PROXY_PORT
     valueFrom:
