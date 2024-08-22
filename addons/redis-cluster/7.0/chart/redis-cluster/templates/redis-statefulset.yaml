@@ -325,7 +325,8 @@ spec:
               redis-cluster-proxy \
                 -startup-nodes=127.0.0.1:{{ .Values.redis.containerPorts.redis }} \
                 -addr=0.0.0.0:{{ .Values.proxy.containerPorts.proxy }} \
-                -password=$(REDIS_PASSWORD)
+                -password=$(REDIS_PASSWORD) \
+                -max-procs={{ .Values.proxy.maxProcs }}
           {{- end }}
           env:
             {{- if and .Values.usePassword (not .Values.usePasswordFile) }}

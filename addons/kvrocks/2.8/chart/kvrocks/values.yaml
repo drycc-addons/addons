@@ -1185,6 +1185,8 @@ proxy:
   ## @param sentinel.args Override default container args (useful when using custom images)
   ##
   args: []
+  # max-procs
+  maxProcs: 1
   ## @param sentinel.preExecCmds Additional commands to run prior to starting kvrocks; Sentinel
   ##
   preExecCmds: []
