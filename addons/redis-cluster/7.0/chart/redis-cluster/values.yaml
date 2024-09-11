@@ -783,6 +783,8 @@ proxy:
     ##    memory: 256Mi
     ##
     requests: {}
+  # max-procs
+  maxProcs: 1
   ## Configure extra options for Redis&reg; liveness probes
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes)
   ## @param redis.livenessProbe.enabled Enable livenessProbe

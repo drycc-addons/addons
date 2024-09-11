@@ -16,7 +16,7 @@ master:
       cpu: 2000m
       memory: 64Gi
     requests:
-      cpu: 200m
+      cpu: 1000m
       memory: 32Gi
   ## Persistence parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -61,7 +61,7 @@ replica:
       cpu: 2000m
       memory: 64Gi
     requests:
-      cpu: 200m
+      cpu: 1000m
       memory: 32Gi
   ## Persistence Parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -120,7 +120,7 @@ sentinel:
       cpu: 100m
       memory: 256Mi
     requests:
-      cpu: 10m
+      cpu: 50m
       memory: 128Mi
 
 proxy:
@@ -131,8 +131,8 @@ proxy:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 1
+      memory: 1Gi
     requests:
-      cpu: 10m
-      memory: 128Mi
+      cpu: 500m
+      memory: 512Mi

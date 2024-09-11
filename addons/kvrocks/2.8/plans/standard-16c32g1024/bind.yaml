@@ -8,6 +8,9 @@ credential:
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
+  - name: MASTER_DOMAIN
+    value: {{ printf "%s-master" (include "common.names.fullname" .) }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
   - name: MASTER_HOST
     valueFrom:
       serviceRef:
@@ -36,6 +39,9 @@ credential:
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
+  - name: REPLICAS_DOMAIN
+    value: {{ printf "%s-replicas" (include "common.names.fullname" .) }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
   - name: REPLICAS_HOST
     valueFrom:
       serviceRef:
@@ -57,6 +63,9 @@ credential:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
+
+  - name: DOMAIN
+    value: {{ template "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
 
   - name: HOST
     valueFrom:

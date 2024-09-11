@@ -7,6 +7,9 @@ credential:
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
+  - name: JOBMANAGER_DOMAIN
+    value: {{ include "flink.jobmanager.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
   - name: JOBMANAGER_HOST
     valueFrom:
       serviceRef:

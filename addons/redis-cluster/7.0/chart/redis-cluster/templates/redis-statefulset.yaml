@@ -325,7 +325,8 @@ spec:
               redis-cluster-proxy \
                 -startup-nodes=127.0.0.1:{{ .Values.redis.containerPorts.redis }} \
                 -addr=0.0.0.0:{{ .Values.proxy.containerPorts.proxy }} \
-                -password=$(REDIS_PASSWORD)
+                -password=$(REDIS_PASSWORD) \
+                -max-procs={{ .Values.proxy.maxProcs }}
           {{- end }}
           env:
             {{- if and .Values.usePassword (not .Values.usePasswordFile) }}
@@ -386,6 +387,8 @@ spec:
             - name: scripts
               mountPath: /scripts
             - name: default-config
+              mountPath: /opt/drycc/redis/etc/redis-proxy-default.toml
+              subPath: redis-proxy-default.toml
             {{- if .Values.usePasswordFile }}
             - name: redis-password
               mountPath: /opt/drycc/redis/secrets/

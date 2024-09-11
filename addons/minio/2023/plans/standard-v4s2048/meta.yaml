@@ -1,0 +1,6 @@
+name: "standard-v4s2048"
+id: ffc98c86-47a0-4cb9-afa3-7482e55d88a7
+description: "Minio standard-v4s2048 plan which limit 4 nodes, each size 2T."
+displayName: "standard-v4s2048"
+bindable: true
+maximum_polling_duration: 1800

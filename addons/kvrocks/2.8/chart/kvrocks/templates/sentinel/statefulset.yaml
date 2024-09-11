@@ -392,7 +392,8 @@ spec:
                 -master {{ .Values.sentinel.masterSet }} \
                 -sentinel-addr ${POD_IP}:{{ .Values.sentinel.containerPorts.sentinel }} \
                 -sentinel-pass $(KVROCKS_REQUIREPASS) \
-                -sentinel-user ""
+                -sentinel-user "" \
+                -max-procs={{ .Values.proxy.maxProcs }}
           {{- end }}
           env:
             - name: POD_IP

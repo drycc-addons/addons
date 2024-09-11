@@ -9,6 +9,9 @@ credential:
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
+  - name: OPENSEARCH_DOMAIN
+    value: {{ include "opensearch.service.name" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
   - name: OPENSEARCH_HOST
     valueFrom:
       serviceRef:

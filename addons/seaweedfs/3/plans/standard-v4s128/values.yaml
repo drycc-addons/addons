@@ -6,7 +6,7 @@ master:
       cpu: 1000m
       memory: 2048Mi
     requests:
-      cpu: 100m
+      cpu: 500m
       memory: 1024Mi
   persistence:
     enabled: true
@@ -19,7 +19,7 @@ filer:
       cpu: 1000m
       memory: 2048Mi
     requests:
-      cpu: 100m
+      cpu: 500m
       memory: 1024Mi
   persistence:
     enabled: true
@@ -33,7 +33,7 @@ volume:
       cpu: 1000m
       memory: 2048Mi
     requests:
-      cpu: 100m
+      cpu: 500m
       memory: 1024Mi
   persistence:
     meta:
