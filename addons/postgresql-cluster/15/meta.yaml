@@ -24,4 +24,7 @@ allow_parameters:
 - name: "backup"
   required: false
   description: "Whether to use S3 for backup your data. default false . ps: Make sure there is a available S3 "
+- name: "logicalbackup"
+  required: false
+  description: "Whether to use S3 for logical backup your data. default false . ps: Make sure there is a available S3 "
 archive: false
