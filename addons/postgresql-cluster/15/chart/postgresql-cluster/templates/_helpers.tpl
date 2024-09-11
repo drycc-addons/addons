@@ -53,6 +53,16 @@ Return true if a cronjob object should be created for Postgresql HA patroni ## T
 {{- end -}}
 
 {{/*
+Return true if a cronjob object should be created for Postgresql HA patroni ## TODO feature
+*/}}
+{{- define "patroni.createLogicalBackupCronJob" -}}
+{{- if and .Values.logicalbackup.enabled }}
+    {{- true -}}
+{{- else -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return true if a configmap object should be created for Postgresql HA patroni
 */}}
 {{- define "patroni.createConfigmap" -}}

@@ -13,6 +13,12 @@ image:
   # IfNotPresent , Always
   pullPolicy: 'IfNotPresent'
 
+logicalbackupImages: 
+  repository: registry.drycc.cc/drycc-addons/postgresql-logicalbackup
+  tag: 15
+  # IfNotPresent , Always
+  pullPolicy: 'IfNotPresent'
+
 # Credentials used by Patroni , passwd
 # https://github.com/zalando/patroni/blob/master/docs/SETTINGS.rst#postgresql
 # https://github.com/zalando/spilo/blob/master/ENVIRONMENT.rst
@@ -147,6 +153,42 @@ backupEnv: |
   export AWS_S3_FORCE_PATH_STYLE={{ .Values.backup.s3.awsS3ForcePathStyle | quote }}
   export AWS_REGION={{ .Values.backup.s3.awsRegion | quote }}
 
+logicalbackupScript: |
+  #!/bin/bash
+
+  # PostgreSQL 设置
+  # POSTGRES_USER="postgres"
+  # POSTGRES_HOST="127.0.0.1"
+
+  # MinIO 设置
+  # MINIO_BUCKET="pgbackup"
+  # MINIO_HOST="http://localhost:9000"
+  # MINIO_ACCESS_KEY="admin123"
+  # MINIO_SECRET_KEY="admin123"
+
+  # 设置 MinIO 客户端别名
+  mc alias set myminio $MINIO_HOST $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+
+  # 创建以当前日期和时间命名的备份目录
+  BACKUP_DIR="$(date +%Y%m%d%H%M)"
+  MINIO_PATH="myminio/$MINIO_BUCKET/$BACKUP_DIR"
+
+  # 备份全局对象
+  echo "Backing up global objects to $MINIO_PATH/roles_globals.sql.gz"
+  pg_dumpall -g -U "$POSTGRES_USER" -h "$POSTGRES_HOST" | pigz | mc pipe "$MINIO_PATH/roles_globals.sql.gz"
+
+  # 获取所有非模板数据库的列表
+  DATABASES=$(psql -U "$POSTGRES_USER" -h "$POSTGRES_HOST" -t -c "SELECT datname FROM pg_database WHERE datistemplate = false;")
+
+  # 为每个数据库执行备份
+  for DB in $DATABASES; do
+    echo "Backing up $DB to $MINIO_PATH/$DB.sql.gz"
+    pg_dump -U "$POSTGRES_USER" -h "$POSTGRES_HOST" "$DB" | pigz | mc pipe "$MINIO_PATH/$DB.sql.gz"
+  done
+
+  echo "Backup process completed!"
+
+
 postgresql: 
   config: |-
     log_min_duration_statement = 1000
@@ -255,6 +297,19 @@ metrics:
     requests:
       cpu: 100m
       memory: 512Mi
+
+logicalbackup: 
+  enabled: false
+  scheduleCronJob: "22 0 * * 0"
+  minio:
+    used: true
+    buckect: "s3://xx"
+    access_key: ""
+    secret_key: ""
+    endpoint: "http://xxxx:9000"
+    awsS3ForcePathStyle: "true"
+    awsRegion: dx-1
+
 backup:
   # Specifies whether Wal-G should be enabled
   enabled: false
@@ -278,6 +333,9 @@ backup:
     awsEndpoint: "http://xxxx:9000"
     awsS3ForcePathStyle: "true"
     awsRegion: dx-1
+
+logicalBackup:
+  enabled: false
 
 ## persistentVolumeClaimRetentionPolicy
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
