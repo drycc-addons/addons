@@ -154,4 +154,4 @@ dashboards:
       cpu: 250m
     requests:
       memory: 1024Mi
-      cpu: 25m
+      cpu: 125m

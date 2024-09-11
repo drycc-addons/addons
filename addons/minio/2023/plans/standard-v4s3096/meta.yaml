@@ -1,0 +1,6 @@
+name: "standard-v4s3096"
+id: 78899fd2-c794-49da-b81a-534da04d728c
+description: "Minio standard-v4s3096 plan which limit 4 nodes, each size 3T."
+displayName: "standard-v4s3096"
+bindable: true
+maximum_polling_duration: 1800

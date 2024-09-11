@@ -7,6 +7,9 @@ credential:
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
+  - name: S3_DOMAIN
+    value: {{ include "seaweedfs.filer.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
   - name: S3_HOST
     valueFrom:
       serviceRef:

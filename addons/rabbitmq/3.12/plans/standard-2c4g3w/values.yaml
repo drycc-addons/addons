@@ -13,10 +13,10 @@ fullnameOverride: hb-rabbitmq-standard-2c4g
 ##
 resources:
   limits:
-    cpu: 2000m
+    cpu: 2
     memory: 4Gi
   requests:
-    cpu: 1000m
+    cpu: 1
     memory: 2Gi
 
 ## @param replicaCount Number of RabbitMQ replicas to deploy

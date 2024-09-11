@@ -28,10 +28,10 @@ master:
   ##
   resources:
     limits:
-      cpu: 2000m
+      cpu: 2
       memory: 4Gi
     requests:
-      cpu: 1000m
+      cpu: 1
       memory: 2Gi
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/

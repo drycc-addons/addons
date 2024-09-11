@@ -1,0 +1,6 @@
+name: "standard-v6d4s1T"
+id: cf456bbf-cd74-48ad-913b-1f67c03a95c5
+description: "Minio standard-v6d4s1T plan which limit 6 nodes, number of drives per node is 4, each drive size 1T."
+displayName: "standard-v6d4s1T"
+bindable: true
+maximum_polling_duration: 1800

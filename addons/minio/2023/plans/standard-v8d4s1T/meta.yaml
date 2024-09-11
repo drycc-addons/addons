@@ -1,0 +1,6 @@
+name: "standard-v8d4s1T"
+id: 019a80c0-05f1-4025-b87a-ddf69e82cabf
+description: "Minio standard-v8d4s1T plan which limit 8 nodes, number of drives per node is 4, each drive size 1T."
+displayName: "standard-v8d4s1T"
+bindable: true
+maximum_polling_duration: 1800

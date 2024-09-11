@@ -7,6 +7,9 @@ credential:
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
+  - name: MASTER_DOMAIN
+    value: {{ printf "%s-master-svc" (include "common.names.fullname" .) }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
   - name: MASTER_HOST
     valueFrom:
       serviceRef:

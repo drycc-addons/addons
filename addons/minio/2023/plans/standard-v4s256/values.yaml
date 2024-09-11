@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: hb-minio-standard-10
+fullnameOverride: hb-minio-standard-v4s256
 
 ## MinIO&reg; containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -13,10 +13,10 @@ fullnameOverride: hb-minio-standard-10
 ##
 resources:
   limits:
-    cpu: 2000m
+    cpu: 2
     memory: 4Gi
   requests:
-    cpu: 200m
+    cpu: 1
     memory: 2Gi
 
 ## @section Persistence parameters
