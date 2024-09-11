@@ -133,9 +133,9 @@ relabel_configs:
     action: replace
     target_label: node
   - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-      separator: ; 
-      regex: mysql
-      action: drop
+    separator: ; 
+    regex: mysql
+    action: drop
 {{- end -}}
 
 {{- define "addons.kubernetes-service-endpoints-slow" -}}
@@ -180,9 +180,9 @@ relabel_configs:
     action: replace
     target_label: node
   - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-      separator: ; 
-      regex: mysql
-      action: drop
+    separator: ; 
+    regex: mysql
+    action: drop
 {{- end -}}
 
 {{- define "addons.kubernetes-pods" -}}
