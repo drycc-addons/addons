@@ -67,8 +67,8 @@ resources:
     memory: 32Gi
     hugepages-2Mi: 60Mi
   requests:
-    cpu: 8000m
-    memory: 32Gi
+    cpu: 4000m
+    memory: 16Gi
 
 persistentVolume:
   enabled: true
