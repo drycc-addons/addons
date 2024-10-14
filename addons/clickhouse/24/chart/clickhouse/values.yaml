@@ -983,7 +983,7 @@ persistence:
 ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
 persistentVolumeClaimRetentionPolicy:
   enabled: true
-  whenScaled: Delete
+  whenScaled: Retain
   whenDeleted: Delete
 
 ## 'volumePermissions' init container parameters

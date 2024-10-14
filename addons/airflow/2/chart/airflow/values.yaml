@@ -985,7 +985,7 @@ worker:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
 ## @section Airflow git sync parameters
 

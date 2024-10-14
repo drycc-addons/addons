@@ -29,7 +29,7 @@ spec:
   podManagementPolicy: {{ .Values.podManagementPolicy }}
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Delete
-    whenScaled: Delete
+    whenScaled: Retain
   replicas: {{ .Values.replicaCount }}
   {{- if .Values.updateStrategy }}
   updateStrategy: {{- toYaml .Values.updateStrategy | nindent 4 }}

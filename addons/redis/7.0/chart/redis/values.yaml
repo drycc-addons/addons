@@ -453,7 +453,7 @@ master:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Redis&trade; master service parameters
   ##
@@ -823,7 +823,7 @@ replica:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Redis&trade; replicas service parameters
   ##
@@ -1081,7 +1081,7 @@ sentinel:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Redis&trade; Sentinel resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -1621,7 +1621,7 @@ metrics:
 volumePermissions:
   ## @param volumePermissions.enabled Enable init container that changes the owner/group of the PV mount point to `runAsUser:fsGroup`
   ##
-  enabled: true
+  enabled: false
   ## Bitnami Shell image
   ## ref: https://hub.docker.com/r/bitnami/bitnami-shell/tags/
   ## @param volumePermissions.image.registry Bitnami Shell image registry

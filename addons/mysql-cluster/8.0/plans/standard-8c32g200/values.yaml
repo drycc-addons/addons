@@ -20,6 +20,18 @@ primary:
     requests:
       cpu: 4000m
       memory: 16Gi
+<<<<<<< HEAD
+=======
+  
+router:
+  resources:
+    limits: 
+      cpu: 800m
+      memory: 1024Mi
+    requests: 
+      cpu: 800m
+      memory: 1024Mi
+>>>>>>> f6c0e1df94a939481eea0c5348f8b611e035180b
 
 ## @section Persistence parameters
 

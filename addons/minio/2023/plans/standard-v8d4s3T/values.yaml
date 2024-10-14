@@ -14,10 +14,10 @@ fullnameOverride: hb-minio-standard-v8d4s3T
 resources:
   limits:
     cpu: 8
-    memory: 32Gi
+    memory: 64Gi
   requests:
     cpu: 4
-    memory: 16Gi
+    memory: 32Gi
 
 ## MinIO&reg; statefulset parameters
 ## Only when mode is 'distributed'

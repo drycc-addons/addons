@@ -146,7 +146,7 @@ spec:
               value: "hostname"
             {{- if .Values.ioThread.enabled }}
             - name: REDIS_IO_THREADS_DO_READS
-              value: {{ .Values.ioThread.doReads }}
+              value: {{ .Values.ioThread.doReads | quote }}
             - name: REDIS_IO_THREADS
               value: {{ .Values.ioThread.counts | quote }}
             {{- end }}
