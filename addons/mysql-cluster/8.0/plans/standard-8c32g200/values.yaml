@@ -20,15 +20,6 @@ primary:
     requests:
       cpu: 4000m
       memory: 16Gi
-  
-router:
-  resources:
-    limits: 
-      cpu: 800m
-      memory: 1024Mi
-    requests: 
-      cpu: 800m
-      memory: 1024Mi
 
 ## @section Persistence parameters
 
@@ -67,3 +58,12 @@ router:
     ##     app: my-app
     ##
     selector: {}
+
+router:
+  resources:
+    limits: 
+      cpu: 800m
+      memory: 1024Mi
+    requests: 
+      cpu: 800m
+      memory: 1024Mi

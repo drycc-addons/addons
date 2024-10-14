@@ -21,15 +21,6 @@ primary:
       cpu: 4000m
       memory: 16Gi
   
-router:
-  resources:
-    limits: 
-      cpu: 500m
-      memory: 512Mi
-    requests: 
-      cpu: 500m
-      memory: 512Mi
-
 ## @section Persistence parameters
 
 ## Enable persistence using Persistent Volume Claims
@@ -67,3 +58,12 @@ router:
     ##     app: my-app
     ##
     selector: {}
+
+router:
+  resources:
+    limits: 
+      cpu: 500m
+      memory: 512Mi
+    requests: 
+      cpu: 500m
+      memory: 512Mi
