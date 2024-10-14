@@ -844,7 +844,7 @@ persistentVolumeClaimRetentionPolicy:
   enabled: true
   ## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
   ##
-  whenScaled: Delete
+  whenScaled: Retain
   ## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
   ##
   whenDeleted: Delete

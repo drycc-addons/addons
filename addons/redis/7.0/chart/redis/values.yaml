@@ -453,7 +453,7 @@ master:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Redis&trade; master service parameters
   ##
@@ -823,7 +823,7 @@ replica:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Redis&trade; replicas service parameters
   ##
@@ -1081,7 +1081,7 @@ sentinel:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Redis&trade; Sentinel resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/

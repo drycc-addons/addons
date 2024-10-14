@@ -774,7 +774,7 @@ master:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Pods Service Account
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -1180,7 +1180,7 @@ data:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
   ## Pods Service Account
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/

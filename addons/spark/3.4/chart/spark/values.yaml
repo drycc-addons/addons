@@ -430,7 +430,7 @@ master:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
 ## @section Spark worker parameters
 ##
@@ -775,7 +775,7 @@ worker:
   ##
   persistentVolumeClaimRetentionPolicy:
     enabled: true
-    whenScaled: Delete
+    whenScaled: Retain
     whenDeleted: Delete
 
 ## @section Security parameters
