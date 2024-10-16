@@ -1,0 +1,6 @@
+name: "standard-131072"
+id: e5b7900e-2311-4650-a580-1943591622a1
+description: "Redis standard-131072 plan which limit resources memory size 128Gi."
+displayName: "standard-131072"
+bindable: true
+maximum_polling_duration: 1800
