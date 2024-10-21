@@ -1112,9 +1112,7 @@ metrics:
       - --collect.perf_schema.replication_group_members
       - --collect.perf_schema.replication_group_member_stats
       - --collect.perf_schema.replication_applier_status_by_worker
-      - --collect.auto_increment.columns
-      - --collect.binlog_size
-      - --collect.engine_innodb_status
+
     secondary: []
   ## Mysqld Prometheus exporter resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
