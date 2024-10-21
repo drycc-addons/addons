@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: hb-redis-standard-32768
+fullnameOverride: hb-redis-standard-131072
 
 ## @section Redis&trade; master configuration parameters
 ##
@@ -13,11 +13,11 @@ master:
   ##
   resources:
     limits:
-      cpu: 1000m
-      memory: 32Gi
+      cpu: 4
+      memory: 128Gi
     requests:
-      cpu: 500m
-      memory: 16Gi
+      cpu: 2
+      memory: 64Gi
   ## Persistence parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -41,7 +41,7 @@ master:
       - ReadWriteOnce
     ## @param master.persistence.size Persistent Volume size
     ##
-    size: 64Gi
+    size: 256Gi
 
 ## @section Redis&trade; replicas configuration parameters
 ##
@@ -58,11 +58,11 @@ replica:
   ##
   resources:
     limits:
-      cpu: 1000m
-      memory: 32Gi
+      cpu: 4
+      memory: 128Gi
     requests:
-      cpu: 500m
-      memory: 16Gi
+      cpu: 2
+      memory: 64Gi
   ## Persistence Parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -86,7 +86,7 @@ replica:
       - ReadWriteOnce
     ## @param replica.persistence.size Persistent Volume size
     ##
-    size: 64Gi
+    size: 256Gi
 
 sentinel:
   ## Persistence parameters
@@ -117,11 +117,11 @@ sentinel:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 1
+      memory: 1Gi
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 500m
+      memory: 512Mi
 
 proxy:
   ## Redis&trade; Sentinel resource requests and limits

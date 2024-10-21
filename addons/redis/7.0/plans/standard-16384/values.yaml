@@ -108,7 +108,7 @@ sentinel:
       - ReadWriteOnce
     ## @param sentinel.persistence.size Persistent Volume size
     ##
-    size: 32Gi
+    size: 8Gi
 
   ## Redis&trade; Sentinel resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/

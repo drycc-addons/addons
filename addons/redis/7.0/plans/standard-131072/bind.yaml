@@ -1,0 +1,108 @@
+credential:
+  {{- if not .Values.sentinel.enabled }}
+  {{ if (eq .Values.master.service.type "LoadBalancer") }}
+  - name: EXTERNAL_MASTER_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master" (include "common.names.fullname" .) }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: MASTER_DOMAIN
+    value: {{ printf "%s-master" (include "common.names.fullname" .) }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
+  - name: MASTER_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: MASTER_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-master" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
+
+  - name: REDIS_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
+  {{- end }}
+
+  {{- if and (eq .Values.architecture "replication") (not .Values.sentinel.enabled) }}
+  {{ if (eq .Values.replica.service.type "LoadBalancer") }}
+  - name: EXTERNAL_REPLICAS_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: REPLICAS_DOMAIN
+    value: {{ printf "%s-replicas" (include "common.names.fullname" .) }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
+  - name: REPLICAS_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: REPLICAS_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-replicas" (include "common.names.fullname" .) }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-redis")].port }'
+  {{- end }}
+
+  {{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
+  {{ if (eq .Values.sentinel.service.type "LoadBalancer") }}
+  - name: EXTERNAL_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: DOMAIN
+    value: {{ template "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: SENTINEL_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-sentinel")].port }'
+
+  - name: MASTER_NAME
+    value: {{ .Values.sentinel.masterSet }}
+
+ {{- if.Values.proxy.enabled }}
+  - name: PROXY_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-proxy")].port }'
+  {{- end }}
+  {{- end }}
+
+  {{- if and .Values.auth.enabled (not .Values.auth.existingSecret) }}
+  - name: REDIS_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.redis-password }'
+  {{- end }}
+
+  {{- if and .Values.auth.enabled .Values.auth.sentinel (not .Values.auth.existingSecret) }}
+  - name: REDIS_SENTINEL_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.redis-password }'
+  {{- end }}

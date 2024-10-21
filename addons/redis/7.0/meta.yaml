@@ -27,12 +27,18 @@ allow_parameters:
 - name: "master.service.type"
   required: false
   description: "master service type config for values.yaml"
+- name: "master.disableCommands"
+  required: false
+  description: "master disableCommands config for values.yaml"
 - name: "replica.service.type"
   required: false
   description: "replica service type config for values.yaml"
 - name: "sentinel.service.type"
   required: false
   description: "sentinel service type config for values.yaml"
+- name: "replica.disableCommands"
+  required: false
+  description: "replica.disableCommands config for values.yaml"
 - name: "sentinel.enabled"
   required: false
   description: "sentinel enabled config for values.yaml"
