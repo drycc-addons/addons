@@ -132,10 +132,6 @@ relabel_configs:
   - source_labels: [__meta_kubernetes_pod_node_name]
     action: replace
     target_label: node
-  - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-    separator: ; 
-    regex: mysql
-    action: drop
 {{- end -}}
 
 {{- define "addons.kubernetes-service-endpoints-slow" -}}
@@ -179,10 +175,6 @@ relabel_configs:
   - source_labels: [__meta_kubernetes_pod_node_name]
     action: replace
     target_label: node
-  - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-    separator: ; 
-    regex: mysql
-    action: drop
 {{- end -}}
 
 {{- define "addons.kubernetes-pods" -}}
@@ -236,10 +228,6 @@ relabel_configs:
   - source_labels: [__meta_kubernetes_pod_node_name]
     action: replace
     target_label: node
-  - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-    separator: ; 
-    regex: mysql
-    action: drop
 {{- end -}}
 
 {{- define "addons.kubernetes-pods-slow" -}}
@@ -292,68 +280,6 @@ relabel_configs:
   - source_labels: [__meta_kubernetes_pod_node_name]
     action: replace
     target_label: node
-  - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-    separator: ; 
-    regex: mysql
-    action: drop
 {{- end -}}
 
-{{- define "addons.mysql-metrics" -}}
-honor_labels: true
-kubernetes_sd_configs:
-  - role: endpoints
-    namespaces:
-      own_namespace: true
-      names: 
-      - {{ include "common.names.namespace" .context }}
-params:
-  collect[]:
-  - informationSchema.processlist
-  - performanceSchema.replication_group_members
-  - performanceSchema.replication_group_member_stats
-  - performanceSchema.replication_applier_status_by_worker
-  - auto_increment.columns
-  - binlog_size
 
-
-relabel_configs:
-  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
-    action: keep
-    regex: true
-  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
-    action: drop
-    regex: true
-  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
-    action: replace
-    target_label: __scheme__
-    regex: (https?)
-  - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_path]
-    action: replace
-    target_label: __metrics_path__
-    regex: (.+)
-  - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
-    action: replace
-    target_label: __address__
-    regex: (.+?)(?::\d+)?;(\d+)
-    replacement: $1:$2
-  - action: labelmap
-    regex: __meta_kubernetes_service_annotation_prometheus_io_param_(.+)
-    replacement: __param_$1
-  - action: labelmap
-    regex: __meta_kubernetes_service_label_(.+)
-  - action: labelmap
-    regex: __meta_kubernetes_pod_label_(.+)
-  - source_labels: [__meta_kubernetes_namespace]
-    action: replace
-    target_label: namespace
-  - source_labels: [__meta_kubernetes_service_name]
-    action: replace
-    target_label: service
-  - source_labels: [__meta_kubernetes_pod_node_name]
-    action: replace
-    target_label: node
-  - source_labels: [__meta_kubernetes_service_label_app_kubernetes_io_name]
-    separator: ; 
-    regex: mysql
-    action: keep
-{{- end -}}
