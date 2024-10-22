@@ -15,12 +15,27 @@ instances_retrievable: true
 bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
+- name: "initScripts"
+  required: false
+  description: "initScripts config for values.yaml"
+- name: "extraPlugins"
+  required: false
+  description: "extraPlugins config for values.yaml"
+- name: "extraContainerPorts"
+  required: false
+  description: "extraContainerPorts config for values.yaml"
+- name: "extraPorts"
+  required: false
+  description: "extraPorts config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "service.extraPorts"
+  required: false
+  description: "service.extraPorts config for values.yaml"
 - name: "metrics.enabled"
   required: false
   description: "metrics enabled or not config for values.yaml"

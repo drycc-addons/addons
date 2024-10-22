@@ -21,7 +21,7 @@ credential:
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.targetPort=="amqp")].port }'
+        jsonpath: '{ .spec.ports[?(@.name=="amqp")].port }'
   {{- end }}
 
   {{- if .Values.auth.tls.enabled }}
@@ -29,7 +29,7 @@ credential:
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.targetPort=="amqp-ssl")].port }'
+        jsonpath: '{ .spec.ports[?(@.name=="amqp-ssl")].port }'
   {{- end }}
 
   {{- if .Values.auth.username }}
