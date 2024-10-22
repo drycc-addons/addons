@@ -282,20 +282,4 @@ relabel_configs:
     target_label: node
 {{- end -}}
 
-{{- define "addons.mysql-metrics" -}}
-honor_labels: true
-kubernetes_sd_configs:
-  - role: endpoints
-    namespaces:
-      own_namespace: true
-      names: 
-      - {{ include "common.names.namespace" .context }}
-params:
-  collect[]:
-  - informationSchema.processlist
-  - performanceSchema.replication_group_members
-  - performanceSchema.replication_group_member_stats
-  - performanceSchema.replication_applier_status_by_worker
-  - auto_increment.columns
-  - binlog_size
 
