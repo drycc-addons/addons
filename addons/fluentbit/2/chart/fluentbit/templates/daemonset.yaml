@@ -81,7 +81,13 @@ spec:
           mountPath: /var/log
         - name: {{ include "fluentbit.configMap" . }}
           mountPath: /opt/drycc/fluent-bit/etc/fluent-bit
+        - name: timezone
+          mountPath: /etc/localtime
+
       volumes:
+      - name: timezone
+        hostPath:
+          path: /usr/share/zoneinfo/Asia/Shanghai
       - name: data
         emptyDir: {}
       - name: varlog
