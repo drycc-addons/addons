@@ -6,6 +6,8 @@ credential:
         name: {{ include "common.names.fullname" . }}-router
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 {{- end }}
+  - name: DOMAIN
+    value: {{ template "common.names.fullname" . }}-router.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
   - name: HOST
     valueFrom:
       serviceRef:
