@@ -10,7 +10,11 @@ credential:
       serviceRef:
         name: {{ template "common.names.fullname" . }}-repl
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
- {{- end }}
+{{- end }}
+  - name: DOMAIN_MASTER
+    value: {{ template "common.names.fullname" . }}-master.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+  - name: DOMAIN_REPL
+    value: {{ template "common.names.fullname" . }}-repl.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
   - name: MASTER_HOST
     valueFrom:
       serviceRef:
