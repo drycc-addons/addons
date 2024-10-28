@@ -433,3 +433,4 @@ networkPolicy:
   ##
   allowCurrentNamespace: true
   allowNamespaces: 
+clusterDomain: cluster.local
