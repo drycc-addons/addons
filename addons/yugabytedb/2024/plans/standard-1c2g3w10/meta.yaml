@@ -1,0 +1,6 @@
+name: "standard-1c2g3w10"
+id: 2b65e52b-7d7f-4e41-83b8-9a53965ce314
+description: "ZooKeeper standard-1c2g3w plan which limit resources 1 core 2G memory 3 replicas."
+displayName: "standard-1c2g3w10"
+bindable: true
+maximum_polling_duration: 1800
