@@ -1,0 +1,6 @@
+name: "standard-2c4g3w20"
+id: 60a4ad4b-9243-4d2a-831d-c6a8b8a03985
+description: "ZooKeeper standard-2c4g20 plan which limit resources 2 cores 4G memory 3 replicas."
+displayName: "standard-2c4g3w20"
+bindable: true
+maximum_polling_duration: 1800

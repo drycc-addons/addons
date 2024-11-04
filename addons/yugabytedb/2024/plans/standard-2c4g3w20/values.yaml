@@ -1,0 +1,31 @@
+storage:
+  master:
+    count: 2
+    size: 20Gi
+  tserver:
+    count: 2
+    size: 20Gi
+
+resource:
+  master:
+    requests:
+      cpu: 2
+      memory: 2Gi
+    limits:
+      cpu: 2
+      memory: 2Gi
+  tserver:
+    requests:
+      cpu: 2
+      memory: 4Gi
+    limits:
+      cpu: 2
+      memory: 4Gi
+
+replicas:
+  master: 3
+  tserver: 3
+
+partition:
+  master: 3
+  tserver: 3

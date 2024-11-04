@@ -1,0 +1,37 @@
+credential:
+  - name: TSERVER_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ (include "yugabyte.fullname" .) }}-yb-tserver-service
+        jsonpath: '{ .spec.clusterIP }'
+  - name: TSERVER_EXTRANET_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ (include "yugabyte.fullname" .) }}-yb-tserver-service
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  - name: TSERVER_PORT
+    value: "5433"
+  - name: UI_EXTRANET_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ (include "yugabyte.fullname" .) }}-yugabyted-ui-service
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  - name: UI_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ (include "yugabyte.fullname" .) }}-yugabyted-ui-service
+        jsonpath: '{ .spec.clusterIP }'    
+  - name: UI_PORT
+    value: "15433"
+  - name: MASTER_UI_EXTRANET_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ (include "yugabyte.fullname" .) }}-yb-master-ui
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  - name: MASTER_UI_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ (include "yugabyte.fullname" .) }}-yb-master-ui
+        jsonpath: '{ .spec.clusterIP }'
+  - name: MASTER_UI_PORT
+    value: "7000"

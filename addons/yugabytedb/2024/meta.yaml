@@ -1,0 +1,24 @@
+name: yugabytedb
+version: 2024
+id: 1f8087cd-d210-44ba-ba84-344f752252b7
+description: "yugabytedb."
+displayName: "yugabytedb"
+metadata:
+  displayName: "yugabytedb"
+  provider:
+    name: drycc
+    supportURL: https://docs.yugabyte.com
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/yugabytedb
+tags: yugabytedb
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+archive: false
