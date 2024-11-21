@@ -294,6 +294,7 @@ defaultConfigurationOverrides: |
       <cluster>
         {{- $shards := $.Values.shards | int }}
         {{- range $shard, $e := until $shards }}
+        <internal_replication>true</internal_replication>
         <shard>
             {{- $replicas := $.Values.replicaCount | int }}
             {{- range $i, $_e := until $replicas }}

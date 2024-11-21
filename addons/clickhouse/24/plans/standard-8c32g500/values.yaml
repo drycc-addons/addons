@@ -16,8 +16,8 @@ resources:
     cpu: 8000m
     memory: 32Gi
   requests:
-    cpu: 8000m
-    memory: 32Gi
+    cpu: 2000m
+    memory: 8Gi
 
 persistence:
   size: 500Gi
