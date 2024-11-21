@@ -549,7 +549,7 @@ redis:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 5
-    timeoutSeconds: 1
+    timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 5
   ## @param redis.startupProbe.enabled Enable startupProbe

@@ -230,7 +230,7 @@ master:
     enabled: true
     initialDelaySeconds: 20
     periodSeconds: 5
-    timeoutSeconds: 1
+    timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 5
   ## @param master.customStartupProbe Custom startupProbe that overrides the default one
@@ -599,7 +599,7 @@ replica:
     enabled: true
     initialDelaySeconds: 20
     periodSeconds: 5
-    timeoutSeconds: 1
+    timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 5
   ## @param replica.customStartupProbe Custom startupProbe that overrides the default one
@@ -1028,7 +1028,7 @@ sentinel:
     enabled: true
     initialDelaySeconds: 20
     periodSeconds: 5
-    timeoutSeconds: 1
+    timeoutSeconds: 5
     successThreshold: 1
     failureThreshold: 5
   ## @param sentinel.customStartupProbe Custom startupProbe that overrides the default one
