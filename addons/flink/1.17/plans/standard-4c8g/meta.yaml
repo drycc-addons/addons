@@ -1,6 +1,0 @@
-name: "standard-4c8g"
-id: 6cd5bc99-9af8-4451-a75b-2d10957482ed
-description: "flink standard-4c8g plan which limit resources 4 cores 8G memory."
-displayName: "standard-4c8g"
-bindable: true
-maximum_polling_duration: 1800

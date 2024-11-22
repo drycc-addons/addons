@@ -1,0 +1,6 @@
+name: "standard-4c8g5w"
+id: 6cd5bc99-9af8-4451-a75b-2d10957482ed
+description: "flink standard-4c8g5w plan which limit resources 4 cores 8G memory and 5 taskmanagers"
+displayName: "standard-4c8g5w"
+bindable: true
+maximum_polling_duration: 1800

@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: hb-flink-standard-4c8g
+fullnameOverride: hb-flink-standard-2c4g5w
 ## @section Jobmanager deployment parameters
 ##
 
@@ -15,11 +15,11 @@ jobmanager:
   ## ref: http://docs.datastax.com/en/archived/flink/2.0/flink/architecture/architecturePlanningHardware_c.html
   resources:
     limits:
-      cpu: 4
-      memory: 8Gi
-    requests:
       cpu: 2
       memory: 4Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
   ## Apache Flink jobmanager.service parameters
   ##
   service:
@@ -32,7 +32,7 @@ jobmanager:
 taskmanager:
   ## @param taskmanager.replicaCount Number of Apache Flink replicas
   ##
-  replicaCount: 2
+  replicaCount: 5
   ## Apache Flink pods' resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## Minimum memory for development is 4GB and 2 CPU cores
@@ -40,16 +40,16 @@ taskmanager:
   ## ref: http://docs.datastax.com/en/archived/flink/2.0/flink/architecture/architecturePlanningHardware_c.html
   resources:
     limits:
-      cpu: 4
-      memory: 8Gi
-    requests:
       cpu: 2
       memory: 4Gi
+    requests:
+      cpu: 1
+      memory: 2Gi
   ## @param taskmanager.extraEnvVars Extra environment variables to be set on flink container
   extraEnvVars:
     # taskmanager.numberOfTaskSlots
     - name: FLINK_TASK_MANAGER_NUMBER_OF_TASK_SLOTS
-      value: "4"
+      value: "2"
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
