@@ -1,0 +1,24 @@
+credential:
+{{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: {{ printf "EXTRANET_HOST" }}
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+{{- end }}
+  - name: {{ printf "HOST" }}
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  - name: PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.admin-password }' 
+  - name: USERNAME
+    value: '{{ .Values.auth.username }}'
+  - name: TCP_PORT
+    value: 9000
+  - name: HTTP_PORT
+    value: 8123

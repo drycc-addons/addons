@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname template
 ##
-fullnameOverride: hb-clickhouse-cluster-standard-4c16g100
+fullnameOverride: hb-clickhouse-cluster-standard-32c64g12000
 
 ## MinIO&reg; containers' resource requests and limits
 ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
@@ -13,11 +13,11 @@ fullnameOverride: hb-clickhouse-cluster-standard-4c16g100
 ##
 resources:
   limits:
-    cpu: 4000m
-    memory: 16Gi
+    cpu: 32000m
+    memory: 64Gi
   requests:
-    cpu: 2000m
-    memory: 4Gi
+    cpu: 8000m
+    memory: 16Gi
 
 persistence:
-  size: 100Gi
+  size: 12000Gi
