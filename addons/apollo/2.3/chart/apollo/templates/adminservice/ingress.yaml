@@ -1,0 +1,63 @@
+{{- /*
+Copyright Drycc Community.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+{{- if .Values.apolloService.enabled }}
+{{- if .Values.apolloService.adminService.ingress.enabled -}}
+{{- $fullName := include "apollo.adminService.fullName" . -}}
+{{- $svcPort := .Values.apolloService.adminService.service.port -}}
+{{- $apiVersion := "extensions/v1beta1" -}}
+{{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
+{{- $apiVersion = "networking.k8s.io/v1" }}
+{{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress" -}}
+{{- $apiVersion = "networking.k8s.io/v1beta1" }}
+{{- end }}
+apiVersion: {{ $apiVersion }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "apollo.labels" . | nindent 4 }}
+  {{- with .Values.apolloService.adminService.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+{{- if .Values.apolloService.adminService.ingress.ingressClassName }}
+  ingressClassName: {{ .Values.apolloService.adminService.ingress.ingressClassName }}
+{{- end }}
+{{- if .Values.apolloService.adminService.ingress.tls }}
+  tls:
+  {{- range .Values.apolloService.adminService.ingress.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  {{- range .Values.apolloService.adminService.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+          - path: {{ . }}
+          {{- if eq $apiVersion "networking.k8s.io/v1" }}
+            pathType: Prefix
+          {{- end }}
+            backend:
+            {{- if eq $apiVersion "networking.k8s.io/v1" }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $svcPort }}
+            {{- else }}
+              serviceName: {{ $fullName }}
+              servicePort: {{ $svcPort }}
+            {{- end }}
+        {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

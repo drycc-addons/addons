@@ -1,0 +1,6 @@
+name: "standard-1c2g2w"
+id: 75f949c8-8366-4805-aa8b-553de0ec6c24
+description: "airflow standard-1c2g2w plan which limit resources 2 workers per worker 1 core memory size 2Gi."
+displayName: "standard-1c2g2w"
+bindable: true
+maximum_polling_duration: 1800
