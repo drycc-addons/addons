@@ -235,7 +235,6 @@ primary:
     character-set-server=UTF8MB4
     collation-server=UTF8MB4_general_ci
     slow_query_log=0
-    slow_query_log_file=/opt/drycc/mysql/logs/mysqld.log
     long_query_time=10.0
     log_timestamps=system
     disabled_storage_engines="MyISAM,BLACKHOLE,FEDERATED,ARCHIVE,MEMORY"
