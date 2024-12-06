@@ -27,9 +27,15 @@ allow_parameters:
 - name: "master.service.type"
   required: false
   description: "master service type config for values.yaml"
+- name: "master.nodeSelector"
+  required: false
+  description: "master nodeSelector config for values.yaml"
 - name: "master.disableCommands"
   required: false
   description: "master disableCommands config for values.yaml"
+- name: "replica.nodeSelector"
+  required: false
+  description: "replica nodeSelector config for values.yaml"
 - name: "replica.service.type"
   required: false
   description: "replica service type config for values.yaml"
