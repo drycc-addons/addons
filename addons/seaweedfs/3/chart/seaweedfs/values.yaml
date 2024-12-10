@@ -391,14 +391,9 @@ volume:
 cronjob:
   scripts: |
     lock
-    ec.encode -fullPercent=95 -quietFor=1h
-    ec.rebuild -force
-    ec.balance -force
     volume.deleteEmpty -quietFor=24h -force
     volume.balance -force
     volume.fix.replication
-    volume.fsck -reallyDeleteFromVolume
-    volume.vacuum -garbageThreshold 0
     s3.clean.uploads -timeAgo=24h
     unlock
   timeZone: "Etc/UTC"
