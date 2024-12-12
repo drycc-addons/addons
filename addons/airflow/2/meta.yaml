@@ -33,18 +33,27 @@ allow_parameters:
 - name: "web.image"
   required: false
   description: "web image config for values.yaml"
+- name: "web.nodeSelector"
+  required: false
+  description: "web nodeSelector config for values.yaml"
 - name: "web.extraEnvVars"
   required: false
   description: "web extraEnvVars config for values.yaml"
 - name: "scheduler.image"
   required: false
   description: "scheduler image config for values.yaml"
+- name: "scheduler.nodeSelector"
+  required: false
+  description: "scheduler nodeSelector config for values.yaml"
 - name: "scheduler.extraEnvVars"
   required: false
   description: "scheduler extraEnvVars config for values.yaml"
 - name: "worker.image"
   required: false
   description: "worker image config for values.yaml"
+- name: "worker.nodeSelector"
+  required: false
+  description: "worker nodeSelector config for values.yaml"
 - name: "worker.extraEnvVars"
   required: false
   description: "worker extraEnvVars config for values.yaml"
@@ -57,6 +66,9 @@ allow_parameters:
 - name: "statsd.enabled"
   required: false
   description: "statsd enabled or not config for values.yaml"
+- name: "statsd.nodeSelector"
+  required: false
+  description: "statsd nodeSelector config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"

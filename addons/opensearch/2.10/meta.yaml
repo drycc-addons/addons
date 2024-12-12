@@ -24,18 +24,33 @@ allow_parameters:
 - name: "config"
   required: false
   description: "opensearch configuration for values.yaml"
+- name: "master.nodeSelector"
+  required: false
+  description: "master nodeSelector config for values.yaml"
 - name: "master.networkPolicy.allowNamespaces"
   required: false
   description: "master networkPolicy allowNamespaces config for values.yaml"
+- name: "ingest.nodeSelector"
+  required: false
+  description: "ingest nodeSelector config for values.yaml"
 - name: "ingest.networkPolicy.allowNamespaces"
   required: false
   description: "ingest networkPolicy allowNamespaces config for values.yaml"
+- name: "data.nodeSelector"
+  required: false
+  description: "data nodeSelector config for values.yaml"
 - name: "data.networkPolicy.allowNamespaces"
   required: false
   description: "data networkPolicy allowNamespaces config for values.yaml"
+- name: "coordinating.nodeSelector"
+  required: false
+  description: "coordinating nodeSelector config for values.yaml"
 - name: "coordinating.networkPolicy.allowNamespaces"
   required: false
   description: "coordinating networkPolicy allowNamespaces config for values.yaml"
+- name: "dashboards.nodeSelector"
+  required: false
+  description: "dashboards nodeSelector config for values.yaml"
 - name: "dashboards.networkPolicy.allowNamespaces"
   required: false
   description: "dashboards networkPolicy allowNamespaces config for values.yaml"
