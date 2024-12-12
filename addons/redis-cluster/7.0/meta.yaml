@@ -21,6 +21,9 @@ allow_parameters:
 - name: "redis.useAOFPersistence"
   required: false
   description: "redis.useAOFPersistence config for values.yaml"
+- name: "redis.nodeSelector"
+  required: false
+  description: "redis.nodeSelector config for values.yaml"
 - name: "networkPolicy.allowNamespaces"
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"

@@ -24,9 +24,15 @@ allow_parameters:
 - name: "controller.extraConfig"
   required: false
   description: "controller.extraConfig config for values.yaml"
+- name: "controller.nodeSelector"
+  required: false
+  description: "controller.nodeSelector config for values.yaml"
 - name: "broker.extraConfig"
   required: false
   description: "broker.extraConfig config for values.yaml"
+- name: "broker.nodeSelector"
+  required: false
+  description: "broker.nodeSelector config for values.yaml"
 - name: "listeners.client.protocol"
   required: false
   description: "listeners client protocol config for values.yaml"
@@ -57,6 +63,9 @@ allow_parameters:
 - name: "metrics.jmx.enabled"
   required: false
   description: "metrics jmx enabled or not config for values.yaml"
+- name: "metrics.nodeSelector"
+  required: false
+  description: "metrics nodeSelector config for values.yaml"
 - name: "metrics.kafka.enabled"
   required: false
   description: "metrics kafka enabled or not config for values.yaml"

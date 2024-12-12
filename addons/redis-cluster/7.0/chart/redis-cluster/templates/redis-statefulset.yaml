@@ -326,7 +326,9 @@ spec:
                 -startup-nodes=127.0.0.1:{{ .Values.redis.containerPorts.redis }} \
                 -addr=0.0.0.0:{{ .Values.proxy.containerPorts.proxy }} \
                 -password=$(REDIS_PASSWORD) \
-                -max-procs={{ .Values.proxy.maxProcs }}
+                -max-procs={{ .Values.proxy.maxProcs }} \
+                -backend-init-connections={{ .Values.proxy.backendInitConnections }} \
+                -backend-idle-connections={{ .Values.proxy.backendIdleConnections }}
           {{- end }}
           env:
             {{- if and .Values.usePassword (not .Values.usePasswordFile) }}

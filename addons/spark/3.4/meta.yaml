@@ -30,12 +30,18 @@ allow_parameters:
 - name: "master.extraEnvVars"
   required: false
   description: "master extraEnvVars config for values.yaml"
+- name: "master.nodeSelector"
+  required: false
+  description: "master nodeSelector config for values.yaml"
 - name: "master.persistence"
   required: false
   description: "master persistence config for values.yaml"
 - name: "worker.configOptions"
   required: false
   description: "worker configOptions config for values.yaml"
+- name: "worker.nodeSelector"
+  required: false
+  description: "worker nodeSelector config for values.yaml"
 - name: "worker.extraEnvVars"
   required: false
   description: "worker extraEnvVars config for values.yaml"
