@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: hb-kafka-standard-1c2g3w
+fullnameOverride: "hb-kafka-standard-1c2g3w"
 
 ## @section Controller-eligible statefulset parameters
 ##
