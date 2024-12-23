@@ -318,17 +318,12 @@ spec:
                   break
                 fi
               done
-              # Start redis cluster proxy
+              # Start envoy redis proxy
               {{- if .Values.usePasswordFile }}
               export REDIS_PASSWORD="$(< "${REDIS_PASSWORD_FILE}")"
               {{- end }}
-              redis-cluster-proxy \
-                -startup-nodes=127.0.0.1:{{ .Values.redis.containerPorts.redis }} \
-                -addr=0.0.0.0:{{ .Values.proxy.containerPorts.proxy }} \
-                -password=$(REDIS_PASSWORD) \
-                -max-procs={{ .Values.proxy.maxProcs }} \
-                -backend-init-connections={{ .Values.proxy.backendInitConnections }} \
-                -backend-idle-connections={{ .Values.proxy.backendIdleConnections }}
+              sed s/{REDIS_PASSWORD}/${REDIS_PASSWORD}/g /opt/drycc/redis/etc/redis-proxy-default.yaml > /opt/drycc/redis/etc/redis-proxy.yaml
+              supervisord
           {{- end }}
           env:
             {{- if and .Values.usePassword (not .Values.usePasswordFile) }}
@@ -389,8 +384,8 @@ spec:
             - name: scripts
               mountPath: /scripts
             - name: default-config
-              mountPath: /opt/drycc/redis/etc/redis-proxy-default.toml
-              subPath: redis-proxy-default.toml
+              mountPath: /opt/drycc/redis/etc/redis-proxy-default.yaml
+              subPath: redis-proxy-default.yaml
             {{- if .Values.usePasswordFile }}
             - name: redis-password
               mountPath: /opt/drycc/redis/secrets/
