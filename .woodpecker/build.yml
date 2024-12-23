@@ -25,8 +25,8 @@ steps:
   environment:
     REPO_NAME: ${CI_REPO_NAME}
     REPO_OWNER: ${CI_REPO_OWNER}
-  secrets:
-  - github_token
+    GITHUB_TOKEN:
+      from_secret: github_token
   when:
   - event: tag
     ref: refs/tags/v*
