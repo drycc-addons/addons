@@ -27,4 +27,10 @@ allow_parameters:
 - name: "backup"
   required: false
   description: "backup config for values.yaml"
+- name: "primary.nodeSelector"
+  required: false
+  description: "primary.nodeSelector for values.yaml"
+- name: "router.nodeSelector"
+  required: false
+  description: "router.nodeSelector for values.yaml"
 archive: false
