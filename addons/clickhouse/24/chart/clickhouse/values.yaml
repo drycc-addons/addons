@@ -278,6 +278,8 @@ keeper:
 defaultConfigurationOverrides: |
   <clickhouse>
     <timezone>Asia/Shanghai</timezone>
+    <max_server_memory_usage>{{  printf "%.0f" .Values.MaxServerMemoryUsage }}</max_server_memory_usage>
+    <merges_mutations_memory_usage_soft_limit>{{  printf "%.0f" .Values.MergesMutationsMemoryUsageSoftLimit }}</merges_mutations_memory_usage_soft_limit>
     <!-- Macros -->
     <macros>
       <shard from_env="CLICKHOUSE_SHARD_ID"></shard>
@@ -294,8 +296,8 @@ defaultConfigurationOverrides: |
       <cluster>
         {{- $shards := $.Values.shards | int }}
         {{- range $shard, $e := until $shards }}
-        <internal_replication>true</internal_replication>
         <shard>
+            <internal_replication>true</internal_replication>
             {{- $replicas := $.Values.replicaCount | int }}
             {{- range $i, $_e := until $replicas }}
             <replica>
@@ -321,10 +323,13 @@ defaultConfigurationOverrides: |
       <server_id from_env="KEEPER_SERVER_ID"></server_id>
       <log_storage_path>/drycc/clickhouse/keeper/coordination/log</log_storage_path>
       <snapshot_storage_path>/drycc/clickhouse/keeper/coordination/snapshots</snapshot_storage_path>
-
+      <max_memory_usage_soft_limit>{{  printf "%.0f" .Values.MaxServerMemoryUsage }}</max_memory_usage_soft_limit>
+      
       <coordination_settings>
           <operation_timeout_ms>10000</operation_timeout_ms>
           <session_timeout_ms>30000</session_timeout_ms>
+          <max_memory_usage_soft_limit>{{  printf "%.0f" .Values.MergesMutationsMemoryUsageSoftLimit }}</max_memory_usage_soft_limit>
+          <async_replication>true</async_replication>
           <raft_logs_level>trace</raft_logs_level>
       </coordination_settings>
 
