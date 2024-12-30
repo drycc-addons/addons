@@ -1,9 +1,49 @@
 credential:
-  - name: INTERNAL_LISTENERS
-    value: {{ include "kafka.kraft.internelListeners" . }}
-
   - name: PROTOCOL_MAP
     value: {{ include "kafka.securityProtocolMap" . }}
+
+  - name: CLIENT_DOMAIN
+    value: {{ template "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
+  - name: CLIENT_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: CLIENT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+
+  {{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: EXTERNAL_CLIENT_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  {{- if .Values.externalAccess.enabled }}
+  - name: EXTERNAL_CLIENT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-external")].port }'
+  {{- end }}
+
+
+  {{- range $i, $internelListeners := ( splitList "," ( include "kafka.kraft.internelListeners" . ) )}}
+  - name: {{ printf "KAFKA_NODE_%d" $i }}
+    value: {{ $internelListeners }}
+  {{- end }}
+
+  - name: KAFKA_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
 
   {{- if (include "kafka.saslUserPasswordsEnabled" .) }}
   {{- if (include "kafka.client.saslEnabled" .) }}
@@ -15,13 +55,8 @@ credential:
       secretKeyRef:
         name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
         jsonpath: '{ .data.client-passwords }'
-
-  - name: SYSTEM_USER_PASSPORT
-    valueFrom:
-      secretKeyRef:
-        name: {{ printf "%s-user-passwords" (include "common.names.fullname" .) }}
-        jsonpath: '{ .data.system-user-password }'
   {{- end }}
+
 
   {{- if regexFind "SASL" (upper .Values.listeners.interbroker.protocol) }}
   - name: INTER_BROKER_PASSWORDS
@@ -40,18 +75,17 @@ credential:
   {{- end }}
   {{- end }}
 
-{{- if .Values.externalAccess.enabled }}
-{{- $fullname := include "common.names.fullname" . }}
-{{- $replicaCount := .Values.controller.replicaCount | int }}
-{{- range $i := until $replicaCount }}
-{{- $targetPod := printf "%s-controller-%d" (printf "%s" $fullname) $i }}
-  - name: {{ printf "EXTERNAL_%d" $i }}
+  {{- if .Values.externalAccess.enabled }}
+  {{- $fullname := include "common.names.fullname" . }}
+  {{- $replicaCount := .Values.controller.replicaCount | int }}
+  {{- range $i := until $replicaCount }}
+  - name: {{ printf "EXTERNAL_KAFKA_NODE_%d" $i }}
     valueFrom:
       serviceRef:
         name: {{ printf "%s-controller-%d-external" (include "common.names.fullname" $) $i | trunc 63 | trimSuffix "-" }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-{{- end }}
+  {{- end }}
 
-  - name: EXTERNAL_PORT
+  - name: EXTERNAL_KAFKA_PORT
     value: {{ .Values.externalAccess.controller.service.ports.external }}
 {{- end }}

@@ -40,7 +40,7 @@ proxy:
   ## backend-init-connections
   backendInitConnections: 10
   ## backend-idle-connections
-  backendIdleConnections: 500
+  backendIdleConnections: 300
   ## Proxy&reg; resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## @param proxy.resources.limits The resources limits for the container
@@ -48,8 +48,9 @@ proxy:
   ##
   resources:
     limits:
-      cpu: 4
-      memory: 8Gi
+      cpu: 2
+      memory: 4Gi
     requests:
       cpu: 1
-      memory: 1Gi
+      memory: 2Gi
+

@@ -42,11 +42,11 @@ redis:
 ##
 proxy:
   ## max-procs
-  maxProcs: 8
+  maxProcs: 4
   ## backend-init-connections
   backendInitConnections: 10
   ## backend-idle-connections
-  backendIdleConnections: 1000
+  backendIdleConnections: 300
   ## Proxy&reg; resource requests and limits
   ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
   ## @param proxy.resources.limits The resources limits for the container
@@ -54,8 +54,8 @@ proxy:
   ##
   resources:
     limits:
-      cpu: 8
-      memory: 16Gi
+      cpu: 2
+      memory: 4Gi
     requests:
       cpu: 1
       memory: 2Gi
