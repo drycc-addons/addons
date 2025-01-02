@@ -21,3 +21,6 @@ resources:
 
 persistence:
   size: 1000Gi
+
+MaxServerMemoryUsage: 59055800320
+MergesMutationsMemoryUsageSoftLimit: 34359738368

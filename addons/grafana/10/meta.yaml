@@ -21,4 +21,6 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "grafana.nodeSelector"
+  required: false
 archive: false

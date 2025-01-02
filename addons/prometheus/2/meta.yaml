@@ -51,4 +51,10 @@ allow_parameters:
 - name: "server.evaluationInterval"
   required: false
   description: "evaluationInterval values.yaml"
+- name: "server.nodeSelector"
+  required: false
+  description: "server nodeSelector"
+- name: "alertmanager.nodeSelector"
+  required: false
+  description: "alertmanager nodeSelector"
 archive: false
