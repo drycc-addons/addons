@@ -54,9 +54,6 @@ preInitScript: |
   restapi:
     listen: 0.0.0.0:8008
     connect_address: 0.0.0.0:8008
-    authentication:
-      username: NzUwNjg3MTEtMDgzOS00YTNkLWEyNjAt
-      password: YjJjMDNjYjQtMDA0Ny00NTgwLTgwYjMt
   bootstrap:
     dcs:
       ttl: 30
@@ -75,16 +72,19 @@ preInitScript: |
         - host replication postgres 0.0.0.0/0 scram-sha-256
         custom_conf: '/opt/drycc/postgresql/config/custom_conf.conf'
         parameters:
-          wal_level: hot_standby
+          max_connections: {{ .Values.patroni.pgParameters.max_connections }}
+          max_worker_processes: {{ .Values.patroni.pgParameters.max_worker_processes }}
+          max_parallel_workers: {{ .Values.patroni.pgParameters.max_parallel_workers }}
+          wal_level: logical
           hot_standby: "on"
-          max_connections: 1005
-          max_worker_processes: 8
           max_wal_senders: 10
           max_replication_slots: 10
           hot_standby_feedback: on
           max_prepared_transactions: 0
           max_locks_per_transaction: 64
           wal_log_hints: "on"
+          wal_keep_size: "1 GB"
+          max_slot_wal_keep_size: {{ .Values.patroni.pgParameters.max_slot_wal_keep_size | quote }}
           track_commit_timestamp: "off"
           archive_mode: "on"
           archive_timeout: 300s
@@ -194,14 +194,19 @@ postgresql:
     log_min_duration_statement = 1000
     max_wal_size = 4GB
     min_wal_size = 4GB
-    max_connections = 1005
-    max_worker_processes = 8
     max_wal_senders = 10
     max_replication_slots = 10
     max_prepared_transactions = 0
     max_locks_per_transaction = 64
 
 patroni:
+  pgParameters:
+    max_worker_processes: 64
+    max_parallel_workers: 32
+    max_connections: 2000
+    max_slot_wal_keep_size: '2 GB'
+
+
   ## @param patroni.podAnnotations Additional pod annotations for Postgresql patroni pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
   ##

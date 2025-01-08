@@ -23,11 +23,16 @@ spec:
     - ports:
       - port: 5432
       - port: 9000
+      - port: 80
+      - port: 8008
     {{- if and .Values.metrics.enabled }}
       - port: {{ .Values.metrics.containerPort }}
-    {{ end }} 
+    {{ end }}
     {{- if or .Values.networkPolicy.allowCurrentNamespace .Values.networkPolicy.allowNamespaces }}
       from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: backup
       {{- if .Values.networkPolicy.allowCurrentNamespace }}
         - namespaceSelector:
             matchLabels:
