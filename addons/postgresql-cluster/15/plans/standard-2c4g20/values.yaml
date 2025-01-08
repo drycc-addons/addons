@@ -2,10 +2,16 @@
 ##
 fullnameOverride: hb-postgresql-cluster-standard-20
 
+patroni:
+  pgParameters:
+    max_worker_processes: 4
+    max_parallel_workers: 2
+    max_connections: 1000
+    max_slot_wal_keep_size: '2 GB'
+
 postgresql:
   config: |-
     # Connectivity
-    max_connections = 1000
     superuser_reserved_connections = 3
 
     # Memory Settings
@@ -29,7 +35,7 @@ postgresql:
     checkpoint_timeout  = '15 min' 
     checkpoint_completion_target = 0.9
     max_wal_size = '2 GB'
-    min_wal_size = '512 MB'
+    min_wal_size = '1 GB'
           
 
     # WAL writing
@@ -37,8 +43,6 @@ postgresql:
     wal_buffers = -1    # auto-tuned by Postgres till maximum of segment size (16MB by default)
     wal_writer_delay = 200ms
     wal_writer_flush_after = 1MB
-    wal_keep_size = '1 GB'
-
 
     # Background writer
     bgwriter_delay = 200ms
@@ -46,18 +50,15 @@ postgresql:
     bgwriter_lru_multiplier = 2.0
     bgwriter_flush_after = 0
 
-    # Parallel queries: 
-    max_worker_processes = 2
+    # Parallel queries:
     max_parallel_workers_per_gather = 1
     max_parallel_maintenance_workers = 1
-    max_parallel_workers = 2
     parallel_leader_participation = on
 
     # Advanced features 
     enable_partitionwise_join = on 
     enable_partitionwise_aggregate = on
     jit = on
-    max_slot_wal_keep_size = '1000 MB'
     track_wal_io_timing = on
     maintenance_io_concurrency = 100
 
