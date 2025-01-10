@@ -328,7 +328,6 @@ defaultConfigurationOverrides: |
       <coordination_settings>
           <operation_timeout_ms>10000</operation_timeout_ms>
           <session_timeout_ms>30000</session_timeout_ms>
-          <max_memory_usage_soft_limit>{{  printf "%.0f" .Values.MergesMutationsMemoryUsageSoftLimit }}</max_memory_usage_soft_limit>
           <async_replication>true</async_replication>
           <raft_logs_level>trace</raft_logs_level>
       </coordination_settings>
