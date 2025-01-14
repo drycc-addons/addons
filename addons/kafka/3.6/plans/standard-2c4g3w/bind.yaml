@@ -1,3 +1,7 @@
+{{- $releaseNamespace := .Release.Namespace }}
+{{- $clusterDomain := .Values.clusterDomain }}
+{{- $fullname := include "common.names.fullname" . }}
+{{- $clientPort := int .Values.listeners.client.containerPort }}
 credential:
   - name: PROTOCOL_MAP
     value: {{ include "kafka.securityProtocolMap" . }}
@@ -23,9 +27,7 @@ credential:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-  {{- end }}
 
-  {{- if .Values.externalAccess.enabled }}
   - name: EXTERNAL_CLIENT_PORT
     valueFrom:
       serviceRef:
@@ -33,17 +35,36 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="tcp-external")].port }'
   {{- end }}
 
-
-  {{- range $i, $internelListeners := ( splitList "," ( include "kafka.kraft.internelListeners" . ) )}}
+  {{- $brokerList := list }}
+  {{- if or (not .Values.kraft.enabled) (.Values.controller.controllerOnly) }}
+  {{- range $i := until (int .Values.broker.replicaCount) }}
+  {{- $brokerList = append $brokerList (printf "%s-broker-%d.%s-broker-headless.%s.svc.%s" $fullname $i $fullname $releaseNamespace $clusterDomain ) }}
+  {{- end }}
+  {{- else }}
+  {{- range $i := until (int .Values.controller.replicaCount) }}
+  {{- $brokerList = append $brokerList (printf "%s-controller-%d.%s-controller-headless.%s.svc.%s" $fullname $i $fullname $releaseNamespace $clusterDomain ) }}
+  {{- end }}
+  {{- end }}
+  {{- range $i, $broker := ( $brokerList )}}
   - name: {{ printf "KAFKA_NODE_%d" $i }}
-    value: {{ $internelListeners }}
+    value: {{ $broker }}
   {{- end }}
 
-  - name: KAFKA_PORT
+  {{- $replicaCount := int .Values.broker.replicaCount }}
+  {{- if gt $replicaCount 0 }}
+  - name: KAFKA_NODE_PORT
     valueFrom:
       serviceRef:
-        name: {{ template "common.names.fullname" . }}
+        name: {{ printf "%s-broker-headless" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
         jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+  {{- else }}
+  - name: KAFKA_NODE_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-controller-headless" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
+  {{- end }}
+
 
   {{- if (include "kafka.saslUserPasswordsEnabled" .) }}
   {{- if (include "kafka.client.saslEnabled" .) }}
@@ -75,8 +96,21 @@ credential:
   {{- end }}
   {{- end }}
 
+
   {{- if .Values.externalAccess.enabled }}
-  {{- $fullname := include "common.names.fullname" . }}
+  {{- if or (not .Values.kraft.enabled) (.Values.controller.controllerOnly) }}
+  {{- $replicaCount := .Values.broker.replicaCount | int }}
+  {{- range $i := until $replicaCount }}
+  - name: {{ printf "EXTERNAL_KAFKA_NODE_%d" $i }}
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-broker-%d-external" (include "common.names.fullname" $) $i | trunc 63 | trimSuffix "-" }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: EXTERNAL_KAFKA_NODE_PORT
+    value: {{ .Values.externalAccess.broker.service.ports.external }}
+  {{- else }}
   {{- $replicaCount := .Values.controller.replicaCount | int }}
   {{- range $i := until $replicaCount }}
   - name: {{ printf "EXTERNAL_KAFKA_NODE_%d" $i }}
@@ -86,6 +120,7 @@ credential:
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
   {{- end }}
 
-  - name: EXTERNAL_KAFKA_PORT
+  - name: EXTERNAL_KAFKA_NODE_PORT
     value: {{ .Values.externalAccess.controller.service.ports.external }}
+  {{- end }}
 {{- end }}

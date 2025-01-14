@@ -27,18 +27,33 @@ allow_parameters:
 - name: "controller.replicaCount"
   required: false
   description: "controller.replicaCount config for values.yaml"
+- name: "controller.controllerOnly"
+  required: false
+  description: "controller.controllerOnly config for values.yaml"
+- name: "controller.zookeeperMigrationMode"
+  required: false
+  description: "controller.zookeeperMigrationMode config for values.yaml"
 - name: "controller.nodeSelector"
   required: false
   description: "controller.nodeSelector config for values.yaml"
+- name: "controller.persistence"
+  required: false
+  description: "controller.persistence config for values.yaml"
 - name: "broker.replicaCount"
   required: false
   description: "broker.replicaCount config for values.yaml"
+- name: "broker.zookeeperMigrationMode"
+  required: false
+  description: "broker.zookeeperMigrationMode config for values.yaml"
 - name: "broker.extraConfig"
   required: false
   description: "broker.extraConfig config for values.yaml"
 - name: "broker.nodeSelector"
   required: false
   description: "broker.nodeSelector config for values.yaml"
+- name: "broker.persistence"
+  required: false
+  description: "broker.persistence config for values.yaml"
 - name: "listeners.client.protocol"
   required: false
   description: "listeners client protocol config for values.yaml"
