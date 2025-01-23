@@ -1,0 +1,431 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-scripts" (include "common.names.fullname" .) }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+{{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled }}
+  start-node.sh: |
+    #!/bin/bash
+
+    . /opt/drycc/scripts/libos.sh
+    . /opt/drycc/scripts/liblog.sh
+    . /opt/drycc/scripts/libvalidations.sh
+
+    get_port() {
+        hostname="$1"
+        type="$2"
+
+        port_var=$(echo "${hostname^^}_SERVICE_PORT_$type" | sed "s/-/_/g")
+        port=${!port_var}
+
+        if [ -z "$port" ]; then
+            case $type in
+                "SENTINEL")
+                    echo {{ .Values.sentinel.containerPorts.sentinel }}
+                    ;;
+                "KVROCKS")
+                    echo {{ .Values.master.containerPorts.kvrocks }}
+                    ;;
+            esac
+        else
+            echo $port
+        fi
+    }
+
+    get_full_hostname() {
+        hostname="$1"
+
+        {{- if eq .Values.sentinel.service.type "NodePort" }}
+        echo "${hostname}.{{- .Release.Namespace }}"
+        {{- else }}
+        echo "${hostname}.${HEADLESS_SERVICE}"
+        {{- end }}
+    }
+
+    KVROCKSPORT=$(get_port "$HOSTNAME" "KVROCKS")
+
+    HEADLESS_SERVICE="{{ template "common.names.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+
+    KVROCKS_SERVICE="{{ template "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+
+    SENTINEL_SERVICE_PORT=$(get_port "{{ include "common.names.fullname" . }}" "TCP_SENTINEL")
+    validate_quorum() {
+
+        quorum_info_command="{{- if and .Values.auth.enabled .Values.auth.sentinel }}REDISCLI_AUTH="\$KVROCKS_REQUIREPASS" {{ end }}redis-cli -h $KVROCKS_SERVICE -p $SENTINEL_SERVICE_PORT sentinel master {{ .Values.sentinel.masterSet }}"
+
+        info "about to run the command: $quorum_info_command"
+        eval $quorum_info_command | grep -Fq "s_down"
+    }
+
+    trigger_manual_failover() {
+
+        failover_command="{{- if and .Values.auth.enabled .Values.auth.sentinel }}REDISCLI_AUTH="\$KVROCKS_REQUIREPASS" {{ end }}redis-cli -h $KVROCKS_SERVICE -p $SENTINEL_SERVICE_PORT sentinel failover {{ .Values.sentinel.masterSet }}"
+
+        info "about to run the command: $failover_command"
+        eval $failover_command
+    }
+
+    get_sentinel_master_info() {
+        sentinel_info_command="{{- if and .Values.auth.enabled .Values.auth.sentinel }}REDISCLI_AUTH="\$KVROCKS_REQUIREPASS" {{ end }}timeout {{ .Values.sentinel.getMasterTimeout }} redis-cli -h $KVROCKS_SERVICE -p $SENTINEL_SERVICE_PORT sentinel get-master-addr-by-name {{ .Values.sentinel.masterSet }}"
+
+        info "about to run the command: $sentinel_info_command"
+        eval $sentinel_info_command
+    }
+
+    {{- if and .Values.replica.containerSecurityContext.runAsUser (eq (.Values.replica.containerSecurityContext.runAsUser | int) 0) }}
+    useradd kvrocks
+    chown -R kvrocks {{ .Values.replica.persistence.path }}
+    {{- end }}
+
+    # check if there is a master
+    master_in_persisted_conf="$(get_full_hostname "$HOSTNAME")"
+    master_port_in_persisted_conf="$KVROCKS_PORT"
+    master_in_sentinel="$(get_sentinel_master_info)"
+    kvrocksRetVal=$?
+
+    {{- if .Values.sentinel.persistence.enabled }}
+    if [[ -f /opt/drycc/redis-sentinel/etc/sentinel.conf ]]; then
+        master_in_persisted_conf="$(awk '/monitor/ {print $4}' /opt/drycc/redis-sentinel/etc/sentinel.conf)"
+        master_port_in_persisted_conf="$(awk '/monitor/ {print $5}' /opt/drycc/redis-sentinel/etc/sentinel.conf)"
+        info "Found previous master ${master_in_persisted_conf}:${master_port_in_persisted_conf} in /opt/drycc/redis-sentinel/etc/sentinel.conf"
+        debug "$(cat /opt/drycc/redis-sentinel/etc/sentinel.conf | grep monitor)"
+        touch /opt/drycc/redis-sentinel/etc/.node_read
+    fi
+    {{- end }}
+
+    if [[ $kvrocksRetVal -ne 0 ]]; then
+        if [[ "$master_in_persisted_conf" == "$(get_full_hostname "$HOSTNAME")" ]]; then
+            # Case 1: No active sentinel and in previous sentinel.conf we were the master --> MASTER
+            info "Configuring the node as master"
+            export KVROCKS_REPLICATION_MODE="master"
+        else
+            # Case 2: No active sentinel and in previous sentinel.conf we were not master --> REPLICA
+            info "Configuring the node as replica"
+            export KVROCKS_REPLICATION_MODE="slave"
+        fi
+    else
+        # Fetches current master's host and port
+        SENTINEL_INFO=($(get_sentinel_master_info))
+        info "Current master: SENTINEL_INFO=(${SENTINEL_INFO[0]},${SENTINEL_INFO[1]})"
+        KVROCKS_MASTER_HOST=${SENTINEL_INFO[0]}
+        KVROCKS_MASTER_PORT_NUMBER=${SENTINEL_INFO[1]}
+
+        if [[ "$KVROCKS_MASTER_HOST" == "$(get_full_hostname "$HOSTNAME")" ]]; then
+            # Case 3: Active sentinel and master it is this node --> MASTER
+            info "Configuring the node as master"
+            export KVROCKS_REPLICATION_MODE="master"
+        else
+            # Case 4: Active sentinel and master is not this node --> REPLICA
+            info "Configuring the node as replica"
+            export KVROCKS_REPLICATION_MODE="slave"
+            {{- if and .Values.sentinel.automateClusterRecovery (le (int .Values.sentinel.downAfterMilliseconds) 2000) }}
+            retry_count=1
+            while validate_quorum
+            do
+                info "sleeping, waiting for Kvrocks master to come up"
+                sleep 1s
+                if ! ((retry_count % 11)); then
+                    info "Trying to manually failover"
+                    failover_result=$(trigger_manual_failover)
+
+                    debug "Failover result: $failover_result"
+                fi
+
+                ((retry_count+=1))
+            done
+            info "Kvrocks master is up now"
+            {{- end }}
+        fi
+    fi
+
+    export KVROCKS_CFG_RELICA__ANNOUNCE__PORT="$KVROCKSPORT"
+    export KVROCKS_CFG_RELICA__ANNOUNCE__IP=$(get_full_hostname "$HOSTNAME")
+    #export KVROCKS_BIND="localhost $(get_full_hostname "$HOSTNAME")"
+
+    if [[ "$KVROCKS_REPLICATION_MODE" = "slave" ]]; then
+        export KVROCKS_CFG_SLAVEOF="${KVROCKS_MASTER_HOST} ${KVROCKS_MASTER_PORT_NUMBER}"
+    fi
+
+    exec init-stack /opt/drycc/scripts/kvrocks/entrypoint.sh /opt/drycc/scripts/kvrocks/run.sh
+
+  start-sentinel.sh: |
+    #!/bin/bash
+
+    . /opt/drycc/scripts/libos.sh
+    . /opt/drycc/scripts/libvalidations.sh
+    . /opt/drycc/scripts/libfile.sh
+
+    HEADLESS_SERVICE="{{ template "common.names.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+    KVROCKS_SERVICE="{{ template "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+
+    get_port() {
+        hostname="$1"
+        type="$2"
+
+        port_var=$(echo "${hostname^^}_SERVICE_PORT_$type" | sed "s/-/_/g")
+        port=${!port_var}
+
+        if [ -z "$port" ]; then
+            case $type in
+                "SENTINEL")
+                    echo {{ .Values.sentinel.containerPorts.sentinel }}
+                    ;;
+                "KVROCKS")
+                    echo {{ .Values.master.containerPorts.kvrocks }}
+                    ;;
+            esac
+        else
+            echo $port
+        fi
+    }
+
+    get_full_hostname() {
+        hostname="$1"
+
+        {{- if eq .Values.sentinel.service.type "NodePort" }}
+        echo "${hostname}.{{- .Release.Namespace }}"
+        {{- else }}
+        echo "${hostname}.${HEADLESS_SERVICE}"
+        {{- end }}
+    }
+
+    SERVPORT=$(get_port "$HOSTNAME" "SENTINEL")
+    KVROCKSPORT=$(get_port "$HOSTNAME" "KVROCKS")
+    SENTINEL_SERVICE_PORT=$(get_port "{{ include "common.names.fullname" . }}" "TCP_SENTINEL")
+
+    sentinel_conf_set() {
+        local -r key="${1:?missing key}"
+        local value="${2:-}"
+
+        # Sanitize inputs
+        value="${value//\\/\\\\}"
+        value="${value//&/\\&}"
+        value="${value//\?/\\?}"
+        [[ "$value" = "" ]] && value="\"$value\""
+
+        replace_in_file "/opt/drycc/redis-sentinel/etc/sentinel.conf" "^#*\s*${key} .*" "${key} ${value}" false
+    }
+    sentinel_conf_add() {
+        echo $'\n'"$@" >> "/opt/drycc/redis-sentinel/etc/sentinel.conf"
+    }
+    host_id() {
+        echo "$1" | openssl sha1 | awk '{print $2}'
+    }
+    get_sentinel_master_info() {
+
+        sentinel_info_command="{{- if and .Values.auth.enabled .Values.auth.sentinel }}REDISCLI_AUTH="\$KVROCKS_REQUIREPASS" {{ end }}redis-cli -h $KVROCKS_SERVICE -p $SENTINEL_SERVICE_PORT sentinel get-master-addr-by-name {{ .Values.sentinel.masterSet }}"
+
+        info "about to run the command: $sentinel_info_command"
+        eval $sentinel_info_command
+    }
+
+    master_in_persisted_conf="$(get_full_hostname "$HOSTNAME")"
+
+    {{- if .Values.sentinel.persistence.enabled }}
+    if [[ -f /opt/drycc/redis-sentinel/etc/sentinel.conf ]]; then
+        check_lock_file() {
+            [[ -f /opt/drycc/redis-sentinel/etc/.node_read ]]
+        }
+        retry_while "check_lock_file"
+        rm -f /opt/drycc/redis-sentinel/etc/.node_read
+        master_in_persisted_conf="$(awk '/monitor/ {print $4}' /opt/drycc/redis-sentinel/etc/sentinel.conf)"
+        info "Found previous master $master_in_persisted_conf in /opt/drycc/redis-sentinel/etc/sentinel.conf"
+        debug "$(cat /opt/drycc/redis-sentinel/etc/sentinel.conf | grep monitor)"
+    fi
+    {{- end }}
+    if ! get_sentinel_master_info && [[ "$master_in_persisted_conf" == "$(get_full_hostname "$HOSTNAME")" ]]; then
+        # No master found, lets create a master node
+        export KVROCKS_REPLICATION_MODE="master"
+
+        KVROCKS_MASTER_HOST=$(get_full_hostname "$HOSTNAME")
+        KVROCKS_MASTER_PORT_NUMBER="$KVROCKSPORT"
+    else
+        export KVROCKS_REPLICATION_MODE="slave"
+
+        # Fetches current master's host and port
+        SENTINEL_INFO=($(get_sentinel_master_info))
+        info "printing SENTINEL_INFO=(${SENTINEL_INFO[0]},${SENTINEL_INFO[1]})"
+        KVROCKS_MASTER_HOST=${SENTINEL_INFO[0]}
+        KVROCKS_MASTER_PORT_NUMBER=${SENTINEL_INFO[1]}
+    fi
+
+    cp /opt/drycc/redis-sentinel/mounted-etc/sentinel.conf /opt/drycc/redis-sentinel/etc/sentinel.conf
+    {{- if .Values.auth.enabled }}
+    printf "\nsentinel auth-pass %s %s" "{{ .Values.sentinel.masterSet }}" "$KVROCKS_REQUIREPASS" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+    {{- if and .Values.auth.enabled .Values.auth.sentinel }}
+    printf "\nrequirepass %s" "$KVROCKS_REQUIREPASS" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+    {{- end }}
+    {{- end }}
+    printf "\nsentinel myid %s" "$(host_id "$HOSTNAME")" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+
+    sentinel_conf_set "sentinel monitor" "{{ .Values.sentinel.masterSet }} "$KVROCKS_MASTER_HOST" "$KVROCKS_MASTER_PORT_NUMBER" {{ .Values.sentinel.quorum }}"
+
+    add_known_sentinel() {
+        hostname="$1"
+        ip="$2"
+
+        if [[ -n "$hostname" && -n "$ip" && "$hostname" != "$HOSTNAME" ]]; then
+            sentinel_conf_add "sentinel known-sentinel {{ .Values.sentinel.masterSet }} $(get_full_hostname "$hostname") $(get_port "$hostname" "SENTINEL") $(host_id "$hostname")"
+        fi
+    }
+    add_known_replica() {
+        hostname="$1"
+        ip="$2"
+
+        if [[ -n "$ip" && "$(get_full_hostname "$hostname")" != "$KVROCKS_MASTER_HOST" ]]; then
+            sentinel_conf_add "sentinel known-replica {{ .Values.sentinel.masterSet }} $(get_full_hostname "$hostname") $(get_port "$hostname" "KVROCKS")"
+        fi
+    }
+
+    # Add available hosts on the network as known replicas & sentinels
+    for node in $(seq 0 $(({{ .Values.replica.replicaCount }}-1))); do
+        hostname="{{ template "common.names.fullname" . }}-node-$node"
+        ip="$(getent hosts "$hostname.$HEADLESS_SERVICE" | awk '{ print $1 }')"
+        add_known_sentinel "$hostname" "$ip"
+        add_known_replica "$hostname" "$ip"
+    done
+
+    echo "" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+    echo "sentinel announce-hostnames yes" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+    echo "sentinel resolve-hostnames yes" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+    echo "sentinel announce-port $SERVPORT" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+    echo "sentinel announce-ip $(get_full_hostname "$HOSTNAME")" >> /opt/drycc/redis-sentinel/etc/sentinel.conf
+
+    exec redis-server /opt/drycc/redis-sentinel/etc/sentinel.conf --sentinel
+  prestop-sentinel.sh: |
+    #!/bin/bash
+
+    . /opt/drycc/scripts/libvalidations.sh
+    . /opt/drycc/scripts/libos.sh
+
+    HEADLESS_SERVICE="{{ template "common.names.fullname" . }}-headless.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+    SENTINEL_SERVICE_ENV_NAME={{ printf "%s%s"  (upper (include "common.names.fullname" .)| replace "-" "_") "_SERVICE_PORT_TCP_SENTINEL" }}
+    SENTINEL_SERVICE_PORT=${!SENTINEL_SERVICE_ENV_NAME}
+
+    get_full_hostname() {
+        hostname="$1"
+
+        {{- if eq .Values.sentinel.service.type "NodePort" }}
+        echo "${hostname}.{{- .Release.Namespace }}"
+        {{- else }}
+        echo "${hostname}.${HEADLESS_SERVICE}"
+        {{- end }}
+    }
+    run_sentinel_command() {
+        redis-cli -h "$KVROCKS_SERVICE" -p "$SENTINEL_SERVICE_PORT" sentinel "$@"
+    }
+    failover_finished() {
+      SENTINEL_INFO=($(run_sentinel_command get-master-addr-by-name "{{ .Values.sentinel.masterSet }}"))
+      KVROCKS_MASTER_HOST="${SENTINEL_INFO[0]}"
+      [[ "$KVROCKS_MASTER_HOST" != "$(get_full_hostname $HOSTNAME)" ]]
+    }
+
+    KVROCKS_SERVICE="{{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+
+    # redis-cli automatically consumes credentials from the REDISCLI_AUTH variable
+    [[ -n "$KVROCKS_REQUIREPASS" ]] && export REDISCLI_AUTH="$KVROCKS_REQUIREPASS"
+
+    if ! failover_finished; then
+        echo "I am the master pod and you are stopping me. Starting sentinel failover"
+        # if I am the master, issue a command to failover once and then wait for the failover to finish
+        run_sentinel_command failover "{{ .Values.sentinel.masterSet }}"
+        if retry_while "failover_finished" "{{ sub .Values.sentinel.terminationGracePeriodSeconds 10 }}" 1; then
+            echo "Master has been successfuly failed over to a different pod."
+            exit 0
+        else
+            echo "Master failover failed"
+            exit 1
+        fi
+    else
+        exit 0
+    fi
+  prestop-redis.sh: |
+    #!/bin/bash
+
+    . /opt/drycc/scripts/libvalidations.sh
+    . /opt/drycc/scripts/libos.sh
+
+    run_redis_command() {
+        redis-cli -h 127.0.0.1 -p ${KVROCKS_PORT} "$@"
+    }
+    failover_finished() {
+        REDIS_ROLE=$(run_redis_command role | head -1)
+        [[ "$REDIS_ROLE" != "master" ]]
+    }
+
+    # redis-cli automatically consumes credentials from the REDISCLI_AUTH variable
+    [[ -n "$KVROCKS_REQUIREPASS" ]] && export REDISCLI_AUTH="$KVROCKS_REQUIREPASS"
+
+    if ! failover_finished; then
+        echo "Waiting for sentinel to run failover for up to {{ sub .Values.sentinel.terminationGracePeriodSeconds 10 }}s"
+        retry_while "failover_finished" "{{ sub .Values.sentinel.terminationGracePeriodSeconds 10 }}" 1
+    else
+        exit 0
+    fi
+
+{{- else }}
+  start-master.sh: |
+    #!/bin/bash
+
+    {{- if and .Values.master.containerSecurityContext.runAsUser (eq (.Values.master.containerSecurityContext.runAsUser | int) 0) }}
+    useradd kvrocks
+    chown -R kvrocks {{ .Values.master.persistence.path }}
+    {{- end }}
+    #export KVROCKS_BIND="localhost $(get_full_hostname "$HOSTNAME")"
+    exec init-stack /opt/drycc/scripts/kvrocks/entrypoint.sh /opt/drycc/scripts/kvrocks/run.sh
+  {{- if eq .Values.architecture "replication" }}
+  start-replica.sh: |
+    #!/bin/bash
+
+    get_port() {
+        hostname="$1"
+        type="$2"
+
+        port_var=$(echo "${hostname^^}_SERVICE_PORT_$type" | sed "s/-/_/g")
+        port=${!port_var}
+
+        if [ -z "$port" ]; then
+            case $type in
+                "SENTINEL")
+                    echo {{ .Values.sentinel.containerPorts.sentinel }}
+                    ;;
+                "KVROCKS")
+                    echo {{ .Values.master.containerPorts.kvrocks }}
+                    ;;
+            esac
+        else
+            echo $port
+        fi
+    }
+
+    get_full_hostname() {
+        hostname="$1"
+
+        {{- if eq .Values.sentinel.service.type "NodePort" }}
+        echo "${hostname}.{{- .Release.Namespace }}"
+        {{- else }}
+        echo "${hostname}.${HEADLESS_SERVICE}"
+        {{- end }}
+    }
+
+    KVROCKSPORT=$(get_port "$HOSTNAME" "KVROCKS")
+
+    {{- if and .Values.replica.containerSecurityContext.runAsUser (eq (.Values.replica.containerSecurityContext.runAsUser | int) 0) }}
+    useradd kvrocks
+    chown -R kvrocks {{ .Values.replica.persistence.path }}
+    {{- end }}
+    export KVROCKS_CFG_RELICA__ANNOUNCE__PORT=$(KVROCKS)
+    export KVROCKS_CFG_RELICA__ANNOUNCE__IP=$(get_full_hostname "$HOSTNAME")
+    export KVROCKS_CFG_SLAVEOF="${KVROCKS_MASTER_HOST} ${KVROCKS_MASTER_PORT_NUMBER}"
+    #export KVROCKS_BIND="localhost $(get_full_hostname "$HOSTNAME")"
+    exec init-stack /opt/drycc/scripts/kvrocks/entrypoint.sh /opt/drycc/scripts/kvrocks/run.sh
+  {{- end }}
+{{- end }}

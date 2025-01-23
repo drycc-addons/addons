@@ -1,0 +1,6 @@
+name: "standard-2c4g128"
+id: 4e315859-7147-4b81-b923-987de24beef6
+description: "Kvrocks standard-2c4g128 plan which limit resources 2 core, memory size 4Gi and persistence size 128Gi."
+displayName: "standard-2c4g128"
+bindable: true
+maximum_polling_duration: 1800

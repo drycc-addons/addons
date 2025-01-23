@@ -1,0 +1,88 @@
+{{- if and (eq .Values.architecture "replication") .Values.sentinel.enabled (eq .Values.sentinel.service.type "NodePort") (or .Release.IsUpgrade .Values.sentinel.service.nodePorts.kvrocks ) }}
+
+{{- range $i := until (int .Values.replica.replicaCount) }}
+
+{{ $portsmap := (lookup "v1" "ConfigMap" $.Release.Namespace (printf "%s-%s" ( include "common.names.fullname" $ ) "ports-configmap")).data }}
+
+{{ $sentinelport := 0}}
+{{ $kvrocksport := 0}}
+{{ $proxyport := 0}}
+{{- if $portsmap }}
+{{ $sentinelport = index $portsmap (printf "%s-node-%s-%s" (include "common.names.fullname" $) (toString $i) "sentinel") }}
+{{ $kvrocksport = index $portsmap (printf "%s-node-%s-%s" (include "common.names.fullname" $) (toString $i) "kvrocks") }}
+{{ $proxyport = index $portsmap (printf "%s-node-%s-%s" (include "common.names.fullname" $) (toString $i) "proxy") }}
+{{- else }}
+{{- end }}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "common.names.fullname" $ }}-node-{{ $i }}
+  namespace: {{ $.Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" $ | nindent 4 }}
+    app.kubernetes.io/component: node
+    {{- if $.Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" $.Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or $.Values.sentinel.service.annotations $.Values.commonAnnotations }}
+  annotations:
+    {{- if $.Values.sentinel.service.annotations }}
+    {{- include "common.tplvalues.render" ( dict "value" $.Values.sentinel.service.annotations "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- if $.Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" $.Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: NodePort
+  ports:
+  - name: sentinel
+    {{- if $.Values.sentinel.service.nodePorts.sentinel  }}
+    nodePort: {{ (add $.Values.sentinel.service.nodePorts.sentinel $i 1) }}
+    port: {{ (add $.Values.sentinel.service.nodePorts.sentinel $i 1) }}
+    {{- else }}
+    nodePort: {{ $sentinelport }}
+    port: {{ $sentinelport }}
+    {{- end }}
+    protocol: TCP
+    targetPort: {{ $.Values.sentinel.containerPorts.sentinel }}
+  - name: proxy
+    {{- if $.Values.sentinel.service.nodePorts.proxy  }}
+    nodePort: {{ (add $.Values.sentinel.service.nodePorts.proxy $i 1) }}
+    port: {{ (add $.Values.sentinel.service.nodePorts.proxy $i 1) }}
+    {{- else }}
+    nodePort: {{ $proxyport }}
+    port: {{ $proxyport }}
+    {{- end }}
+    protocol: TCP
+    targetPort: {{ $.Values.proxy.containerPorts.proxy }}
+  - name: kvrocks
+    {{- if $.Values.sentinel.service.nodePorts.kvrocks }}
+    nodePort: {{ (add $.Values.sentinel.service.nodePorts.kvrocks $i 1) }}
+    port: {{ (add $.Values.sentinel.service.nodePorts.kvrocks $i 1) }}
+    {{- else }}
+    nodePort: {{ $kvrocksport }}
+    port: {{ $kvrocksport }}
+    {{- end }}
+    protocol: TCP
+    targetPort: {{ $.Values.replica.containerPorts.kvrocks }}
+  - name: sentinel-internal
+    nodePort: null
+    port: {{ $.Values.sentinel.containerPorts.sentinel }}
+    protocol: TCP
+    targetPort: {{ $.Values.sentinel.containerPorts.sentinel }}
+  - name: proxy-internal
+    nodePort: null
+    port: {{ $.Values.proxy.containerPorts.proxy }}
+    protocol: TCP
+    targetPort: {{ $.Values.proxy.containerPorts.proxy }}
+  - name: kvrocks-internal
+    nodePort: null
+    port: {{ $.Values.replica.containerPorts.kvrocks }}
+    protocol: TCP
+    targetPort: {{ $.Values.replica.containerPorts.kvrocks }}
+  selector:
+    statefulset.kubernetes.io/pod-name: {{ template "common.names.fullname" $ }}-node-{{ $i }}
+{{- end }}
+{{- end }}

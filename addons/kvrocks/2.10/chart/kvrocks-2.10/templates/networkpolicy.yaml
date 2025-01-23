@@ -1,0 +1,80 @@
+{{- if .Values.networkPolicy.enabled }}
+kind: NetworkPolicy
+apiVersion: {{ template "networkPolicy.apiVersion" . }}
+metadata:
+  name: {{ template "common.names.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  podSelector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+  policyTypes:
+    - Ingress
+  {{- if or (eq .Values.architecture "replication") .Values.networkPolicy.extraEgress }}
+    - Egress
+  egress:
+    - {}
+  {{- end }}
+  ingress:
+    {{- if or (eq .Values.sentinel.service.type "LoadBalancer") (eq .Values.master.service.type "LoadBalancer") (eq .Values.replica.service.type "LoadBalancer") }}
+    - {}
+    {{- else }}
+    # Allow inbound connections
+    - ports:
+        - port: {{ .Values.master.containerPorts.kvrocks }}
+        {{- if .Values.sentinel.enabled }}
+        - port: {{ .Values.sentinel.containerPorts.sentinel }}
+        {{- end }}
+        {{- if .Values.proxy.enabled }}
+        - port: {{ .Values.proxy.containerPorts.proxy }}
+        {{- end }}
+      {{- if not .Values.networkPolicy.allowExternal }}
+      from:
+        - podSelector:
+            matchLabels:
+              {{ template "common.names.fullname" . }}-client: "true"
+        - podSelector:
+            matchLabels: {{- include "common.labels.matchLabels" . | nindent 14 }}
+        {{- if .Values.networkPolicy.allowCurrentNamespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+        {{- end }}
+        {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
+        {{- if $namespace }}
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ $namespace }}
+        {{- end }}
+        {{- end }}
+        {{- if .Values.networkPolicy.ingressNSMatchLabels }}
+        - namespaceSelector:
+            matchLabels:
+              {{- range $key, $value := .Values.networkPolicy.ingressNSMatchLabels }}
+              {{ $key | quote }}: {{ $value | quote }}
+              {{- end }}
+          {{- if .Values.networkPolicy.ingressNSPodMatchLabels }}
+          podSelector:
+            matchLabels:
+              {{- range $key, $value := .Values.networkPolicy.ingressNSPodMatchLabels }}
+              {{ $key | quote }}: {{ $value | quote }}
+              {{- end }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- if .Values.metrics.enabled }}
+    # Allow prometheus scrapes for metrics
+    - ports:
+        - port: 9121
+    {{- end }}
+    {{- if .Values.networkPolicy.extraIngress }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.networkPolicy.extraIngress "context" $ ) | nindent 4 }}
+    {{- end }}
+    {{- end }}
+{{- end }}

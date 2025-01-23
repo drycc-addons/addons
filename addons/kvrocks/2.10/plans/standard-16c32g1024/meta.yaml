@@ -1,0 +1,6 @@
+name: "standard-16c32g1024"
+id: 7ea1ccde-3495-4388-8160-c2b6b443a938
+description: "Kvrocks standard-16c32g1024 plan which limit resources 16 core, memory size 32Gi and persistence size 1024Gi."
+displayName: "standard-16c32g1024"
+bindable: true
+maximum_polling_duration: 1800
