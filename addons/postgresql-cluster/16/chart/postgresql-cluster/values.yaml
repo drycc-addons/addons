@@ -1,0 +1,441 @@
+replicaCount: 3
+diagnosticMode: 
+  enable: false
+
+service:
+ type: ClusterIP
+
+image:
+  # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
+  # https://github.com/zalando/spilo/tree/master/postgres-appliance
+  repository: registry.drycc.cc/drycc-addons/postgresql-patroni
+  tag: 16
+  # IfNotPresent , Always
+  pullPolicy: 'IfNotPresent'
+
+logicalbackupImages: 
+  repository: registry.drycc.cc/drycc-addons/postgresql-logicalbackup
+  tag: 16
+  # IfNotPresent , Always
+  pullPolicy: 'IfNotPresent'
+
+# Credentials used by Patroni , passwd
+# https://github.com/zalando/patroni/blob/master/docs/SETTINGS.rst#postgresql
+# https://github.com/zalando/spilo/blob/master/ENVIRONMENT.rst
+credentials:
+  superuser: ""
+  rewind: ""
+  replication: ""
+
+adminRole:
+  username: administrator
+  password: ""
+
+# Distribution Configuration stores
+# Please note that only one of the following stores should be enabled.
+kubernetes:
+  endpoints:
+    enable: true
+  configmaps:
+    enable: false
+
+# Extra custom environment variables.
+env: {}
+
+#
+#custom patroni.yaml used by patroni boot
+# configuration: {}
+preInitScript: |
+  mkdir -p /home/postgres/pgdata/log
+  ln -sf /dev/stdout "/home/postgres/pgdata/log/postgresql.csv"
+  cat > /opt/drycc/postgresql/patroni.yml <<__EOF__
+  log:
+    level: INFO
+  restapi:
+    listen: 0.0.0.0:8008
+    connect_address: 0.0.0.0:8008
+  bootstrap:
+    dcs:
+      ttl: 30
+      loop_wait: 10
+      retry_timeout: 10
+      maximum_lag_on_failover: 1048576
+      failsafe_mode: true
+      postgresql:
+        use_pg_rewind: true
+        use_slots: true
+        pg_hba:
+        - local all all  peer
+        - host all tea_mon 127.0.0.1/32  trust
+        - host all all 0.0.0.0/0 scram-sha-256
+        - host replication ${PATRONI_REPLICATION_USERNAME} 0.0.0.0/0 scram-sha-256
+        - host replication postgres 0.0.0.0/0 scram-sha-256
+        custom_conf: '/opt/drycc/postgresql/config/custom_conf.conf'
+        parameters:
+          max_connections: {{ .Values.patroni.pgParameters.max_connections }}
+          max_worker_processes: {{ .Values.patroni.pgParameters.max_worker_processes }}
+          max_parallel_workers: {{ .Values.patroni.pgParameters.max_parallel_workers }}
+          wal_level: logical
+          hot_standby: "on"
+          max_wal_senders: 10
+          max_replication_slots: 10
+          hot_standby_feedback: on
+          max_prepared_transactions: 0
+          max_locks_per_transaction: 64
+          wal_log_hints: "on"
+          wal_keep_size: "1 GB"
+          max_slot_wal_keep_size: {{ .Values.patroni.pgParameters.max_slot_wal_keep_size | quote }}
+          track_commit_timestamp: "off"
+          archive_mode: "on"
+          archive_timeout: 300s
+          archive_command: sh /opt/drycc/postgresql/walbackup.sh %p
+          # timescaledb.license: 'timescale'
+          shared_preload_libraries: 'auto_explain,pg_stat_statements'
+          log_destination: 'csvlog'
+          log_filename: postgresql.log
+          logging_collector: on
+          log_directory: /home/postgres/pgdata/log
+          log_min_messages: 'info'
+          log_min_duration_statement: 1000
+          log_lock_waits: on
+          log_statement: 'ddl' 
+    initdb:
+      - auth-host: scram-sha-256
+      - auth-local: trust
+      - encoding: UTF8
+      - locale: en_US.UTF-8
+      - data-checksums
+    post_bootstrap: sh /opt/drycc/postgresql/scripts/post_init.sh
+  restapi:
+    connect_address: '${PATRONI_KUBERNETES_POD_IP}:8008'
+  postgresql:
+    connect_address: '${PATRONI_KUBERNETES_POD_IP}:5432'
+    authentication:
+      superuser:
+        username: postgres
+        password: '${PATRONI_SUPERUSER_PASSWORD}'
+      replication:
+        username: standby
+        password: '${PATRONI_REPLICATION_PASSWORD}'
+      rewind:  # Has no effect on postgres 10 and lower
+        username: rewinder
+        password: '${PATRONI_REWIND_PASSWORD}'
+  watchdog:
+    mode: off
+  __EOF__
+
+postInitScript: |
+  #!/bin/bash
+  set -Eeu
+  # Create monitor user
+  psql -w -c  "CREATE USER tea_mon ;GRANT pg_monitor TO tea_mon ;create extension pg_stat_statements;create extension pg_buffercache ;"
+  # Create admin  user 
+  if [[( -n "$ADMIN_USER") &&  ( -n "$ADMIN_PASSWORD")]]; then
+
+    echo "Creating user ${ADMIN_USER}"
+    psql -w -c "CREATE USER ${ADMIN_USER} WITH SUPERUSER CREATEDB CREATEROLE CONNECTION LIMIT 10 LOGIN ENCRYPTED PASSWORD '${ADMIN_PASSWORD}'"
+
+  else
+    echo "Skipping create admin user"
+  fi
+  psql -w -c  "CHECKPOINT;CHECKPOINT;"
+
+backupEnv: |
+  #!/bin/bash
+  export USE_WALG={{ .Values.backup.enabled | quote }}
+  export BACKUP_NUM_TO_RETAIN={{ .Values.backup.retainBackups | quote}}
+  export WALG_BACKUP_THRESHOLD_MEGABYTES={{ .Values.backup.backupThresholdMegabytes | quote }}
+  export WALE_BACKUP_THRESHOLD_PERCENTAGE={{ .Values.backup.backupThresholdPercentage | quote }}
+  export AWS_ACCESS_KEY_ID={{ .Values.backup.s3.awsAccessKeyID | quote }}
+  export AWS_SECRET_ACCESS_KEY={{ .Values.backup.s3.awsSecretAccessKey | quote }}
+  export WALG_S3_PREFIX={{ .Values.backup.s3.walGS3Prefix | quote }}
+  export AWS_ENDPOINT={{ .Values.backup.s3.awsEndpoint | quote }}
+  export AWS_S3_FORCE_PATH_STYLE={{ .Values.backup.s3.awsS3ForcePathStyle | quote }}
+  export AWS_REGION={{ .Values.backup.s3.awsRegion | quote }}
+
+logicalbackupScript: |
+  #!/bin/bash
+
+  # PostgreSQL 设置
+  # POSTGRES_USER="postgres"
+  # POSTGRES_HOST="127.0.0.1"
+
+  # MinIO 设置
+  # MINIO_BUCKET="pgbackup"
+  # MINIO_HOST="http://localhost:9000"
+  # MINIO_ACCESS_KEY="admin123"
+  # MINIO_SECRET_KEY="admin123"
+
+  # 设置 MinIO 客户端别名
+  mc alias set myminio $MINIO_HOST $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+
+  # 创建以当前日期和时间命名的备份目录
+  BACKUP_DIR="$(date +%Y%m%d%H%M)"
+  MINIO_PATH="myminio/$MINIO_BUCKET/$BACKUP_DIR"
+
+  # 备份全局对象
+  echo "Backing up global objects to $MINIO_PATH/roles_globals.sql.gz"
+  pg_dumpall -g -U "$POSTGRES_USER" -h "$POSTGRES_HOST" | pigz | mc pipe "$MINIO_PATH/roles_globals.sql.gz"
+
+  # 获取所有非模板数据库的列表
+  DATABASES=$(psql -U "$POSTGRES_USER" -h "$POSTGRES_HOST" -t -c "SELECT datname FROM pg_database WHERE datistemplate = false;")
+
+  # 为每个数据库执行备份
+  for DB in $DATABASES; do
+    echo "Backing up $DB to $MINIO_PATH/$DB.sql.gz"
+    pg_dump -U "$POSTGRES_USER" -h "$POSTGRES_HOST" "$DB" | pigz | mc pipe "$MINIO_PATH/$DB.sql.gz"
+  done
+
+  echo "Backup process completed!"
+
+
+postgresql: 
+  config: |-
+    log_min_duration_statement = 1000
+    max_wal_size = 4GB
+    min_wal_size = 4GB
+    max_wal_senders = 10
+    max_replication_slots = 10
+    max_prepared_transactions = 0
+    max_locks_per_transaction = 64
+
+patroni:
+  pgParameters:
+    max_worker_processes: 64
+    max_parallel_workers: 32
+    max_connections: 2000
+    max_slot_wal_keep_size: '2 GB'
+
+
+  ## @param patroni.podAnnotations Additional pod annotations for Postgresql patroni pods
+  ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+  ##
+  podAnnotations: {}
+  ## @param patroni.podAffinityPreset Postgresql patroni pod affinity preset. Ignored if `patroni.affinity` is set. Allowed values: `soft` or `hard`
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+  ##
+  podAffinityPreset: ""
+  ## @param patroni.podAntiAffinityPreset Postgresql patroni pod anti-affinity preset. Ignored if `patroni.affinity` is set. Allowed values: `soft` or `hard`
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+  ##
+  podAntiAffinityPreset: soft
+  ## Postgresql Primary node affinity preset
+  ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
+  ##
+  nodeAffinityPreset:
+    ## @param patroni.nodeAffinityPreset.type Postgresql patroni node affinity preset type. Ignored if `patroni.affinity` is set. Allowed values: `soft` or `hard`
+    ##
+    type: ""
+    ## @param patroni.nodeAffinityPreset.key Postgresql patroni node label key to match Ignored if `patroni.affinity` is set.
+    ## E.g.
+    ## key: "kubernetes.io/e2e-az-name"
+    ##
+    key: ""
+    ## @param patroni.nodeAffinityPreset.values Postgresql patroni node label values to match. Ignored if `patroni.affinity` is set.
+    ## E.g.
+    ## values:
+    ##   - e2e-az1
+    ##   - e2e-az2
+    ##
+    values: []
+  ## @param patroni.affinity Affinity for Postgresql patroni pods assignment
+  ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+  ## Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
+  ##
+  affinity: {}
+  ## @param patroni.nodeSelector Node labels for Postgresql patroni pods assignment
+  ## ref: https://kubernetes.io/docs/user-guide/node-selection/
+  ##
+  nodeSelector: {}
+
+## Postgresql Prometheus exporter parameters
+##
+metrics:
+  enabled: true 
+  image:
+    repository: registry.drycc.cc/drycc-addons/postgres-exporter
+    tag: "0"
+    # IfNotPresent , Always
+    pullPolicy: 'IfNotPresent'
+  ## @param metrics.customMetrics Define additional custom metrics
+  ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
+  ## customMetrics:
+  ##   pg_database:....
+  ##     query: "SELECT d.datname AS name, CASE WHEN pg_catalog.has_database_privilege(d.datname, 'CONNECT') THEN pg_catalog.pg_database_size(d.datname) ELSE 0 END AS size_bytes FROM pg_catalog.pg_database d where datname not in ('template0', 'template1', 'postgres')"
+  ##     metrics:
+  ##       - name:
+  ##           usage: "LABEL"
+  ##           description: "Name of the database"
+  ##       - size_bytes:
+  ##           usage: "GAUGE"
+  ##           description: "Size of the database in bytes"
+  ##
+  service:
+    ports:
+      metrics: 9187
+    clusterIP: ""
+    ## @param metrics.service.sessionAffinity Control where client requests go, to the same pod or round-robin
+    ## Values: ClientIP or None
+    ## ref: https://kubernetes.io/docs/user-guide/services/
+    ##
+    sessionAffinity: None                                                                                                                                                                                                                                                 
+    ## @param metrics.service.annotations [object] Annotations for Prometheus to auto-discover the metrics endpoint
+    ##
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "{{ .Values.metrics.service.ports.metrics }}"
+
+  customMetrics: {} 
+  containerPort: 9187
+  containerSecurityContext:
+    enabled: false
+    runAsUser: 1001
+    runAsNonRoot: true
+  customLivenessProbe: {}
+  customReadinessProbe:
+    enabled: true 
+  resources: 
+    limits:
+      cpu: 100m
+      memory: 512Mi
+      hugepages-2Mi: 20Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+
+logicalbackup: 
+  enabled: false
+  scheduleCronJob: "22 0 * * 0"
+  minio:
+    used: true
+    buckect: "s3://xx"
+    access_key: ""
+    secret_key: ""
+    endpoint: "http://xxxx:9000"
+    awsS3ForcePathStyle: "true"
+    awsRegion: dx-1
+
+backup:
+  # Specifies whether Wal-G should be enabled
+  enabled: false
+  # Cron schedule for doing base backups
+  scheduleCronJob: "22 0 * * 0"
+  # Amount of base backups to retain
+  retainBackups: 2
+  # Name of the secret that holds the credentials to the bucket
+  kubernetesSecret:
+  # Maximum size of the WAL segments accumulated after the base backup to
+  # consider WAL-G restore instead of pg_basebackup
+  backupThresholdMegabytes: 1024
+  # Maximum ratio (in percents) of the accumulated WAL files to the base backup
+  # to consider WAL-G restore instead of pg_basebackup
+  backupThresholdPercentage: 30
+  s3:
+    used: true
+    awsAccessKeyID: ""
+    awsSecretAccessKey: ""
+    walGS3Prefix: "s3://xx"
+    awsEndpoint: "http://xxxx:9000"
+    awsS3ForcePathStyle: "true"
+    awsRegion: dx-1
+
+logicalBackup:
+  enabled: false
+
+## persistentVolumeClaimRetentionPolicy
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
+## @param persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
+## @param persistentVolumeClaimRetentionPolicy.whenScaled Volume retention behavior when the replica count of the StatefulSet is reduced
+## @param persistentVolumeClaimRetentionPolicy.whenDeleted Volume retention behavior that applies when the StatefulSet is deleted
+persistentVolumeClaimRetentionPolicy:
+  enabled: true
+  whenScaled: Retain
+  whenDeleted: Delete
+persistentVolume:
+  enabled: true
+  size: 10G
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  subPath: ""
+  mountPath: "/home/postgres/pgdata"
+  annotations: {}
+  accessModes:
+    - ReadWriteOnce
+
+resources: 
+  # If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 100m
+    memory: 512Mi
+    # hugepages-2Mi: 4Mi
+  requests:
+    cpu: 100m
+    memory: 512Mi
+
+shmVolume:
+  ## @param shmVolume.enabled Enable emptyDir volume for /dev/shm for PostgreSQL pod(s)
+  ##
+  enabled: true
+  ## @param shmVolume.sizeLimit Set this to enable a size limit on the shm tmpfs
+  ## Note: the size of the tmpfs counts against container's memory limit
+  ## e.g:
+  ## sizeLimit: 1Gi
+  ##
+  sizeLimit: "1Gi"
+
+# https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+nodeSelector: {}
+
+# https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+tolerations: []
+
+# https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+affinityTemplate: |
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        topologyKey: "kubernetes.io/hostname"
+        labelSelector:
+          matchLabels:
+            application:  {{ template "patroni.name" . }}
+            release: {{ .Release.Name | quote }}
+affinity: {}
+
+## Use an alternate scheduler, e.g. "stork".
+## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+##
+# schedulerName:
+
+rbac:
+  # Specifies whether RBAC resources should be created
+  create: true
+
+serviceAccount:
+  # Specifies whether a ServiceAccount should be created
+  create: true
+  # The name of the ServiceAccount to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+## Postgresql Nework Policy configuration
+##
+networkPolicy:
+  ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
+  ##
+  enabled: true 
+  ## @param networkPolicy.allowExternal The Policy model to apply.
+  ## When set to false, only pods with the correct
+  ## client label will have network access to the port Postgresql is listening
+  ## on. When true, Postgresql will accept connections from any source
+  ## (with the correct destination port).
+  ##
+  allowCurrentNamespace: true
+  allowNamespaces: 
+clusterDomain: cluster.local

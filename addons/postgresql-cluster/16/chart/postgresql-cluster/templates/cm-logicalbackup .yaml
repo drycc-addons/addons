@@ -1,0 +1,19 @@
+{{- if (include "patroni.createLogicalBackupCronJob" .) }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "common.names.fullname" . }}-logicalbackup
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+    cluster-name: {{ template "patroni.fullname" . }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+data:
+  logicalbackup.sh: |-
+    {{- include "common.tplvalues.render" ( dict "value" .Values.logicalbackupScript "context" $ ) | nindent 4 }}
+
+{{- end }}
