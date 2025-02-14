@@ -63,6 +63,8 @@ entries:
   kvrocks: 
     - version: 2.8
       description: "Apache Kvrocks is a distributed key value NoSQL database that uses RocksDB as storage engine and is compatible with Redis protocol."
+    - version: "2.10"
+      description: "Apache Kvrocks is a distributed key value NoSQL database that uses RocksDB as storage engine and is compatible with Redis protocol."
   yugabytedb: 
     - version: 2024
       description: "YugabyteDB is a high-performance distributed SQL database for powering global, internet-scale applications. "

@@ -1,0 +1,57 @@
+name: kvrocks-2.10
+version: "2.10"
+id: 1fb81154-606f-4b54-9aab-5c3aa429b8b2
+description: "kvrocks-2.10."
+displayName: "kvrocks-2.10"
+metadata:
+  displayName: "kvrocks-2.10"
+  provider:
+    name: drycc
+    supportURL: https://kvrocks.apache.org/
+  documentationURL: https://github.com/drycc-addons/addons/tree/main/addons/kvrocks/2.10/chart/kvrocks
+tags: kvrocks
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "auth.password"
+  required: false
+  description: "auth.password config for values.yaml"
+- name: "commonConfiguration"
+  required: false
+  description: "commonConfiguration config for values.yaml"
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "master.nodeSelector"
+  required: false
+  description: "master nodeSelector config for values.yaml"
+- name: "master.service.type"
+  required: false
+  description: "master service type config for values.yaml"
+- name: "master.nodeSelector"
+  required: false
+  description: "master nodeSelector config for values.yaml"
+- name: "replica.nodeSelector"
+  required: false
+  description: "replica nodeSelector config for values.yaml"
+- name: "replica.service.type"
+  required: false
+  description: "replica service type config for values.yaml"
+- name: "sentinel.service.type"
+  required: false
+  description: "sentinel service type config for values.yaml"
+- name: "sentinel.extraEnvVars"
+  required: false
+  description: "sentinel extraEnvVars config for values.yaml"
+- name: "sentinel.enabled"
+  required: false
+  description: "sentinel enabled type config for values.yaml"
+- name: "proxy.enabled"
+  required: false
+  description: "proxy enabled type config for values.yaml"
+- name: "metrics.enabled"
+  required: false
+  description: "metrics enabled or not config for values.yaml"
+archive: false
