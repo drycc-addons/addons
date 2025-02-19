@@ -10,13 +10,13 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     cluster-name: {{ template "patroni.fullname" . }}
-    role: master
+    role: primary
 spec:
   type: {{ .Values.service.type }}
   selector:
     application: {{ template "patroni.fullname" . }}
     cluster-name: {{ template "patroni.fullname" . }}
-    role: master
+    role: primary
   ports:
   - name: postgresql
     port: 5432

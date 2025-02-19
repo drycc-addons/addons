@@ -1,5 +1,5 @@
 name: "standard-2c4g20"
-id: edf8bdfe-b1dc-4f41-b042-801153794df7
+id: 15a1f1b3-2af5-4d6a-acf3-4251ef305d66
 description: "PostgreSQL Cluster standard-2c4g20 plan: Disk 20Gi ,vCPUs 2 , RAM 4G , DB MAX Connection 1000"
 displayName: "standard-2c4g20"
 bindable: true

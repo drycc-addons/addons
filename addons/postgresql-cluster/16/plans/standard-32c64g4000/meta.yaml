@@ -1,5 +1,5 @@
 name: "standard-32c64g4000"
-id: 138f8059-a3f6-4efe-a210-09d9ff00f9a9
+id: 60f4fb02-fb4d-4e42-acbe-194e056535a6
 description: "PostgreSQL Cluster standard-32c64g4000 plan: Disk 4Ti ,vCPUs 32 , RAM 64G , DB MAX Connection 2000"
 displayName: "standard-32c64g4000"
 bindable: true

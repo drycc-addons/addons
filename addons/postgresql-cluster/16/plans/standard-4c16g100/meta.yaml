@@ -1,5 +1,5 @@
 name: "standard-4c16g100"
-id: c44160a6-5ec4-49e5-af1e-a1c1676871cf
+id: 87f0fa69-67ba-4d1d-b0e7-cd84e5d57a0f
 description: "PostgreSQL Cluster standard-4c16g100 plan: Disk 100Gi ,vCPUs 4 , RAM 16G , DB MAX Connection 2000"
 displayName: "standard-4c16g100"
 bindable: true

@@ -48,3 +48,7 @@ toCopy/
 out/
 Chart.lock
 *.tgz
+
+*.fix
+addons/grafana/10/dashborad/
+addons/prometheus/prom-value.yaml

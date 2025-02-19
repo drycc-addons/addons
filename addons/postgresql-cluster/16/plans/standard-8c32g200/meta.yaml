@@ -1,5 +1,5 @@
 name: "standard-8c32g200"
-id: a2160ac2-6c35-4162-b8a2-8dfb2e01816f
+id: 44b98aeb-6774-42d2-80a3-c7bd2bf6155d
 description: "PostgreSQL Cluster standard-8c32g200 plan: Disk 200Gi ,vCPUs 8 , RAM 32G , DB MAX Connection 2000"
 displayName: "standard-8c32g200"
 bindable: true

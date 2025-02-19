@@ -1,5 +1,5 @@
 name: "standard-2c8g50"
-id: 0542f411-4e7b-46af-966c-c9989e54873c
+id: 1cb94804-c93d-4500-a736-09f467230754
 description: "PostgreSQL Cluster standard-2c8g50 plan: Disk 50Gi ,vCPUs 2 , RAM 8G , DB MAX Connection 2000"
 displayName: "standard-2c8g50"
 bindable: true
