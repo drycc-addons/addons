@@ -29,7 +29,7 @@ credential:
     valueFrom:
       serviceRef:
         name: {{ include "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.name=="amqp-ssl")].port }'
+        jsonpath: '{ .spec.ports[?(@.name=="amqp-tls")].port }'
   {{- end }}
 
   {{- if .Values.auth.username }}

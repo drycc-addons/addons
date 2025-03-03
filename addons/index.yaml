@@ -15,6 +15,8 @@ entries:
   rabbitmq:
     - version: 3.12
       description: "RabbitMQ is the most widely deployed open source message broker."
+    - version: "4.0"
+      description: "RabbitMQ is the most widely deployed open source message broker."
   redis:
     - version: 7.0
       description: "Redis is an advanced key-value cache and store."

@@ -1,10 +1,10 @@
-name: rabbitmq
-version: 3.12
-id: f8186d36-f334-4094-8e02-d21a61da657b
+name: rabbitmq-4.0
+version: "4.0"
+id: 8cf49e53-ed76-4930-82eb-ea0e6535cf7d
 description: "RabbitMQ is the most widely deployed open source message broker.."
-displayName: "rabbitmq"
+displayName: "rabbitmq-4.0"
 metadata:
-  displayName: "rabbitmq"
+  displayName: "rabbitmq-4.0"
   provider:
     name: drycc
     supportURL: https://www.rabbitmq.com/
@@ -15,12 +15,12 @@ instances_retrievable: true
 bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
-- name: "auth"
-  required: false
-  description: "auth config for values.yaml"
 - name: "nodeSelector"
   required: false
   description: "nodeSelector config for values.yaml"
+- name: "auth"
+  required: false
+  description: "auth config for values.yaml"
 - name: "initScripts"
   required: false
   description: "initScripts config for values.yaml"

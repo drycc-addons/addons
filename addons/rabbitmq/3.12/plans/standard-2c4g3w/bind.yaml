@@ -44,3 +44,12 @@ credential:
         name: {{ include "common.names.fullname" . }}
         jsonpath: '{ .data.rabbitmq-password }'
   {{- end }}
+
+  {{- if (include "rabbitmq.createTlsSecret" . ) }}
+  {{- $secretName := printf "%s-certs" (include "common.names.fullname" .) }}
+  - name: CA_CRT
+    valueFrom:
+      secretKeyRef:
+        name: {{ $secretName }}
+        jsonpath: '{ .data.ca\.crt }'
+  {{- end }}
