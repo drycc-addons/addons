@@ -470,6 +470,11 @@ redis:
   ## @param redis.priorityClassName Redis&reg; Master pod priorityClassName
   ##
   priorityClassName: ""
+  ## @param redis.defaultConfigOverride Optional default Redis&reg; configuration for the nodes
+  ## If not set, the default Redis configuration from the chart is used
+  ## ref: https://redis.io/topics/config
+  ##
+  defaultConfigOverride: ""
   ## @param redis.configmap Additional Redis&reg; configuration for the nodes
   ## ref: https://redis.io/topics/config
   ##

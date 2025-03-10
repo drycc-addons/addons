@@ -21,6 +21,12 @@ allow_parameters:
 - name: "redis.useAOFPersistence"
   required: false
   description: "redis.useAOFPersistence config for values.yaml"
+- name: "redis.defaultConfigOverride"
+  required: false
+  description: "redis.defaultConfigOverride config for values.yaml"
+- name: "redis.configmap"
+  required: false
+  description: "redis.configmap config for values.yaml"
 - name: "redis.nodeSelector"
   required: false
   description: "redis.nodeSelector config for values.yaml"

@@ -100,6 +100,10 @@ data:
                   filename: {{ template "redis-cluster.tlsCACert" . }}
         {{- end }}
   {{- end }}
+{{- if .Values.redis.defaultConfigOverride }}
+  redis-default.conf: |-
+    {{- include "common.tplvalues.render" (dict "value" .Values.redis.defaultConfigOverride "context" $) | nindent 4 }}
+{{- else }}
   redis-default.conf: |-
     # Redis configuration file example.
     #
@@ -534,9 +538,7 @@ data:
     # You can set these explicitly by uncommenting the following line.
     #
     # save 3600 1 300 100 60 10000
-    save 900 1
-    save 300 10
-    save 60 10000
+    save 900 1 300 10 60 10000
     # By default Redis will stop accepting writes if RDB snapshots are enabled
     # (at least one save point) and the latest background save failed.
     # This will make the user aware (in a hard way) that data is not persisting
@@ -2379,6 +2381,7 @@ data:
     # to suppress
     #
     # ignore-warnings ARM64-COW-BUG
+{{- end }}
 {{- if .Values.redis.configmap }}
 {{- include "common.tplvalues.render" (dict "value" .Values.redis.configmap "context" $) | nindent 4 }}
 {{- end }}
