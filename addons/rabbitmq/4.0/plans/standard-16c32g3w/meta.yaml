@@ -1,0 +1,6 @@
+name: "standard-16c32g3w"
+id: 106130bc-8f94-4c26-a38d-e421cef7ebe4
+description: "RabbitMQ standard-16c32g3w plan which limit resources 16 cores 32G memory and 3 workers."
+displayName: "standard-16c32g3w"
+bindable: true
+maximum_polling_duration: 1800

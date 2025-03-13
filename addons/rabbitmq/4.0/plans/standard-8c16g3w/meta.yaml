@@ -1,0 +1,6 @@
+name: "standard-8c16g3w"
+id: 3fd10f9e-5659-4dee-b708-2cb5bbb19521
+description: "RabbitMQ standard-8c16g3w plan which limit resources 8 cores 16G memory and 3 workers."
+displayName: "standard-8c16g3w"
+bindable: true
+maximum_polling_duration: 1800

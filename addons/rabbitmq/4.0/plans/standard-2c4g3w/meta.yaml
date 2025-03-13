@@ -1,0 +1,6 @@
+name: "standard-2c4g3w"
+id: 7d190a7c-2b0d-4d0d-8bf5-19adbdf88ff6
+description: "RabbitMQ standard-2c4g3w plan which limit resources 2 cores 4G memory and 3 workers."
+displayName: "standard-2c4g3w"
+bindable: true
+maximum_polling_duration: 1800
