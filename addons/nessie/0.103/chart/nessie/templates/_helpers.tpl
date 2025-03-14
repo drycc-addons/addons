@@ -344,7 +344,7 @@ config types know about that symbolic name and resolve it via a SecretsProvider,
 {{- $addRef := index . 4 -}}
 {{- $global := index . 5 -}}
 {{- if $secret -}}
-{{- $secretName := get $secret "name" -}}
+{{- $secretName := printf "%s-%s" (include "nessie.fullname" $global) (get $secret "name") -}}
 {{- $secretKey := get $secret $key -}}
 {{- with $global -}}
 {{- if (and $secretName $secretKey) -}}
@@ -375,7 +375,7 @@ Define an env var from secret key.
 {{- $envVarName := index . 2 -}}
 {{- $global := index . 3 -}}
 {{- if $secret -}}
-{{- $secretName := get $secret "name" -}}
+{{- $secretName := printf "%s-%s" (include "nessie.fullname" $global) (get $secret "name") -}}
 {{- $secretKey := get $secret $key -}}
 {{- with $global -}}
 {{- if (and $secretName $secretKey) -}}

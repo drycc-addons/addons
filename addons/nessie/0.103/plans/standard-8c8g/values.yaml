@@ -1,0 +1,11 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: hb-nessie-standard-8c8g
+
+resources:
+  limits:
+    cpu: 8000m
+    memory: 8192Mi
+  requests:
+    cpu: 1000m
+    memory: 1024Mi

@@ -1,0 +1,6 @@
+name: "standard-4c4g"
+id: dcaa216a-00a5-11f0-b8cd-9bd9f5fdeeed
+description: "nessie plan standard-4c4g which limit 4c4g"
+displayName: "4c4g"
+bindable: true
+maximum_polling_duration: 1800

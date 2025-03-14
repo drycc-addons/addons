@@ -40,7 +40,7 @@ spec:
       annotations:
         projectnessie.org/config-checksum: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         prometheus.io/scrape: "{{ .Values.metrics.enabled | default "false" }}"
-        prometheus.io/port: "{{ .Values.managementService.port }}"
+        prometheus.io/port: "{{ .Values.managementService.portNumber }}"
         prometheus.io/path: "/q/metrics"
       {{- if .Values.podAnnotations }}
         {{- tpl (toYaml .Values.podAnnotations) . | nindent 8 }}
