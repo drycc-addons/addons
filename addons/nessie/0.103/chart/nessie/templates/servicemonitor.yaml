@@ -1,0 +1,47 @@
+{{- if .Values.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "nessie.fullname" . }}
+  labels:
+    {{- include "nessie.labels" . | nindent 4 }}
+    {{- with .Values.metrics.serviceMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    spec:
+  endpoints:
+  - port: {{ .Values.managementService.portName | default "metrics" }}
+    path: /q/metrics
+    interval: 30s
+  selector:
+    matchLabels:
+      {{- include "nessie.selectorLabels" . | nindent 6 }}
+{{- end }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "nessie.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "nessie.labels" . | nindent 4 }}
+    {{- if .Values.metrics.serviceMonitor.labels }}
+    {{ toYaml .Values.metrics.serviceMonitor.labels | nindent 4 }}
+    {{- end }}
+spec:
+  endpoints:
+    - port: {{ .Values.managementService.portName }}
+      scheme: http
+      {{- if .Values.metrics.serviceMonitor.interval }}
+      interval: {{ .Values.metrics.serviceMonitor.interval }}
+      {{- end }}
+      path: /q/metrics
+      {{- with .Values.metrics.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "nessie.selectorLabels" . | nindent 6 }}
+{{- end }}
