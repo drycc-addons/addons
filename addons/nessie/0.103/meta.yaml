@@ -1,0 +1,30 @@
+name: nessie
+version: "0.103.0"
+id: fd1cbeda-00a5-11f0-8a54-dbe6761671cc
+description: "nessie."
+displayName: "nessie"
+metadata:
+  displayName: "nessie"
+  provider:
+    name: drycc
+    supportURL: https://nessie.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/nessie
+tags: nessie
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "service.type"
+  required: false
+  description: "config nessie service type"
+- name: "jdbc"
+  required: true
+  description: "config nessie persist store"
+- name: "catalog"
+  required: false
+  description: "config nessie catalog"
+- name: "extraEnv"
+  required: false
+  description: "config nessie env"
+archive: false

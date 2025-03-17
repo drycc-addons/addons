@@ -1,0 +1,6 @@
+name: "standard-8c8g"
+id: c6ebd538-00b1-11f0-b921-d7a8e3333e3c
+description: "nessie plan standard-8c8g which limit 8c8g"
+displayName: "8c8g"
+bindable: true
+maximum_polling_duration: 1800

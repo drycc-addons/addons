@@ -41,6 +41,8 @@ entries:
   postgresql-cluster:
     - version: 15
       description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
+    - version: 16
+      description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
   seaweedfs:
     - version: 3
       description: "SeaweedFS is a fast distributed storage system for blobs, objects, files, and data lake, for billions of files."
@@ -70,3 +72,6 @@ entries:
   yugabytedb: 
     - version: 2024
       description: "YugabyteDB is a high-performance distributed SQL database for powering global, internet-scale applications. "
+  nessie: 
+    - version: "0.103"
+      description: "Transactional Catalog for Data Lakes with Git-like semantics . "

@@ -1,7 +1,7 @@
 annotations:
   category: Database
 apiVersion: v2
-appVersion: "15"
+appVersion: "16"
 dependencies:
   - name: common
     repository: oci://registry.drycc.cc/charts
@@ -25,4 +25,4 @@ name: postgresql
 sources:
   - https://github.com/drycc-addons/
   - https://www.postgresql.org/
-version: 15.4.1
+version: "16.4"

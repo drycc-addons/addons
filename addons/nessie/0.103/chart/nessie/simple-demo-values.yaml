@@ -1,0 +1,44 @@
+service:
+  # -- The type of service to create.ClusterIP , LoadBalancer
+  type: LoadBalancer
+jdbc:
+  # -- The JDBC connection string. If you are using Nessie OSS images, then only
+  # PostgreSQL, MariaDB and MySQL URLs are supported. Check your JDBC driver documentation
+  # for the correct URL format.
+  jdbcUrl: jdbc:postgresql://10.43.205.80:5432/postgres
+  # -- The secret key storing the datasource username.
+  username: administrator
+    # -- The secret key storing the datasource password.
+  password: gvB7Ha9uP7
+
+catalog:
+  # -- Whether to enable the REST catalog service.
+  enabled: true
+  iceberg:
+    # -- The default warehouse name. Required. This is just a symbolic name; it must refer to a
+    # declared warehouse below.
+    defaultWarehouse:  warehouse
+    warehouses:
+      # -- Symbolic name of the warehouse. Required.
+    - name: warehouse
+      # -- Location of the warehouse. Required. Used to determine the base location of a table.
+      # Scheme must be either s3 (Amazon S3), gs (Google GCS) or abfs / abfss (Azure ADLS). Storage
+      # properties for each location can be defined below.
+      location: s3://bucket1/
+
+  storage:
+    s3:
+      # Global S3 settings. Can be overridden on a per-bucket basis below.
+      defaultOptions:
+        # -- DNS name of the region, required for AWS.
+        region: us-west-1
+        # -- Endpoint URI, required for private clouds. Optional; if not provided, the default is
+        # used.
+        endpoint: "http://10.43.223.144:9000"
+          # -- The secret key storing the AWS secret key id.
+        awsAccessKeyId: admin
+          # -- The secret key storing the AWS secret access key.
+        awsSecretAccessKey: u929mrqXtb
+
+extraEnv: 
+  []

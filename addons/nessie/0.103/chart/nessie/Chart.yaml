@@ -1,0 +1,21 @@
+apiVersion: v2
+description: A Helm chart for Nessie
+home: https://projectnessie.org/
+icon: https://raw.githubusercontent.com/projectnessie/nessie/main/site/docs/img/nessie.svg
+keywords:
+- nessie
+- iceberg
+- delta
+- data lake
+- transactional catalog
+- git-like semantics
+maintainers:
+- name: nastra
+- name: snazy
+- name: dimas-b
+- name: adutra
+name: nessie
+sources:
+- https://github.com/projectnessie/nessie
+type: application
+version: 0.103.0

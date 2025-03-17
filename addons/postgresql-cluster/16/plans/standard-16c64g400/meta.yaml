@@ -1,0 +1,6 @@
+name: "standard-16c64g400"
+id: a8f2ec87-7b64-4ad5-ae21-b8070a8cbf4e
+description: "PostgreSQL Cluster standard-16c64g400 plan: Disk 400Gi ,vCPUs 16 , RAM 64G , DB MAX Connection 2000"
+displayName: "standard-16c64g400"
+bindable: true
+maximum_polling_duration: 1800
