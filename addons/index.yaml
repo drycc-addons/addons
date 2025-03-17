@@ -72,3 +72,6 @@ entries:
   yugabytedb: 
     - version: 2024
       description: "YugabyteDB is a high-performance distributed SQL database for powering global, internet-scale applications. "
+  nessie: 
+    - version: "0.103"
+      description: "Transactional Catalog for Data Lakes with Git-like semantics . "

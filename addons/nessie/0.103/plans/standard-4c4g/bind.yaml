@@ -3,17 +3,17 @@ credential:
 - name: EXTERNAL_IP
   valueFrom:
     serviceRef:
-      name: {{ include "common.names.fullname" . }}
+      name: {{ include "nessie.fullname" . }}
       jsonpath: '{.status.loadBalancer.ingress[0].ip}'
 {{- end }}
 - name: CLUSTER_IP
   valueFrom:
     serviceRef:
-      name: {{ include "common.names.fullname" . }}
+      name: {{ include "nessie.fullname" . }}
       jsonpath: '{.spec.clusterIP}'
 - name: PORT
   valueFrom:
     serviceRef:
-      name: {{ include "common.names.fullname" . }}
-      jsonpath: '{.spec.ports[?(@.name=="http")].port}'
+      name: {{ include "nessie.fullname" . }}
+      jsonpath: '{.spec.ports[?(@.name=="nessie-http")].port}'
 
