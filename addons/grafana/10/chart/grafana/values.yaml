@@ -42,7 +42,7 @@ commonAnnotations: {}
 
 ## @section Grafana parameters
 
-## Bitnami Grafana image version
+## Drycc Grafana image version
 ## ref: https://hub.docker.com/r/drycc/grafana/tags/
 ## @param image.registry Grafana image registry
 ## @param image.repository Grafana image repository
@@ -816,7 +816,7 @@ imageRenderer:
   ## @param imageRenderer.enabled Enable using a remote rendering service to render PNG images
   ##
   enabled: false
-  ## Bitnami Grafana Image Renderer image
+  ## Drycc Grafana Image Renderer image
   ## ref: https://hub.docker.com/r/drycc/grafana-image-renderer/tags/
   ## @param imageRenderer.image.registry Grafana Image Renderer image registry
   ## @param imageRenderer.image.repository Grafana Image Renderer image repository
@@ -1155,14 +1155,14 @@ volumePermissions:
   ## @param volumePermissions.enabled Enable init container that changes the owner/group of the PV mount point to `runAsUser:fsGroup`
   ##
   enabled: false
-  ## Bitnami Shell image
+  ## Drycc Shell image
   ## ref: https://hub.docker.com/r/drycc/drycc-shell/tags/
-  ## @param volumePermissions.image.registry Bitnami Shell image registry
-  ## @param volumePermissions.image.repository Bitnami Shell image repository
-  ## @param volumePermissions.image.tag Bitnami Shell image tag (immutable tags are recommended)
-  ## @param volumePermissions.image.digest Bitnami Shell image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
-  ## @param volumePermissions.image.pullPolicy Bitnami Shell image pull policy
-  ## @param volumePermissions.image.pullSecrets Bitnami Shell image pull secrets
+  ## @param volumePermissions.image.registry Drycc Shell image registry
+  ## @param volumePermissions.image.repository Drycc Shell image repository
+  ## @param volumePermissions.image.tag Drycc Shell image tag (immutable tags are recommended)
+  ## @param volumePermissions.image.digest Drycc Shell image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag
+  ## @param volumePermissions.image.pullPolicy Drycc Shell image pull policy
+  ## @param volumePermissions.image.pullSecrets Drycc Shell image pull secrets
   ##
   image:
     registry: docker.io

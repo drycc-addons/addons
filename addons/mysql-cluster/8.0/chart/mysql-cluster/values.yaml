@@ -65,7 +65,7 @@ diagnosticMode:
 
 ## @section MySQL common parameters
 
-## Bitnami MySQL image
+## Drycc MySQL image
 ## ref: https://hub.docker.com/r/drycc/mysql/tags/
 ## @param image.registry MySQL image registry
 ## @param image.repository MySQL image repository
