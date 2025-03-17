@@ -18,7 +18,7 @@ keywords:
   - metrics
   - logs
 maintainers:
-  - name: Bitnami
+  - name: Drycc
     url: https://github.com/drycc/charts
 name: grafana
 sources:

@@ -1,12 +1,12 @@
 <!--- app-name: Grafana -->
 
-# Grafana packaged by Bitnami
+# Grafana packaged by Drycc
 
 Grafana is an open source metric analytics and visualization suite for visualizing time series data that supports various types of data sources.
 
 [Overview of Grafana](https://grafana.com/)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by Drycc. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
 
 ## TL;DR
 
@@ -19,7 +19,7 @@ $ helm install my-release my-repo/grafana
 
 This chart bootstraps a [grafana](https://github.com/drycc/containers/tree/main/drycc/grafana) deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-Bitnami charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
+Drycc charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
 
 ## Prerequisites
 
@@ -51,9 +51,9 @@ $ helm delete my-release
 
 The command removes all the Kubernetes components associated with the chart and deletes the release. Use the option `--purge` to delete all persistent volumes too.
 
-## Differences between the Bitnami Grafana chart and the Bitnami Grafana Operator chart
+## Differences between the Drycc Grafana chart and the Drycc Grafana Operator chart
 
-In the Bitnami catalog we offer both the drycc/grafana and drycc/grafana-operator charts. Each solution covers different needs and use cases.
+In the Drycc catalog we offer both the drycc/grafana and drycc/grafana-operator charts. Each solution covers different needs and use cases.
 
 The *drycc/grafana* chart deploys a single Grafana installation (with grafana-image-renderer) using a Kubernetes Deployment object (together with Services, PVCs, ConfigMaps, etc.). The figure below shows the deployed objects in the cluster after executing *helm install*:
 
@@ -441,12 +441,12 @@ This solution allows to easily deploy multiple Grafana instances compared to the
 | Name                                                   | Description                                                                                                   | Value                   |
 | ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ----------------------- |
 | `volumePermissions.enabled`                            | Enable init container that changes the owner/group of the PV mount point to `runAsUser:fsGroup`               | `false`                 |
-| `volumePermissions.image.registry`                     | Bitnami Shell image registry                                                                                  | `docker.io`             |
-| `volumePermissions.image.repository`                   | Bitnami Shell image repository                                                                                | `drycc/drycc-shell` |
-| `volumePermissions.image.tag`                          | Bitnami Shell image tag (immutable tags are recommended)                                                      | `11-debian-11-r38`      |
-| `volumePermissions.image.digest`                       | Bitnami Shell image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                    |
-| `volumePermissions.image.pullPolicy`                   | Bitnami Shell image pull policy                                                                               | `IfNotPresent`          |
-| `volumePermissions.image.pullSecrets`                  | Bitnami Shell image pull secrets                                                                              | `[]`                    |
+| `volumePermissions.image.registry`                     | Drycc Shell image registry                                                                                  | `docker.io`             |
+| `volumePermissions.image.repository`                   | Drycc Shell image repository                                                                                | `drycc/drycc-shell` |
+| `volumePermissions.image.tag`                          | Drycc Shell image tag (immutable tags are recommended)                                                      | `11-debian-11-r38`      |
+| `volumePermissions.image.digest`                       | Drycc Shell image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                    |
+| `volumePermissions.image.pullPolicy`                   | Drycc Shell image pull policy                                                                               | `IfNotPresent`          |
+| `volumePermissions.image.pullSecrets`                  | Drycc Shell image pull secrets                                                                              | `[]`                    |
 | `volumePermissions.resources.limits`                   | The resources limits for the init container                                                                   | `{}`                    |
 | `volumePermissions.resources.requests`                 | The requested resources for the init container                                                                | `{}`                    |
 | `volumePermissions.containerSecurityContext.runAsUser` | Set init container's Security Context runAsUser                                                               | `0`                     |
@@ -486,7 +486,7 @@ $ helm install my-release -f values.yaml my-repo/grafana
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+Drycc will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Using custom configuration
 
@@ -614,14 +614,14 @@ As an alternative, you can use of the preset configurations for pod affinity, po
 
 ## Persistence
 
-The [Bitnami Grafana](https://github.com/drycc/containers/tree/main/drycc/grafana) image stores the Grafana data and configurations at the `/opt/drycc/grafana/data` path of the container.
+The [Drycc Grafana](https://github.com/drycc/containers/tree/main/drycc/grafana) image stores the Grafana data and configurations at the `/opt/drycc/grafana/data` path of the container.
 
 Persistent Volume Claims are used to keep the data across deployments. This is known to work in GCE, AWS, and minikube.
 See the [Parameters](#parameters) section to configure the PVC or to disable persistence.
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.drycc.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to Drycc's Helm charts in [this troubleshooting guide](https://docs.drycc.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -631,7 +631,7 @@ This major release only bumps the Grafana version to 9.x. No major issues are ex
 
 ### To 7.0.0
 
-This major release renames several values in this chart and adds missing features, in order to be inline with the rest of assets in the Bitnami charts repository.
+This major release renames several values in this chart and adds missing features, in order to be inline with the rest of assets in the Drycc charts repository.
 
 Since the volume access mode when persistence is enabled is `ReadWriteOnce` in order to upgrade the deployment you will need to either use the `Recreate` strategy or delete the old deployment.
 
@@ -651,7 +651,7 @@ This version also introduces `drycc/common`, a [library chart](https://helm.sh/d
 **What changes were introduced in this major version?**
 
 - Previous versions of this Helm Chart use `apiVersion: v1` (installable by both Helm 2 and 3), this Helm Chart was updated to `apiVersion: v2` (installable by Helm 3 only). [Here](https://helm.sh/docs/topics/charts/#the-apiversion-field) you can find more information about the `apiVersion` field.
-- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Bitnami Helm Charts
+- The different fields present in the *Chart.yaml* file has been ordered alphabetically in a homogeneous way for all the Drycc Helm Charts
 
 **Considerations when upgrading to this version**
 
@@ -677,7 +677,7 @@ This major version signifies this change.
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2022 Drycc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

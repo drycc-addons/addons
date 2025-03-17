@@ -1,12 +1,12 @@
 <!--- app-name: MySQL -->
 
-# MySQL packaged by Bitnami
+# MySQL packaged by Drycc
 
 MySQL is a fast, reliable, scalable, and easy to use open source relational database system. Designed to handle mission-critical, heavy-load production applications.
 
 [Overview of MySQL](http://www.mysql.com)
 
-Trademarks: This software listing is packaged by Bitnami. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
+Trademarks: This software listing is packaged by Drycc. The respective trademarks mentioned in the offering are owned by the respective companies, and use of them does not imply any affiliation or endorsement.
                            
 ## TL;DR
 
@@ -19,7 +19,7 @@ $ helm install my-release my-repo/mysql
 
 This chart bootstraps a [MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) replication cluster deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
-Bitnami charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
+Drycc charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
 
 ## Prerequisites
 
@@ -386,7 +386,7 @@ $ helm install my-release -f values.yaml my-repo/mysql
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
-Bitnami will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
+Drycc will release a new chart updating its containers if a new version of the main container, significant changes, or critical vulnerabilities exist.
 
 ### Use a different MySQL version
 
@@ -394,7 +394,7 @@ To modify the application version used in this chart, specify a different versio
 
 ### Customize a new MySQL instance
 
-The [Bitnami MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) image allows you to use your custom scripts to initialize a fresh instance. Custom scripts may be specified using the `initdbScripts` parameter. Alternatively, an external ConfigMap may be created with all the initialization scripts and the ConfigMap passed to the chart via the `initdbScriptsConfigMap` parameter. Note that this will override the `initdbScripts` parameter.
+The [Drycc MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) image allows you to use your custom scripts to initialize a fresh instance. Custom scripts may be specified using the `initdbScripts` parameter. Alternatively, an external ConfigMap may be created with all the initialization scripts and the ConfigMap passed to the chart via the `initdbScriptsConfigMap` parameter. Note that this will override the `initdbScripts` parameter.
 
 The allowed extensions are `.sh`, `.sql` and `.sql.gz`.
 
@@ -430,7 +430,7 @@ initContainers:
 
 ## Persistence
 
-The [Bitnami MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) image stores the MySQL data and configurations at the `/bitnami/mysql` path of the container.
+The [Drycc MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) image stores the MySQL data and configurations at the `/bitnami/mysql` path of the container.
 
 The chart mounts a [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) volume at this location. The volume is created using dynamic volume provisioning by default. An existing PersistentVolumeClaim can also be defined for this purpose.
 
@@ -459,7 +459,7 @@ As an alternative, you can use the preset configurations for pod affinity, pod a
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Bitnami's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to Drycc's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -473,7 +473,7 @@ $ helm upgrade my-release my-repo/mysql --set auth.rootPassword=[ROOT_PASSWORD]
 
 ### To 9.0.0
 
-This major release renames several values in this chart and adds missing features, in order to be aligned with the rest of the assets in the Bitnami charts repository.
+This major release renames several values in this chart and adds missing features, in order to be aligned with the rest of the assets in the Drycc charts repository.
 
 Affected values:
 
@@ -532,7 +532,7 @@ $ kubectl delete statefulset mysql-slave --cascade=false
 
 ## License
 
-Copyright &copy; 2022 Bitnami
+Copyright &copy; 2022 Drycc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
