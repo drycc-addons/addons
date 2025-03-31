@@ -1,0 +1,6 @@
+name: "standard-1c1g"
+id: 0074ff96-0dd2-11f0-85dd-bff4b041926a
+description: "lakefs plan standard-1c1g which limit 1c1g ."
+displayName: "1c1g"
+bindable: true
+maximum_polling_duration: 1800
