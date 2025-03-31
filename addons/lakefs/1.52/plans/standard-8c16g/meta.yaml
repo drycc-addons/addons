@@ -1,0 +1,6 @@
+name: "standard-8c16g"
+id: 307d195c-0dd3-11f0-bfca-2f68dd3fac98
+description: "lakefs plan standard-8c16g ."
+displayName: "8c16g"
+bindable: true
+maximum_polling_duration: 1800

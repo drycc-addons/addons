@@ -1,0 +1,6 @@
+name: "standard-4c8g"
+id: 22327fd6-0dd3-11f0-86e5-ef33ac735b18
+description: "lakefs plan standard-4c8g ."
+displayName: "4c8g"
+bindable: true
+maximum_polling_duration: 1800

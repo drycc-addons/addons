@@ -1,0 +1,6 @@
+name: "standard-4c4g"
+id: 07243b90-0dd2-11f0-b921-97ce1e5f9446
+description: "lakefs plan standard-4c4g ."
+displayName: "4c4g"
+bindable: true
+maximum_polling_duration: 1800

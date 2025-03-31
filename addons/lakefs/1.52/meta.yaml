@@ -1,0 +1,30 @@
+name: lakefs
+version: 1.52
+id: 6e34d8ba-0dd4-11f0-9f70-9b985edbdcd7
+description: "lakefs"
+displayName: "lakefs"
+metadata:
+  displayName: "lakefs"
+  provider:
+    name: drycc
+    supportURL: https://docs.lakefs.io
+  documentationURL: https://github.com/drycc-addons/
+tags: lakefs
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "lakefsConfig"
+  required: false
+  description: "lakefsConfig config for values.yaml"
+- name: "replicaCount"
+  required: false
+  description: "replicaCount config for values.yaml"
+- name: "extraEnvVars"
+  required: false
+  description: "extraEnvVars config for values.yaml"
+archive: false

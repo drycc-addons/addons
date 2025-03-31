@@ -1,0 +1,12 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: hb-grafana-standard-4c8g
+
+
+resources:
+  limits:
+    cpu: 4000m
+    memory: 8Gi
+  requests:
+    cpu: 1000m
+    memory: 1Gi
