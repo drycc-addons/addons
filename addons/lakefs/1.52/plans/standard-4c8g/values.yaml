@@ -10,9 +10,3 @@ resources:
   requests:
     cpu: 1000m
     memory: 1Gi
-
-lakefsConfig: |
-  database:
-    type: local1111
-  blockstore:
-    type: localcd 
