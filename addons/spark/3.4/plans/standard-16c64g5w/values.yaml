@@ -1,0 +1,95 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: "hb-spark-standard-16c64g5w"
+
+## Spark master specific configuration
+##
+master:
+  ## @param master.daemonMemoryLimit Set the memory limit for the master daemon
+  ##
+  daemonMemoryLimit: ""
+  ## @param master.configOptions Use a string to set the config options for in the form "-Dx=y"
+  ##
+  configOptions: ""
+  ## @param master.extraEnvVars Extra environment variables to pass to the master container
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: SPARK_DAEMON_JAVA_OPTS
+  ##    value: -Dx=y
+  ##
+  ## Container resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param master.resources.limits The resources limits for the container
+  ## @param master.resources.requests The requested resources for the container
+  ##
+  resources:
+    limits:
+      cpu: 16
+      memory: 64Gi
+    requests:
+      cpu: 4
+      memory: 16Gi
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+## @section Spark worker parameters
+##
+
+## Spark worker specific configuration
+##
+worker:
+  ## @param worker.daemonMemoryLimit Set the memory limit for the worker daemon
+  ##
+  daemonMemoryLimit: ""
+  ## @param worker.memoryLimit Set the maximum memory the worker is allowed to use
+  ##
+  memoryLimit: ""
+  ## @param worker.coreLimit Se the maximum number of cores that the worker can use
+  ##
+  coreLimit: ""
+  javaOptions: ""
+  ## @param worker.configOptions Set extra options to configure the worker in the form `-Dx=y`
+  ##
+  configOptions: ""
+  ## @param worker.extraEnvVars An array to add extra env vars
+  ## For example:
+  ## extraEnvVars:
+  ##  - name: SPARK_DAEMON_JAVA_OPTS
+  ##    value: -Dx=y
+
+  ## @param worker.replicaCount Number of spark workers (will be the minimum number when autoscaling is enabled)
+  ##
+  replicaCount: 5
+  ## Container resource requests and limits
+  ## ref: https://kubernetes.io/docs/user-guide/compute-resources/
+  ## We usually recommend not to specify default resources and to leave this as a conscious
+  ## choice for the user. This also increases chances charts run on environments with little
+  ## resources, such as Minikube. If you do want to specify resources, uncomment the following
+  ## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  ## @param worker.resources.limits The resources limits for the container
+  ## @param worker.resources.requests The requested resources for the container
+  ##
+  resources:
+    limits:
+      cpu: 16
+      memory: 64Gi
+    requests:
+      cpu: 4
+      memory: 16Gi
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi

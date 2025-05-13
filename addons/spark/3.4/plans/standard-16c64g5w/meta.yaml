@@ -1,0 +1,6 @@
+name: "standard-16c64g5w"
+id: 4fbc37f3-b36e-44d9-bf30-6bd1ddee5fde
+description: "Spark standard-16c64g5w plan which limit resources 16 cores 64G memory 5 workers."
+displayName: "standard-16c64g5w"
+bindable: true
+maximum_polling_duration: 1800
