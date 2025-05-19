@@ -21,6 +21,9 @@ allow_parameters:
 - name: "auth.password"
   required: false
   description: "auth.password config for values.yaml"
+- name: "auth.fernetKey"
+  required: false
+  description: "auth.fernetKey config for values.yaml"
 - name: "git"
   required: false
   description: "git config for values.yaml"
