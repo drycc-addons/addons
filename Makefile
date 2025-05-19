@@ -33,4 +33,3 @@ ci-master: check prepare-assets
 
 .PHONY: ci-release
 ci-release: check prepare-assets push-release release-branch
-

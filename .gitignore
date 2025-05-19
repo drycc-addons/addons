@@ -44,7 +44,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-toCopy/
+_dist/
 out/
 Chart.lock
 *.tgz

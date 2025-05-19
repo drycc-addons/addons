@@ -7,11 +7,11 @@ readonly RED='\033[0;31m'
 readonly NC='\033[0m' # No Color
 
 function prepareAssets() {
-          destination=toCopy/
+          destination=_dist/
 
           echo "Copy files"
 
-          mkdir -p toCopy
+          mkdir -p _dist
 
           # do not fail if there is no .md file
           cp addons/*.md ${destination} 2>/dev/null || true
