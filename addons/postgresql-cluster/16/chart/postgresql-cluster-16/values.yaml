@@ -89,8 +89,8 @@ preInitScript: |
           archive_mode: "on"
           archive_timeout: 300s
           archive_command: sh /opt/drycc/postgresql/walbackup.sh %p
-          # timescaledb.license: 'timescale'
-          shared_preload_libraries: 'auto_explain,pg_stat_statements'
+          # timescaledb.license: 'timescale' 
+          shared_preload_libraries: 'auto_explain,pg_stat_statements,timescaledb'
           log_destination: 'csvlog'
           log_filename: postgresql.log
           logging_collector: on
