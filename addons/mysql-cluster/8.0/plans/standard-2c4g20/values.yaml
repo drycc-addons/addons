@@ -19,11 +19,13 @@ primary:
     max_connect_errors=1000000
     open_files_limit=2000000                                     
     performance_schema_max_table_instances=200
-    thread_cache_size=200
+    thread_cache_size=0
+    innodb_flush_method=O_DIRECT
     innodb_read_io_threads=4                 
     innodb_write_io_threads=4                      
     innodb_buffer_pool_instances=2
     innodb_buffer_pool_size=2147483648
+    group_replication_message_cache_size=536870912
     max_connections=1000
   resources:
     limits:
