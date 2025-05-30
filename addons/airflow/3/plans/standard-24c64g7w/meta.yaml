@@ -1,0 +1,6 @@
+name: "standard-24c64g7w"
+id: d657f880-0282-414a-82f4-078ba98a01f4
+description: "airflow standard-24c64g7w plan which limit resources 7 workers per worker 24 cores memory size 64Gi."
+displayName: "standard-24c64g7w"
+bindable: true
+maximum_polling_duration: 1800

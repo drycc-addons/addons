@@ -3,6 +3,8 @@ entries:
   airflow:
     - version: 2
       description: "Apache Airflow is a platform that allows you to create, schedule and monitor workflows using Python, Jinja and a message queue"
+    - version: 3
+      description: "Apache Airflow is a platform that allows you to create, schedule and monitor workflows using Python, Jinja and a message queue"
   cloudbeaver:
     - version: 23
       description: "Cloud Database Manager."
