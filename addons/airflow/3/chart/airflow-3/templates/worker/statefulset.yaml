@@ -221,6 +221,8 @@ spec:
             - name: empty-dir
               mountPath: /opt/drycc/airflow/webserver_config.py
               subPath: app-base-dir/webserver_config.py
+            - name: data
+              mountPath: /data
             {{- if .Values.requirements }}
             - name: req-config
               mountPath: /drycc/python/requirements.txt
