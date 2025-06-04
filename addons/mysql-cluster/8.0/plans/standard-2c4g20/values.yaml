@@ -25,7 +25,7 @@ primary:
     innodb_write_io_threads=4                      
     innodb_buffer_pool_instances=2
     innodb_buffer_pool_size=2147483648
-    group_replication_message_cache_size=536870912
+    loose-group_replication_message_cache_size=536870912
     max_connections=1000
   resources:
     limits:
