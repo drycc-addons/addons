@@ -1,0 +1,6 @@
+name: "standard-4c16g2w"
+id: 3eb0d2e1-66bc-4af5-b531-cbe31d740a5c
+description: "airflow standard-4c16g2w plan which limit resources 2 workers per worker 4 cores memory size 16Gi."
+displayName: "standard-4c16g2w"
+bindable: true
+maximum_polling_duration: 1800

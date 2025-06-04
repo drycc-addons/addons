@@ -1,0 +1,53 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: hb-airflow-standard-4c16g2w
+
+web:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 4
+      memory: 16Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi
+
+scheduler:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 4
+      memory: 16Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi
+
+worker:
+  replicaCount: 2
+  resources:
+    limits:
+      cpu: 4
+      memory: 16Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi
+
+dagProcessor:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 4
+      memory: 16Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi
+
+triggerer:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: 4
+      memory: 16Gi
+    requests:
+      cpu: 500m
+      memory: 2Gi

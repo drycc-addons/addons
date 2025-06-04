@@ -1,0 +1,111 @@
+name: airflow-3
+version: "3"
+id: 3c126f34-31aa-4a29-8628-bb7a0da15498
+description: "airflow-3"
+displayName: "airflow-3"
+metadata:
+  displayName: "airflow-3"
+  provider:
+    name: drycc
+    supportURL: http://airflow.apache.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/airflow
+tags: airflow
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "auth.password"
+  required: false
+  description: "auth.password config for values.yaml"
+- name: "auth.fernetKey"
+  required: false
+  description: "auth.fernetKey config for values.yaml"
+- name: "dags"
+  required: false
+  description: "dags config for values.yaml"
+- name: "plugins"
+  required: false
+  description: "plugins config for values.yaml"
+- name: "configuration"
+  required: false
+  description: "configuration config for values.yaml"
+- name: "extraEnvVars"
+  required: false
+  description: "extraEnvVars config for values.yaml"
+- name: "image"
+  required: false
+  description: "image config for values.yaml"
+- name: "web.baseUrl"
+  required: false
+  description: "web.baseUrl config for values.yaml"
+- name: "web.nodeSelector"
+  required: false
+  description: "web nodeSelector config for values.yaml"
+- name: "web.extraEnvVars"
+  required: false
+  description: "web extraEnvVars config for values.yaml"
+- name: "web.podSecurityContext.containerSecurityContext"
+  required: false
+  description: "web.podSecurityContext.containerSecurityContext config for values.yaml"
+- name: "scheduler.nodeSelector"
+  required: false
+  description: "scheduler nodeSelector config for values.yaml"
+- name: "scheduler.extraEnvVars"
+  required: false
+  description: "scheduler extraEnvVars config for values.yaml"
+- name: "scheduler.podSecurityContext.containerSecurityContext"
+  required: false
+  description: "scheduler.podSecurityContext.containerSecurityContext config for values.yaml"
+- name: "worker.nodeSelector"
+  required: false
+  description: "worker nodeSelector config for values.yaml"
+- name: "worker.extraEnvVars"
+  required: false
+  description: "worker extraEnvVars config for values.yaml"
+- name: "worker.persistence"
+  required: false
+  description: "worker persistence config for values.yaml"
+- name: "worker.podSecurityContext.containerSecurityContext"
+  required: false
+  description: "worker.podSecurityContext.containerSecurityContext config for values.yaml"
+- name: "triggerer.nodeSelector"
+  required: false
+  description: "triggerer nodeSelector config for values.yaml"
+- name: "triggerer.extraEnvVars"
+  required: false
+  description: "triggerer extraEnvVars config for values.yaml"
+- name: "triggerer.persistence"
+  required: false
+  description: "triggerer persistence config for values.yaml"
+- name: "dagProcessor.extraEnvVars"
+  required: false
+  description: "dagProcessor extraEnvVars config for values.yaml"
+- name: "dagProcessor.nodeSelector"
+  required: false
+  description: "dagProcessor nodeSelector config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "metrics.enabled"
+  required: false
+  description: "metrics enabled or not config for values.yaml"
+- name: "metrics.nodeSelector"
+  required: false
+  description: "metrics nodeSelector config for values.yaml"
+- name: pip
+  required: false
+  description: "pip config for values.yaml"
+- name: requirements
+  required: false
+  description: "requirements config for values.yaml"
+- name: "externalDatabase"
+  required: true
+  description: "externalDatabase config for values.yaml"
+- name: celeryBrokerUrl
+  required: true
+  description: "celeryBrokerUrl config for values.yaml"
+- name: celeryBrokerTransportOption
+  required: false
+  description: "celeryBrokerTransportOption config for values.yaml"
+archive: false
