@@ -189,6 +189,7 @@ daemonset:
           Tag_Regex               (?<pod_name>[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*)_(?<namespace_name>[^_]+)_(?<container_name>.+)-(?<container_id>[a-z0-9]{64})\.log$
           Read_from_Head          false
           multiline.parser        docker,cri
+          Mem_Buf_Limit           30M
 
     ## https://docs.fluentbit.io/manual/pipeline/filters
     filters_base: |
