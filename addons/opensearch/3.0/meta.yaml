@@ -1,0 +1,66 @@
+name: opensearch-3.0
+version: "3.0"
+id: 44553de0-804c-4bed-8057-b72dbc0a02a9
+description: "opensearch-3.0."
+displayName: "opensearch-3.0"
+metadata:
+  displayName: "opensearch-3.0"
+  provider:
+    name: drycc
+    supportURL: https://opensearch.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/opensearch
+tags: opensearch
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "extraConfig"
+  required: false
+  description: "extraConfig config for values.yaml"
+- name: "plugins"
+  required: false
+  description: "plugins config for values.yaml"
+- name: "config"
+  required: false
+  description: "opensearch configuration for values.yaml"
+- name: "master.nodeSelector"
+  required: false
+  description: "master nodeSelector config for values.yaml"
+- name: "master.networkPolicy.allowNamespaces"
+  required: false
+  description: "master networkPolicy allowNamespaces config for values.yaml"
+- name: "ingest.nodeSelector"
+  required: false
+  description: "ingest nodeSelector config for values.yaml"
+- name: "ingest.networkPolicy.allowNamespaces"
+  required: false
+  description: "ingest networkPolicy allowNamespaces config for values.yaml"
+- name: "data.nodeSelector"
+  required: false
+  description: "data nodeSelector config for values.yaml"
+- name: "data.networkPolicy.allowNamespaces"
+  required: false
+  description: "data networkPolicy allowNamespaces config for values.yaml"
+- name: "coordinating.nodeSelector"
+  required: false
+  description: "coordinating nodeSelector config for values.yaml"
+- name: "coordinating.networkPolicy.allowNamespaces"
+  required: false
+  description: "coordinating networkPolicy allowNamespaces config for values.yaml"
+- name: "dashboards.nodeSelector"
+  required: false
+  description: "dashboards nodeSelector config for values.yaml"
+- name: "dashboards.networkPolicy.allowNamespaces"
+  required: false
+  description: "dashboards networkPolicy allowNamespaces config for values.yaml"
+- name: "snapshots.nodeSelector"
+  required: false
+  description: "snapshots nodeSelector config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "dashboards.service.type"
+  required: false
+  description: "dashboards service type config for values.yaml"
+archive: false

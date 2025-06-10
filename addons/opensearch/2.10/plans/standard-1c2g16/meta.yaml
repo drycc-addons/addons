@@ -1,6 +1,0 @@
-name: "standard-1c2g16"
-id: ba01d605-e665-475d-97b5-6072cfbf07db
-description: "Opensearch standard-1c2g16 plan which limit resources 1 cores 2Gi memory and persistence size 16Gi."
-displayName: "standard-1c2g16"
-bindable: true
-maximum_polling_duration: 1800
