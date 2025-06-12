@@ -321,7 +321,7 @@ spec:
         - name: grafana-ini
           {{- if .Values.config.grafanaIniConfigMap }}
           configMap:
-            name: {{ .Values.config.grafanaIniConfigMap }}
+            name: {{ include "common.names.fullname" . }}-ini
           {{- else if .Values.config.grafanaIniSecret }}
           secret:
             secretName: {{ .Values.config.grafanaIniSecret }}

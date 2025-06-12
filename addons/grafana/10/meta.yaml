@@ -23,4 +23,7 @@ allow_parameters:
   description: "service type config for values.yaml"
 - name: "grafana.nodeSelector"
   required: false
+- name: "pg_url"
+  required: true
+  description: "Postgres URL for Grafana to connect to"
 archive: false
