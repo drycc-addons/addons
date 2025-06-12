@@ -34,6 +34,8 @@ entries:
   opensearch:
     - version: "2.10"
       description: "OpenSearch is a scalable, flexible, and extensible open-source software suite for search, analytics, and observability applications licensed under Apache 2.0."
+    - version: "3.0"
+      description: "OpenSearch is a scalable, flexible, and extensible open-source software suite for search, analytics, and observability applications licensed under Apache 2.0."
   prometheus:
     - version: 2
       description: "Prometheus is an open-source systems monitoring and alerting toolkit originally built at SoundCloud."

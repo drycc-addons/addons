@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: "hb-opensearch-standard-1c2g16"
+fullnameOverride: "hb-opensearch-standard-8c32g768"
 ## @section Master-elegible nodes parameters
 
 master:
@@ -21,18 +21,18 @@ master:
   ##
   resources:
     limits:
-      cpu: 1
-      memory: 2Gi
+      cpu: 8
+      memory: 32Gi
     requests:
-      cpu: 500m
-      memory: 1Gi
+      cpu: 4
+      memory: 16Gi
   ## @param master.heapSize OpenSearch master-eligible node heap size.
   ## Note: The recommended heapSize is half of the container's memory.
   ## If omitted, it will be automatically set.
   ## Example:
   ##   heapSize: 128m
   ##
-  heapSize: 512m
+  heapSize: 16384m
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -54,7 +54,7 @@ master:
       - ReadWriteOnce
     ## @param master.persistence.size Persistent Volume Size
     ##
-    size: 16Gi
+    size: 768Gi
 ## @section Data-only nodes parameters
 
 data:
@@ -94,7 +94,7 @@ data:
       - ReadWriteOnce
     ## @param data.persistence.size Persistent Volume Size
     ##
-    size: 16Gi
+    size: 8Gi
 ## @section Coordinating-only nodes parameters
 
 coordinating:
@@ -150,8 +150,8 @@ dashboards:
   ##
   resources:
     limits: 
-      memory: 2048Mi
-      cpu: 250m
+      memory: 3072Mi
+      cpu: 1500m
     requests:
       memory: 1024Mi
-      cpu: 125m
+      cpu: 750m
