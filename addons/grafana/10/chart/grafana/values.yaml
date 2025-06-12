@@ -209,14 +209,15 @@ ldap:
 ## @param config.grafanaIniSecret Name of the Secret containing the `grafana.ini` file
 ##
 config:
-  useGrafanaIniFile: false
-  grafanaIniConfigMap: ""
+  useGrafanaIniFile: true
+  grafanaIniConfigMap: "grafana-ini"
   grafanaIniSecret: ""
 ## Create dasboard provider to load dashboards, a default one is created to load dashboards
 ## from "/opt/drycc/grafana/dashboards"
 ## @param dashboardsProvider.enabled Enable the use of a Grafana dashboard provider
 ## @param dashboardsProvider.configMapName Name of a ConfigMap containing a custom dashboard provider
 ##
+pg_url: "postgres://user:secret@host:port/database"
 dashboardsProvider:
   enabled: false
   ## Important to set the Path to "/opt/drycc/grafana/dashboards"
@@ -542,7 +543,7 @@ grafana:
 ## @param persistence.size Size for the PV
 ##
 persistence:
-  enabled: true
+  enabled: false
   ## If defined, storageClassName: <storageClass>
   ## If set to "-", storageClassName: "", which disables dynamic provisioning
   ## If undefined (the default) or set to null, no storageClassName spec is
