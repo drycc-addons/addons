@@ -13,6 +13,13 @@ metadata:
   {{- end }}
 data:
   grafana.ini: |
+    [unified_alerting]
+      enabled = true
+      ha_listen_address = "${POD_IP}:9094"
+      ha_peers = "{{ include "common.names.fullname" . }}:9094"
+      ha_advertise_address = "${POD_IP}:9094"
+      ha_peer_timeout = 15s
+      ha_reconnect_timeout = 2m
     [database]
       type = postgres
       url = {{ .Values.pg_url | quote }}

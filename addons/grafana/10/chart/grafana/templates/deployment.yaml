@@ -128,6 +128,10 @@ spec:
                 name: {{ include "common.tplvalues.render" (dict "value" .Values.grafana.extraEnvVarsSecret "context" $) }}
             {{- end }}
           env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             - name: GF_SECURITY_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -217,6 +221,12 @@ spec:
             - name: dashboard
               containerPort: {{ .Values.grafana.containerPorts.grafana }}
               protocol: TCP
+            - name: gossip-tcp
+              containerPort: {{ .Values.grafana.containerPorts.gossipTCP }}
+              protocol: TCP
+            - name: gossip-udp
+              containerPort: {{ .Values.grafana.containerPorts.gossipUDP }}
+              protocol: UDP
           {{- if .Values.grafana.customLivenessProbe }}
           livenessProbe: {{- include "common.tplvalues.render" (dict "value" .Values.grafana.customLivenessProbe "context" $) | nindent 12 }}
           {{- else if .Values.grafana.livenessProbe.enabled }}
