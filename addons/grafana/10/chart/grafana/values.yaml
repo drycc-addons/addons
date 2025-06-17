@@ -318,6 +318,8 @@ grafana:
   ##
   containerPorts:
     grafana: 3000
+    gossipTCP: 9094
+    gossipUDP: 9094
   ## Node affinity preset
   ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
   ## @param grafana.nodeAffinityPreset.type Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
@@ -586,6 +588,8 @@ service:
   ##
   ports:
     grafana: 3000
+    gossipTCP: 9094
+    gossipUDP: 9094
   ## @param service.nodePorts.grafana Specify the nodePort value for the LoadBalancer and NodePort service types
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
   ##
@@ -733,7 +737,7 @@ ingress:
 metrics:
   ## @param metrics.enabled Enable the export of Prometheus metrics
   ##
-  enabled: false
+  enabled: true
   ## Prometheus Operator ServiceMonitor configuration
   ## @param metrics.service.annotations [object] Annotations for Prometheus metrics service
   ##

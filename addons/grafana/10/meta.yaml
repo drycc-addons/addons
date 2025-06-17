@@ -13,7 +13,7 @@ tags: grafana
 bindable: true
 instances_retrievable: true
 bindings_retrievable: true
-plan_updateable: false
+plan_updateable: true
 allow_parameters:
 - name: "networkPolicy.allowNamespaces"
   required: false

@@ -45,6 +45,14 @@ spec:
       targetPort: dashboard
       protocol: TCP
       name: http
+    - port: {{ .Values.service.ports.gossipTCP }}
+      targetPort: gossip-tcp
+      protocol: TCP
+      name: gossip-tcp
+    - port: {{ .Values.service.ports.gossipUDP }}
+      targetPort: gossip-udp
+      protocol:  UDP
+      name: gossip-udp
       {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.grafana)) }}
       nodePort: {{ .Values.service.nodePorts.grafana }}
       {{- else if eq .Values.service.type "ClusterIP" }}
