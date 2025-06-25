@@ -1,0 +1,6 @@
+name: "standard-8c16g200"
+id: 8e34beb6-4fd6-11f0-91bf-fb3650f4e494
+description: "VictoriaMetrics Standard Plan with 8 CPU, 16GB Memory"
+displayName: "standard-8c16g200"
+bindable: true
+maximum_polling_duration: 1800

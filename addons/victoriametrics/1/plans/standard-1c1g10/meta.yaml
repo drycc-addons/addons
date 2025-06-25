@@ -1,0 +1,6 @@
+name: "standard-1c1g10"
+id: a69619c6-4ff6-11f0-b5d5-3b23b0dd4860
+description: "VictoriaMetrics Standard Plan with 1 CPU, 2GB Memory"
+displayName: "standard-1c1g10"
+bindable: true
+maximum_polling_duration: 1800

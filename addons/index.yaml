@@ -82,3 +82,6 @@ entries:
   lakefs: 
     - version: "1.52"
       description: "LakeFS provides version control over the data lake, and uses Git-like semantics to create and access those versions. If you know git, you’ll be right at home with lakeFS. "
+  victoriametrics:
+    - version: "1"
+      description: "VictoriaMetrics is a fast, cost-effective and scalable monitoring solution and time series database. It is designed to handle large amounts of data with high performance and low resource usage."

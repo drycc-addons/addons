@@ -1,0 +1,44 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: "hb-vmcluster-standard-4c8g100"
+vmauth: 
+  resources: 
+    requests:
+      cpu: 1000m
+      memory: 512Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+  replicaCount: 2
+
+vmselect: 
+  resources: 
+    requests:
+      cpu: 1000m
+      memory: 512Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+  replicaCount: 2
+
+vminsert: 
+  resources: 
+    requests:
+      cpu: 1000m
+      memory: 512Mi
+    limits:
+      cpu: 4000m
+      memory: 8Gi
+  replicaCount: 2
+
+vmstorage:
+  resources: 
+    requests:
+      cpu: 1000m
+      memory: 512Mi
+    memory:
+      cpu: 4000m
+      memory: 8Gi
+  replicaCount: 3
+  persistence:
+    size: 100Gi

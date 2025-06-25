@@ -1,0 +1,6 @@
+name: "standard-16c32g500"
+id: 99b0550c-4fd6-11f0-98ea-f3c453bc45ed
+description: "VictoriaMetrics Standard Plan with 16 CPU, 32GB Memory"
+displayName: "standard-16c32g500"
+bindable: true
+maximum_polling_duration: 1800
