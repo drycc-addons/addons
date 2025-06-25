@@ -1,0 +1,6 @@
+name: "standard-4c8g100"
+id: 4ed63e32-4fd3-11f0-934c-ff0f8d3bcb1d
+description: "VictoriaMetrics Standard Plan with 4 CPU, 8GB Memory"
+displayName: "standard-4c8g100"
+bindable: true
+maximum_polling_duration: 1800

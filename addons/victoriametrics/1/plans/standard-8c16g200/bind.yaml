@@ -1,0 +1,24 @@
+credential:
+  - name: {{ printf "DOMAIN" }}
+    value: {{ printf "%s" (include "common.names.fullname" .) }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+{{- if (eq .Values.vmauth.service.type "LoadBalancer") }}
+  - name: EXTRANET_HOST
+    valueFrom:
+      serviceRef: 
+        name: {{ template "victoriametrics.vmauth.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+{{- end }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "victoriametrics.vmauth.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  - name: PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "victoriametrics.vmauth.fullname" . }}
+        jsonpath: ' { .spec.ports[?(@.name=="http")].port }' 
+  - name: USER
+    value: {{ .Values.vmauth.user.username }}
+  - name: PASSWORD
+    value: {{ .Values.vmauth.user.password }} 

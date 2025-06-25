@@ -1,0 +1,17 @@
+vmauth:
+  user:
+    username: admin 
+    password: admin
+  networkPolicy:
+    allowNamespaces:
+      - "ns1"
+      - "ns2"
+  service:
+    type: LoadBalancer
+
+vmagent:
+  scrapeInterval: 60s
+  scrapeTimeout: 10s  
+
+vmstorage:
+  retentionPeriod: 30d

@@ -1,0 +1,45 @@
+name: victoriametrics
+version: "1.0"
+id: 6ee5a947-61b6-47ce-b27d-fe7a5246ea3b
+description: "victoriametrics"
+displayName: "victoriametrics"
+metadata:
+  displayName: "victoriametrics"
+  provider:
+    name: drycc
+    supportURL: https://victoriametrics.com/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/victoriametrics
+tags: victoriametrics
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "vmauth.user.username"
+  required: false
+  description: "username for mvauth"
+- name: "vmauth.user.password"
+  required: false
+  description: "password for mvauth"
+- name: "vmauth.networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces"
+- name: "vmauth.service.type"
+  required: false
+  description: "networkPolicy ClusterIP or LoadBalancer"
+- name: "vmagent.scrapeInterval"
+  required: false
+  description: "scrape interval for vmagent"
+- name: "vmagent.scrapeTimeout"
+  required: false
+  description: "scrape timeout for vmagent"
+- name: "vmagent.scrapeConfigOverrides"
+  required: false
+  description: "scrape config overrides for vmagent"
+- name: "vmagent.extraJobs"
+  required: false
+  description: "extra jobs for vmagent"
+- name: "vmstorage.retentionPeriod"
+  required: false
+  description: "retention period for vmstorage"
+archive: false

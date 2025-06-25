@@ -1,0 +1,28 @@
+# Copyright Broadcom, Inc. All Rights Reserved.
+# SPDX-License-Identifier: APACHE-2.0
+
+annotations:
+  category: Infrastructure
+  licenses: Apache-2.0
+apiVersion: v2
+appVersion: 1.118.0
+dependencies:
+- name: common
+  repository: oci://registry-1.docker.io/drycccharts
+  tags:
+  - drycc-common
+  version: 2.x.x
+description: VictoriaMetrics is a fast, cost-effective, and scalable monitoring solution
+  and time series database, compatible with Prometheus and Graphite
+home: https://drycc.com
+icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/victoriametrics/img/victoriametrics-stack-220x234.png
+keywords:
+- monitoring
+- metrics
+maintainers:
+- name: Broadcom, Inc. All Rights Reserved.
+  url: https://github.com/drycc/charts
+name: victoriametrics
+sources:
+- https://github.com/drycc/charts/tree/main/drycc/victoriametrics
+version: 0.1.13
