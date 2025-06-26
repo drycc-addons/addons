@@ -1889,6 +1889,7 @@ vmauth:
   user: 
     username: "admin"
     password: "admin"
+
   image:
     registry: registry.drycc.cc
     repository: drycc-addons/victoriametrics
