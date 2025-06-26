@@ -90,8 +90,8 @@ vmselect:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc/victoriametrics
-    tag: 0.0.1
+    repository: drycc-addons/victoriametrics
+    tag: 1
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -713,8 +713,8 @@ vminsert:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc/victoriametrics
-    tag: 0.0.1
+    repository: drycc-addons/victoriametrics
+    tag: 1
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1321,8 +1321,8 @@ vmstorage:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc/victoriametrics
-    tag: 0.0.1
+    repository: drycc-addons/victoriametrics
+    tag: 1
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -1887,12 +1887,13 @@ vmauth:
   ## @param vmauth.image.pullSecrets VictoriaMetrics Auth image pull secrets
   ##
   user: 
-    username: "admin1"
+    username: "admin"
     password: "admin"
+
   image:
     registry: registry.drycc.cc
-    repository: drycc/victoriametrics
-    tag: 0.0.1
+    repository: drycc-addons/victoriametrics
+    tag: 1
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -2519,8 +2520,8 @@ vmagent:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc/victoriametrics
-    tag: 0.0.1
+    repository: drycc-addons/victoriametrics
+    tag: 1
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -3094,8 +3095,8 @@ vmalert:
   ##
   image:
     registry: registry.drycc.cc
-    repository: drycc/victoriametrics
-    tag: 0.0.1
+    repository: drycc-addons/victoriametrics
+    tag: 1
     digest: ""
     ## Specify a imagePullPolicy
     ## ref: http://kubernetes.io/docs/concepts/containers/images/#pre-pulled-images
@@ -3628,8 +3629,8 @@ defaultInitContainers:
     ##
     image:
       registry: registry.drycc.cc
-      repository: drycc/victoriametrics
-      tag: 0.0.1
+      repository: drycc-addons/victoriametrics
+      tag: 1
       digest: ""
       pullPolicy: IfNotPresent
       ## Optionally specify an array of imagePullSecrets.
