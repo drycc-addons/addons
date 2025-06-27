@@ -18,8 +18,8 @@ jobmanager:
       cpu: 2
       memory: 4Gi
     requests:
-      cpu: 1
-      memory: 2Gi
+      cpu: 200m
+      memory: 512Mi
   ## Apache Flink jobmanager.service parameters
   ##
   service:
@@ -43,8 +43,8 @@ taskmanager:
       cpu: 2
       memory: 4Gi
     requests:
-      cpu: 1
-      memory: 2Gi
+      cpu: 200m
+      memory: 512Mi
   ## @param taskmanager.extraEnvVars Extra environment variables to be set on flink container
   extraEnvVars:
     # taskmanager.numberOfTaskSlots

@@ -18,8 +18,8 @@ web:
       cpu: 4
       memory: 8Gi
     requests:
-      cpu: 2
-      memory: 4Gi
+      cpu: 0.5
+      memory: 1Gi
 
 ## @section Airflow scheduler parameters
 
@@ -37,8 +37,8 @@ scheduler:
       cpu: 4
       memory: 8Gi
     requests:
-      cpu: 2
-      memory: 4Gi
+      cpu: 0.5
+      memory: 1Gi
 
 ## @section Airflow worker parameters
 
@@ -56,5 +56,5 @@ worker:
       cpu: 16
       memory: 48Gi
     requests:
-      cpu: 4
-      memory: 24Gi
+      cpu: 2
+      memory: 6Gi

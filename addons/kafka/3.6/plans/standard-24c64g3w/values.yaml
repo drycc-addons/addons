@@ -17,8 +17,8 @@ controller:
       cpu: 24
       memory: 64Gi
     requests:
-      cpu: 12
-      memory: 32Gi
+      cpu: 3
+      memory: 8Gi
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
   ##

@@ -16,8 +16,8 @@ master:
       cpu: 2000m
       memory: 64Gi
     requests:
-      cpu: 1000m
-      memory: 32Gi
+      cpu: 500m
+      memory: 8Gi
   ## Persistence parameters
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##

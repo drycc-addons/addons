@@ -16,8 +16,8 @@ resources:
     cpu: 1
     memory: 2048Mi
   requests:
-    cpu: 500m
-    memory: 1024Mi
+    cpu: 200m
+    memory: 256Mi
 
 ## @section Persistence parameters
 

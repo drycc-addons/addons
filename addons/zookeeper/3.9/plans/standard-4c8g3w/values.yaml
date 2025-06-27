@@ -17,8 +17,8 @@ resources:
     memory: 8Gi
     cpu: 4
   requests:
-    memory: 4Gi
-    cpu: 2
+    memory: 1Gi
+    cpu: 1
 ## @section Persistence parameters
 
 ## Enable persistence using Persistent Volume Claims
