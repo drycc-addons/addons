@@ -75,6 +75,9 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "service.externalTrafficPolicy"
+  required: false
+  description: "service externalTrafficPolicy config for values.yaml"
 - name: "externalAccess.enabled"
   required: false
   description: "externalAccess enabled or not config for values.yaml"

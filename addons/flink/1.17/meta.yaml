@@ -24,6 +24,9 @@ allow_parameters:
 - name: "jobmanager.service.type"
   required: false
   description: "jobmanager service type config for values.yaml"
+- name: "jobmanager.service.externalTrafficPolicy"
+  required: false
+  description: "jobmanager service externalTrafficPolicy config for values.yaml"
 - name: "jobmanager.networkPolicy.allowNamespaces"
   required: false
   description: "jobmanager networkPolicy allowNamespaces config for values.yaml"
@@ -36,6 +39,9 @@ allow_parameters:
 - name: "taskmanager.service.type"
   required: false
   description: "taskmanager service type config for values.yaml"
+- name: "taskmanager.service.externalTrafficPolicy"
+  required: false
+  description: "taskmanager service externalTrafficPolicy config for values.yaml"
 - name: "taskmanager.networkPolicy.allowNamespaces"
   required: false
   description: "taskmanager networkPolicy allowNamespaces config for values.yaml"

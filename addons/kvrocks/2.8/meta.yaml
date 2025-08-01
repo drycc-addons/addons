@@ -30,6 +30,9 @@ allow_parameters:
 - name: "master.service.type"
   required: false
   description: "master service type config for values.yaml"
+- name: "master.service.externalTrafficPolicy"
+  required: false
+  description: "master service externalTrafficPolicy config for values.yaml"
 - name: "master.nodeSelector"
   required: false
   description: "master nodeSelector config for values.yaml"
@@ -39,9 +42,15 @@ allow_parameters:
 - name: "replica.service.type"
   required: false
   description: "replica service type config for values.yaml"
+- name: "replica.service.externalTrafficPolicy"
+  required: false
+  description: "replica service externalTrafficPolicy config for values.yaml"
 - name: "sentinel.service.type"
   required: false
   description: "sentinel service type config for values.yaml"
+- name: "sentinel.service.externalTrafficPolicy"
+  required: false
+  description: "sentinel service externalTrafficPolicy config for values.yaml"
 - name: "sentinel.extraEnvVars"
   required: false
   description: "sentinel extraEnvVars config for values.yaml"

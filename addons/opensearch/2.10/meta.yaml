@@ -54,10 +54,16 @@ allow_parameters:
 - name: "dashboards.networkPolicy.allowNamespaces"
   required: false
   description: "dashboards networkPolicy allowNamespaces config for values.yaml"
+- name: "service.externalTrafficPolicy"
+  required: false
+  description: "service externalTrafficPolicy config for values.yaml"
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
 - name: "dashboards.service.type"
   required: false
   description: "dashboards service type config for values.yaml"
+- name: "dashboards.service.externalTrafficPolicy"
+  required: false
+  description: "dashboards service externalTrafficPolicy config for values.yaml"
 archive: false
