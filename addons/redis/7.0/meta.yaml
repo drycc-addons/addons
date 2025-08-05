@@ -15,9 +15,9 @@ instances_retrievable: true
 bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
-- name: "auth.password"
+- name: "auth"
   required: false
-  description: "auth.password config for values.yaml"
+  description: "auth config for values.yaml"
 - name: "commonConfiguration"
   required: false
   description: "commonConfiguration config for values.yaml"
@@ -27,6 +27,9 @@ allow_parameters:
 - name: "master.service.type"
   required: false
   description: "master service type config for values.yaml"
+- name: "master.service.externalTrafficPolicy"
+  required: false
+  description: "master service externalTrafficPolicy config for values.yaml"
 - name: "master.nodeSelector"
   required: false
   description: "master nodeSelector config for values.yaml"
@@ -39,9 +42,15 @@ allow_parameters:
 - name: "replica.service.type"
   required: false
   description: "replica service type config for values.yaml"
+- name: "replica.service.externalTrafficPolicy"
+  required: false
+  description: "replica service externalTrafficPolicy config for values.yaml"
 - name: "sentinel.service.type"
   required: false
   description: "sentinel service type config for values.yaml"
+- name: "sentinel.service.externalTrafficPolicy"
+  required: false
+  description: "sentinel service externalTrafficPolicy config for values.yaml"
 - name: "replica.disableCommands"
   required: false
   description: "replica.disableCommands config for values.yaml"

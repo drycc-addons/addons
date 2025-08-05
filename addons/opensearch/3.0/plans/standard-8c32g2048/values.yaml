@@ -24,8 +24,8 @@ master:
       cpu: 8
       memory: 32Gi
     requests:
-      cpu: 4
-      memory: 16Gi
+      cpu: 1
+      memory: 4Gi
   ## @param master.heapSize OpenSearch master-eligible node heap size.
   ## Note: The recommended heapSize is half of the container's memory.
   ## If omitted, it will be automatically set.
@@ -150,8 +150,8 @@ dashboards:
   ##
   resources:
     limits: 
-      memory: 4096Mi
-      cpu: 2000m
+      memory: 4Gi
+      cpu: 2
     requests:
-      memory: 2058Mi
-      cpu: 1000m
+      memory: 512Mi
+      cpu: 500m

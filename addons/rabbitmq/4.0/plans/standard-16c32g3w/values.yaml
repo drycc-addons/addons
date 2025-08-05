@@ -16,8 +16,8 @@ resources:
     cpu: 16
     memory: 32Gi
   requests:
-    cpu: 8
-    memory: 16Gi
+    cpu: 2
+    memory: 4Gi
 
 ## @param replicaCount Number of RabbitMQ replicas to deploy
 ##

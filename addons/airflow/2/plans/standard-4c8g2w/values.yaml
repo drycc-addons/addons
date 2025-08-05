@@ -15,11 +15,11 @@ web:
   ##
   resources:
     limits:
-      cpu: 4000m
+      cpu: 4
       memory: 8Gi
     requests:
-      cpu: 2000m
-      memory: 4Gi
+      cpu: 0.5
+      memory: 1Gi
 
 ## @section Airflow scheduler parameters
 
@@ -34,11 +34,11 @@ scheduler:
   ##
   resources:
     limits:
-      cpu: 4000m
+      cpu: 4
       memory: 8Gi
     requests:
-      cpu: 2000m
-      memory: 4Gi
+      cpu: 0.5
+      memory: 1Gi
 
 ## @section Airflow worker parameters
 
@@ -53,8 +53,8 @@ worker:
   ##
   resources:
     limits:
-      cpu: 4000m
+      cpu: 4
       memory: 8Gi
     requests:
-      cpu: 2000m
-      memory: 4Gi
+      cpu: 0.5
+      memory: 1Gi

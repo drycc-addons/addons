@@ -27,6 +27,9 @@ allow_parameters:
 - name: "service.type"
   required: false
   description: "service type config for values.yaml"
+- name: "service.externalTrafficPolicy"
+  required: false
+  description: "service externalTrafficPolicy config for values.yaml"
 - name: "auth.rootPassword"
   required: false
   description: "auth rootPassword config for values.yaml"

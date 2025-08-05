@@ -31,8 +31,8 @@ master:
       cpu: 2
       memory: 4Gi
     requests:
-      cpu: 1
-      memory: 2Gi
+      cpu: 500m
+      memory: 512Mi
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -80,11 +80,11 @@ worker:
   ##
   resources:
     limits:
-      cpu: 2000m
+      cpu: 2
       memory: 4Gi
     requests:
-      cpu: 1000m
-      memory: 2Gi
+      cpu: 500m
+      memory: 512Mi
   ## Enable persistence using Persistent Volume Claims
   ## ref: https://kubernetes.io/docs/user-guide/persistent-volumes/
   ##

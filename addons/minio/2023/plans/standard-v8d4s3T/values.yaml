@@ -16,8 +16,8 @@ resources:
     cpu: 8
     memory: 64Gi
   requests:
-    cpu: 4
-    memory: 32Gi
+    cpu: 1
+    memory: 8Gi
 
 ## MinIO&reg; statefulset parameters
 ## Only when mode is 'distributed'
