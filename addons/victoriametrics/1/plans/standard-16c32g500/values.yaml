@@ -7,7 +7,7 @@ vmauth:
       cpu: 1000m
       memory: 1024Mi
     requests:
-      cpu: 1600m
+      cpu: 16000m
       memory: 32Gi
   replicaCount: 2
 
@@ -17,7 +17,7 @@ vmselect:
       cpu: 1000m
       memory: 1024Mi
     requests:
-      cpu: 1600m
+      cpu: 16000m
       memory: 32Gi
   replicaCount: 2
 
@@ -27,7 +27,7 @@ vminsert:
       cpu: 1000m
       memory: 1024Mi
     requests:
-      cpu: 1600m
+      cpu: 16000m
       memory: 32Gi
   replicaCount: 2
 
@@ -37,7 +37,7 @@ vmstorage:
       cpu: 1000m
       memory: 1024Mi
     requests:
-      cpu: 1600m
+      cpu: 16000m
       memory: 32Gi
   replicaCount: 3
   persistence:
