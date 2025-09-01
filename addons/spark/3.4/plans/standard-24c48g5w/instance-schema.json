@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "master": {
+      "type": "object",
+      "properties": {
+        "persistence": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "description": "persistence size",
+              "pattern": "^(?:(?:[1-9]\\d{0,2}|1\\d{3}|2(?:[0-4]\\d{2}|5(?:[0-5]\\d|60)))Gi|(?:1(?:.\\d)?|2(?:.[0-5])?)Ti)$"
+            }
+          }
+        }
+      }
+    },
+    "worker": {
+      "type": "object",
+      "properties": {
+        "persistence": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "description": "persistence size",
+              "pattern": "^(?:(?:[1-9]\\d{0,2}|1\\d{3}|2(?:[0-4]\\d{2}|5(?:[0-5]\\d|60)))Gi|(?:1(?:.\\d)?|2(?:.[0-5])?)Ti)$"
+            }
+          }
+        }
+      }
+    }
+  }
+}

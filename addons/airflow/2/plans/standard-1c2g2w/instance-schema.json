@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "worker": {
+      "type": "object",
+      "properties": {
+        "persistence": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "description": "persistence size",
+              "pattern": "^(?:[1-9]\\d?|100)Gi$"
+            }
+          }
+        }
+      }
+    }
+  }
+}
