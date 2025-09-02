@@ -164,8 +164,9 @@ daemonset:
     type: OnDelete
   flush: 1
   ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
-  config:
-  
+  config: 
+    podWildcards: 
+     - "*"
     service: |
       [SERVICE]
           Flush                   {{ .Values.daemonset.flush }}
@@ -181,7 +182,7 @@ daemonset:
     inputs: |
       [INPUT]
           Name                    tail
-          Path                    /var/log/containers/*_{{ .Release.Namespace }}_*.log
+          Path                    {{ include "input.paths" . }}
           DB                      /data/containers.pos.db
           DB.locking              true
           Offset_Key              offset

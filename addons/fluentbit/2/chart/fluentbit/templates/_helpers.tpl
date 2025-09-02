@@ -60,3 +60,22 @@ Return the Fluentbit Reloader image name
 {{- include "fluentbit.image" . -}}
 {{- end -}}
 {{- end -}}
+
+{{/* 
+Return the Fluentbit input path 
+*/}}
+{{- define "input.paths" -}}
+  {{- $namespace := .Release.Namespace -}}
+  {{- $wildcards := .Values.daemonset.config.podWildcards -}}
+  {{- $pathTemplate := "/var/log/containers/%s_%s_*.log" -}}
+  
+  {{/* */}}
+  {{- $paths := list -}}
+  {{- range $wildcard := $wildcards -}}
+    {{- $path := printf $pathTemplate $wildcard $namespace -}}
+    {{- $paths = append $paths $path -}}
+  {{- end -}}
+  {{- join "," $paths -}}
+{{- end -}}
+
+

@@ -18,6 +18,9 @@ allow_parameters:
 - name: "daemonset.extraEnvVars"
   required: false
   description: "extra environment variables to add to fluentbit"
+- name: "daemonset.config.podWildcards"
+  equired: false
+  description: "fluentbit inout paths pod wildcards"
 - name: "daemonset.config.outputs"
   required: true
   description: "destinations for your data: databases, cloud services and more"
