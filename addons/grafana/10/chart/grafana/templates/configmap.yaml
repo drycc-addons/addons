@@ -32,3 +32,4 @@ data:
   GF_PATHS_CONFIG: "/opt/drycc/grafana/conf/grafana.ini"
   GF_PATHS_DATA: "/opt/drycc/grafana/data"
   GF_PATHS_LOGS: "/opt/drycc/grafana/logs"
+  

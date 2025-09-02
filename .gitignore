@@ -52,3 +52,4 @@ Chart.lock
 *.fix
 addons/grafana/10/dashborad/
 addons/prometheus/prom-value.yaml
+toCopy/
