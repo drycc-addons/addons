@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "worker": {
+      "type": "object",
+      "properties": {
+        "persistence": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "description": "persistence size",
+              "pattern": "^(?:(?:[1-9]\\d{0,2}|1[0-4]\\d{2}|15(?:0\\d|1\\d|2\\d|3[0-6]))Gi|1(?:.[0-5])?Ti)$"
+            }
+          }
+        }
+      }
+    }
+  }
+}

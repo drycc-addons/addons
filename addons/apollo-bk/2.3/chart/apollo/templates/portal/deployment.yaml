@@ -1,0 +1,102 @@
+{{- /*
+Copyright Drycc Community.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+
+{{- if .Values.portal.enabled }}
+{{- $portalFullName := include "apollo.portal.fullName" . }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ $portalFullName }}
+  labels:
+    {{- include "apollo.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.portal.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ $portalFullName }}
+  {{- with .Values.portal.strategy }}
+  strategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  template:
+    metadata:
+      labels:
+        app: {{ $portalFullName }}
+      {{- with .Values.portal.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.portal.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: secret-{{ $portalFullName }}
+          Secret:
+            name: {{ $portalFullName }}
+            items:
+              - key: application-github.properties
+                path: application-github.properties
+              - key: apollo-env.properties
+                path: apollo-env.properties
+            {{- range $fileName, $content := .Values.portal.config.files }}
+              - key: {{ $fileName }}
+                path: {{ $fileName }}
+            {{- end }}
+            defaultMode: 420
+      containers:
+        - name: {{ .Values.portal.name }}
+          image: "{{ .Values.portal.image.repository }}:{{ .Values.portal.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.portal.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.portal.containerPort }}
+              protocol: TCP
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.portal.config.profiles | quote }}
+          {{- range $key, $value := .Values.portal.env }}
+            - name: {{ $key }}
+              value: {{ $value }}
+          {{- end }}
+          volumeMounts:
+            - name: secret-{{ $portalFullName }}
+              mountPath: /apollo-portal/config/application-github.properties
+              subPath: application-github.properties
+            - name: secret-{{ $portalFullName }}
+              mountPath: /apollo-portal/config/apollo-env.properties
+              subPath: apollo-env.properties
+          {{- range $fileName, $content := .Values.portal.config.files }}
+            - name: secret-{{ $portalFullName }}
+              mountPath: /apollo-portal/config/{{ $fileName }}
+              subPath: {{ $fileName }}
+          {{- end }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.portal.containerPort }}
+            initialDelaySeconds: {{ .Values.portal.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.portal.liveness.periodSeconds }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.portal.config.contextPath }}/health
+              port: {{ .Values.portal.containerPort }}
+            initialDelaySeconds: {{ .Values.portal.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.portal.readiness.periodSeconds }}
+          resources:
+            {{- toYaml .Values.portal.resources | nindent 12 }}
+    {{- with .Values.portal.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.portal.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.portal.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}
