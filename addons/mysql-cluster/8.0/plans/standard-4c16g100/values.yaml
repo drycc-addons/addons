@@ -32,8 +32,8 @@ primary:
       cpu: 4000m
       memory: 16Gi
     requests:
-      cpu: 4000m
-      memory: 12Gi
+      cpu: 100m
+      memory: 1Gi
   
 ## @section Persistence parameters
 
