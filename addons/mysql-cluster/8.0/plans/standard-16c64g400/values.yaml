@@ -31,8 +31,8 @@ primary:
       cpu: 16000m
       memory: 64Gi
     requests:
-      cpu: 8000m
-      memory: 32Gi
+      cpu: 100m
+      memory: 1Gi
 
 ## @section Persistence parameters
 
@@ -83,6 +83,6 @@ router:
     limits: 
       cpu: 1600m
       memory: 2Gi
-    requests: 
-      cpu: 1600m
-      memory: 2Gi
+    requests:
+      cpu: 100m
+      memory: 1Gi
