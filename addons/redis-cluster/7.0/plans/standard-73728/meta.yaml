@@ -1,0 +1,6 @@
+name: "standard-73728"
+id: 66e78b91-c7da-4bb1-a058-6e3d2e109746
+description: "Redis cluster standard-73728 plan which limit resources memory size 73728Mi."
+displayName: "standard-73728"
+bindable: true
+maximum_polling_duration: 1800

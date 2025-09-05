@@ -1,0 +1,35 @@
+credential:
+  {{- if (eq .Values.jobmanager.service.type "LoadBalancer") }}
+  - name: JOBMANAGER_EXTERNAL_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: JOBMANAGER_DOMAIN
+    value: {{ include "flink.jobmanager.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
+  - name: JOBMANAGER_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+
+  - name: JOBMANAGER_PORT_HTTP
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="http")].port }'
+
+  - name: JOBMANAGER_PORT_RPC
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-rpc")].port }'
+
+  - name: JOBMANAGER_PORT_BLOB
+    valueFrom:
+      serviceRef:
+        name: {{ include "flink.jobmanager.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-blob")].port }'

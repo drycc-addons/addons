@@ -1,0 +1,6 @@
+name: "standard-4c10g5w"
+id: 1efdf417-6c42-46b4-9fba-6796419f9590
+description: "flink standard-4c10g5w plan which limit resources 4 cores 10G memory and 5 taskmanagers"
+displayName: "standard-4c10g5w"
+bindable: true
+maximum_polling_duration: 1800
