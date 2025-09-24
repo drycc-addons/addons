@@ -122,6 +122,9 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: datadir
+      {{- if .Values.master.persistence.annotations }}
+        annotations: {{- include "common.tplvalues.render" (dict "value" .Values.master.persistence.annotations "context" $) | nindent 10 }}
+      {{- end }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
       {{- if .Values.master.persistence.storageClass }}

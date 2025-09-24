@@ -196,6 +196,9 @@ master:
     enabled: false
     size: 5Gi
     storageClass: ""
+    ## @param annotations Persistent Volume Claim annotations
+    ##
+    annotations: {}
   garbageThreshold: 0.3
   defaultReplication: "001"
   ## persistentVolumeClaimRetentionPolicy
@@ -287,6 +290,9 @@ filer:
     enabled: false
     size: 5Gi
     storageClass: ""
+    ## @param annotations Persistent Volume Claim annotations
+    ##
+    annotations: {}
   ## persistentVolumeClaimRetentionPolicy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention
   ## @param persistentVolumeClaimRetentionPolicy.enabled Controls if and how PVCs are deleted during the lifecycle of a StatefulSet
@@ -373,10 +379,16 @@ volume:
       enabled: false
       size: 5Gi
       storageClass: ""
+      ## @param annotations Persistent Volume Claim annotations
+      ##
+      annotations: {}
     data:
       enabled: false
       size: 5Gi
       storageClass: ""
+      ## @param annotations Persistent Volume Claim annotations
+      ##
+      annotations: {}
   compactionMBps: 50
   ## persistentVolumeClaimRetentionPolicy
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#persistentvolumeclaim-retention

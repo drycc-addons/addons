@@ -148,6 +148,9 @@ spec:
   {{- if .Values.volume.persistence.meta.enabled }}
   - metadata:
       name: datadir-meta
+      {{- if .Values.volume.persistence.meta.annotations }}
+        annotations: {{- include "common.tplvalues.render" (dict "value" .Values.volume.persistence.meta.annotations "context" $) | nindent 10 }}
+      {{- end }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
       {{- if .Values.volume.persistence.meta.storageClass }}
@@ -164,6 +167,9 @@ spec:
   {{- if .Values.volume.persistence.data.enabled }}
   - metadata:
       name: datadir-data
+      {{- if .Values.volume.persistence.data.annotations }}
+        annotations: {{- include "common.tplvalues.render" (dict "value" .Values.volume.persistence.data.annotations "context" $) | nindent 10 }}
+      {{- end }}
     spec:
       accessModes: [ "ReadWriteOnce" ]
       {{- if .Values.volume.persistence.data.storageClass }}
