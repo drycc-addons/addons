@@ -1,0 +1,6 @@
+name: "standard-2c4g20"
+id: 68589728-9430-11f0-82a4-6b51ec33c9e0
+description: "PostgreSQL Cluster standard-2c4g20 plan: Disk 20Gi ,vCPUs 2 , RAM 4G , DB MAX Connection 1000"
+displayName: "standard-2c4g20"
+bindable: true
+maximum_polling_duration: 1800

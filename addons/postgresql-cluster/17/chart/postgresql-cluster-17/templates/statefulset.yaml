@@ -1,0 +1,273 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "patroni.fullname" . }}
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels:  {{- include "common.labels.standard" . | nindent 4 }}
+    app.kubernetes.io/component: patroni
+    application: {{ template "patroni.fullname" . }}
+    chart: {{ template "patroni.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    cluster-name: {{ template "patroni.fullname" . }}
+spec:
+  serviceName: {{ template "patroni.fullname" . }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app.kubernetes.io/component: patroni
+      application: {{ template "patroni.fullname" . }}
+      chart: {{ template "patroni.chart" . }}
+      release: {{ .Release.Name }}
+      heritage: {{ .Release.Service }}
+      cluster-name: {{ template "patroni.fullname" . }}
+  template:
+    metadata:
+      name: {{ template "patroni.fullname" . }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        app.kubernetes.io/component: patroni
+        application: {{ template "patroni.fullname" . }}
+        chart: {{ template "patroni.chart" . }}
+        release: {{ .Release.Name }}
+        heritage: {{ .Release.Service }}
+        cluster-name: {{ template "patroni.fullname" . }}
+    spec:
+      {{- if .Values.patroni.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.patroni.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.patroni.podAffinityPreset "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.patroni.podAntiAffinityPreset "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.patroni.nodeAffinityPreset.type "key" .Values.patroni.nodeAffinityPreset.key "values" .Values.patroni.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      {{- if .Values.patroni.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.patroni.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ template "patroni.serviceAccountName" . }}
+      # securityContext:
+      #   runAsUser: postgres
+      #   fsGroup: postgres
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        # securityContext: 
+        #   runAsUser: postgres
+        #   fsGroup: postgres
+        env:
+        {{- include "patroni.envs" . | indent 8 }} 
+        {{- if .Values.env }}
+        {{- range $key, $val := .Values.env }}
+        - name: {{  $key | quote | upper }}
+          value: {{ $val | quote }}
+        {{- end }}
+        {{- end }}
+        readinessProbe:
+          httpGet:
+            scheme: HTTP
+            path: /readiness
+            port: 8008
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+        livenessProbe:
+          failureThreshold: 3                            
+          httpGet:       
+            path: /liveness
+            port: 8008
+            scheme: HTTP   
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command:
+                - /usr/bin/env
+                - bash
+                - -c
+                - |
+                  # switch leader pod if the current pod is the leader
+                  if curl --fail http://localhost:8008/read-write; then
+                    init-stack patronictl switchover --force
+                  fi
+        ports:
+        - containerPort: 8008
+          protocol: TCP
+        - containerPort: 5432
+          protocol: TCP
+        volumeMounts:
+        - name: storage-volume
+          mountPath: "{{ .Values.persistentVolume.mountPath }}"
+        - mountPath: "/opt/drycc/postgresql/scripts/"
+          name: patroni-config
+        - mountPath: "/opt/drycc/postgresql/config/"
+          name: postgresql-config
+          # readOnly: true
+        - mountPath: "/opt/drycc/postgresql/backup/"
+          name: backup-config
+        - name: dshm
+          mountPath: /dev/shm
+          # readOnly: true
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      {{- if .Values.metrics.enabled }}
+      - name: metrics
+        image: "{{ .Values.metrics.image.repository }}:{{ .Values.metrics.image.tag }}"
+        imagePullPolicy: {{ .Values.metrics.image.pullPolicy | quote }}
+        {{- if .Values.metrics.containerSecurityContext.enabled }}
+        securityContext: {{- omit .Values.metrics.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+        {{- end }}
+        {{- if .Values.diagnosticMode.enabled }}
+        command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
+        args: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.args "context" $) | nindent 12 }}
+        {{- else if .Values.metrics.customMetrics }}
+        args: ["--extend.query-path", "/conf/custom-metrics.yaml"]
+        {{- end }}
+        env:
+          - name: DATA_SOURCE_NAME
+            value: {{ printf "postgresql://tea_mon:password@127.0.0.1:5432/postgres?sslmode=disable" }}       
+        ports:
+          - name: http-metrics
+            containerPort: {{ .Values.metrics.containerPort }}
+        startupProbe:
+          initialDelaySeconds: 10
+          tcpSocket:
+              port: http-metrics
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 15
+          successThreshold: 1
+        livenessProbe:
+          initialDelaySeconds: 5
+          httpGet:
+            path: /
+            port: http-metrics
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+          successThreshold: 1
+        readinessProbe:
+          initialDelaySeconds: 5
+          httpGet:
+            path: /
+            port: http-metrics
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+          successThreshold: 1
+        {{- if .Values.metrics.resources }}
+        resources: {{- toYaml .Values.metrics.resources | nindent 12 }}
+        {{- end }}
+      {{- end }}
+      - name: {{ .Chart.Name }}-backup
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        # securityContext: 
+        #   runAsUser: postgres
+        #   fsGroup: postgres
+        command:
+        - /usr/bin/env
+        - bash
+        - -c
+        - | 
+          python3 /opt/drycc/postgresql/pgbackup.py 0.0.0.0 9000 
+        env:
+        - name: PGHOST
+          value: localhost
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ template "patroni.fullname" . }}
+              key: password-superuser
+        - name: PGUSER
+          value: postgres
+        - name: PGDATABASE
+          value: postgres
+        - name: PGPORT
+          value: "5432" 
+        - name: PGDATA
+          value: "{{ .Values.persistentVolume.mountPath }}/data"  
+        ports:
+        - containerPort: 9000
+        volumeMounts:
+        - name: storage-volume
+          mountPath: "{{ .Values.persistentVolume.mountPath }}" 
+        - mountPath: "/opt/drycc/postgresql/backup/"
+          name: backup-config
+
+     {{- with .Values.nodeSelector }} 
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- if .Values.schedulerName }}
+      schedulerName: {{ .Values.schedulerName }}
+    {{- end }}
+    {{- if .Values.affinity }}
+      affinity:
+{{ .Values.affinity | toYaml | indent 8 }}
+    {{- else if .Values.affinityTemplate }}
+      affinity:
+{{ tpl .Values.affinityTemplate . | indent 8 }}
+    {{- end }}
+      volumes:
+      - name: patroni-config
+        configMap:
+          name: {{ template "common.names.fullname" . }}-patroni
+      - name: postgresql-config
+        configMap:
+          name: {{ template "common.names.fullname" . }}-postgresql
+      - name: backup-config
+        configMap:
+          name: {{ template "common.names.fullname" . }}-backup
+      {{- if not .Values.persistentVolume.enabled }}
+      - name: storage-volume
+        emptyDir: {}
+      {{- end }}
+      {{- if .Values.shmVolume.enabled }}
+      - name: dshm
+        emptyDir:
+          medium: Memory
+          {{- if .Values.shmVolume.sizeLimit }}
+          sizeLimit: {{ .Values.shmVolume.sizeLimit }}
+          {{- end }}
+      {{- end }}
+
+  {{- if .Values.persistentVolumeClaimRetentionPolicy.enabled }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.persistentVolumeClaimRetentionPolicy.whenDeleted }}
+    whenScaled: {{ .Values.persistentVolumeClaimRetentionPolicy.whenScaled }}
+  {{- end }}
+  {{- if .Values.persistentVolume.enabled }}
+  volumeClaimTemplates:
+    - metadata:
+        name: storage-volume
+        annotations:
+        {{- if .Values.persistentVolume.annotations }}
+{{ toYaml .Values.persistentVolume.annotations | indent 8 }}
+        {{- end }}
+        labels:
+          application: {{ template "patroni.fullname" . }}
+          release: {{ .Release.Name }}
+          heritage: {{ .Release.Service }}
+      spec:
+        accessModes:
+{{ toYaml .Values.persistentVolume.accessModes | indent 8 }}
+        resources:
+          requests:
+            storage: "{{ .Values.persistentVolume.size }}"
+      {{- if .Values.persistentVolume.storageClass }}
+      {{- if (eq "-" .Values.persistentVolume.storageClass) }}
+        storageClassName: ""
+      {{- else }}
+        storageClassName: "{{ .Values.persistentVolume.storageClass }}"
+      {{- end }}
+      {{- end }}
+  {{- end }}

@@ -1,0 +1,6 @@
+name: "standard-32c64g4000"
+id: ab26077a-9430-11f0-85c8-9328c7044661
+description: "PostgreSQL Cluster standard-32c64g4000 plan: Disk 4Ti ,vCPUs 32 , RAM 64G , DB MAX Connection 2000"
+displayName: "standard-32c64g4000"
+bindable: true
+maximum_polling_duration: 1800
