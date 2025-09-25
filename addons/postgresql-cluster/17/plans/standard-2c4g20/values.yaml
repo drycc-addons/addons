@@ -1,0 +1,81 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: hb-postgresql-cluster-standard-20
+
+patroni:
+  pgParameters:
+    max_worker_processes: 4
+    max_parallel_workers: 2
+    max_connections: 1000
+    max_slot_wal_keep_size: '2 GB'
+
+postgresql:
+  config: |-
+    # Connectivity
+    superuser_reserved_connections = 3
+
+    # Memory Settings
+    shared_buffers = '1024 MB'
+    work_mem = '32 MB'
+    maintenance_work_mem = '320 MB'
+    huge_pages = off
+    effective_cache_size = '3 GB'
+    effective_io_concurrency = 100 # concurrent IO only really activated if OS supports posix_fadvise function
+    random_page_cost = 1.25 # speed of random disk access relative to sequential access (1.0)
+
+    # Monitoring
+    track_io_timing=on        # measure exact block IO times
+    track_functions=pl        # track execution times of pl-language procedures if any
+
+    # Replication
+    max_wal_senders = 10
+    synchronous_commit = on
+
+    # Checkpointing: 
+    checkpoint_timeout  = '15 min' 
+    checkpoint_completion_target = 0.9
+    max_wal_size = '2 GB'
+    min_wal_size = '1 GB'
+          
+
+    # WAL writing
+    wal_compression = on
+    wal_buffers = -1    # auto-tuned by Postgres till maximum of segment size (16MB by default)
+    wal_writer_delay = 200ms
+    wal_writer_flush_after = 1MB
+
+    # Background writer
+    bgwriter_delay = 200ms
+    bgwriter_lru_maxpages = 100
+    bgwriter_lru_multiplier = 2.0
+    bgwriter_flush_after = 0
+
+    # Parallel queries:
+    max_parallel_workers_per_gather = 1
+    max_parallel_maintenance_workers = 1
+    parallel_leader_participation = on
+
+    # Advanced features 
+    enable_partitionwise_join = on 
+    enable_partitionwise_aggregate = on
+    jit = on
+    track_wal_io_timing = on
+    maintenance_io_concurrency = 100
+
+resources: 
+  # If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+    hugepages-2Mi: 20Mi
+  requests:
+    cpu: 100m
+    memory: 1Gi
+
+persistentVolume:
+  enabled: true
+  size: 20Gi
+
+shmVolume:
+  sizeLimit: "2Gi"

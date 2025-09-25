@@ -47,6 +47,8 @@ entries:
       description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
     - version: 16
       description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
+    - version: 17
+      description: "PostgreSQL is an object-relational database management system (ORDBMS) with an emphasis on extensibility and on standards-compliance."
   seaweedfs:
     - version: 3
       description: "SeaweedFS is a fast distributed storage system for blobs, objects, files, and data lake, for billions of files."
@@ -62,24 +64,24 @@ entries:
   pmm:
     - version: 2.41
       description: "Percona Monitoring and Management: an open source database monitoring, observability and management tool ."
-  mongodb: 
+  mongodb:
     - version: 7.0
       description: "MongoDB is a document database designed for ease of application development and scaling."
-  clickhouse: 
+  clickhouse:
     - version: 24
       description: "ClickHouse is the fastest and most resource efficient open-source database for real-time apps and analytics."
-  kvrocks: 
+  kvrocks:
     - version: 2.8
       description: "Apache Kvrocks is a distributed key value NoSQL database that uses RocksDB as storage engine and is compatible with Redis protocol."
     - version: "2.10"
       description: "Apache Kvrocks is a distributed key value NoSQL database that uses RocksDB as storage engine and is compatible with Redis protocol."
-  yugabytedb: 
+  yugabytedb:
     - version: 2024
       description: "YugabyteDB is a high-performance distributed SQL database for powering global, internet-scale applications. "
-  nessie: 
+  nessie:
     - version: "0.103"
       description: "Transactional Catalog for Data Lakes with Git-like semantics . "
-  lakefs: 
+  lakefs:
     - version: "1.52"
       description: "LakeFS provides version control over the data lake, and uses Git-like semantics to create and access those versions. If you know git, you’ll be right at home with lakeFS. "
   victoriametrics:
