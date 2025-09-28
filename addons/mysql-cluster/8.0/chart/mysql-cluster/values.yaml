@@ -149,9 +149,9 @@ auth:
 ## initdbScripts:
 ##   my_init_script.sh: |
 ##      #!/bin/bash
-##      echo "Do something." 
+##      echo "Do something."
 ##
-initdbScripts: 
+initdbScripts:
   int-mysql.sh: |
     #!/bin/bash
     set -ex
@@ -211,14 +211,14 @@ primary:
   ## ref: https://mysql.com/kb/en/mysql/configuring-mysql-with-mycnf/#example-of-configuration-file
   ##
   maxConnectionLimit: 2000
-  ## against plans 
+  ## against plans
   extraConfig: |
     [mysqld]
     innodb_io_capacity=2000
     innodb_io_capacity_max=3000
     max_connect_errors=1000000
     thread_cache_size=200
-    
+
   configuration: |-
     [mysqld]
     # server
@@ -250,7 +250,7 @@ primary:
     default-time-zone='+8:00'
     local_infile=ON
     # Replication
-  
+
     log_bin=mysql-bin
     gtid_mode=ON
     enforce_gtid_consistency=ON
@@ -266,18 +266,18 @@ primary:
     replica_parallel_workers=8
 
     # Group Replication Settings 
-  
+
     [client]
     port=3306
     socket=/opt/drycc/mysql/tmp/mysql.sock
     default-character-set=UTF8MB4
     plugin_dir=/opt/drycc/mysql/lib/plugin
- 
+
     [manager]
     port=3306
     socket=/opt/drycc/mysql/tmp/mysql.sock
     pid-file=/opt/drycc/mysql/tmp/mysqld.pid
-    
+
     !includedir /drycc/mysql/
 
   ## @param primary.existingConfigmap Name of existing ConfigMap with MySQL Primary configuration.
@@ -593,20 +593,19 @@ primary:
   podLabels: {}
 
 cluster:
-  ## @param router.name Name of the cluster 
+  ## @param router.name Name of the cluster
   ##
   name: cluster
 
   image:
     registry: registry.drycc.cc
-    repository: drycc-addons/mysql-shell   
+    repository: drycc-addons/mysql-shell
     tag: "8.0"
     digest: ""
-    pullPolicy: IfNotPresent 
-
+    pullPolicy: IfNotPresent
 
 router:
-  ## @param router.name Name of the router 
+  ## @param router.name Name of the router
   ##
   name: router
   ## @param router.replicaCount Number of MySQL secondary replicas
@@ -725,7 +724,7 @@ router:
     ##    cpu: 250m
     ##    memory: 256Mi
     ##
-    limits: 
+    limits:
       cpu: 250m
       memory: 256Mi
     ## Examples:
@@ -733,7 +732,7 @@ router:
     ##    cpu: 250m
     ##    memory: 256Mi
     ##
-    requests: 
+    requests:
       cpu: 250m
       memory: 256Mi
   ## Configure extra options for liveness probe
@@ -749,8 +748,8 @@ router:
     enabled: true
     initialDelaySeconds: 5
     periodSeconds: 10
-    timeoutSeconds: 10
-    failureThreshold: 3
+    timeoutSeconds: 30
+    failureThreshold: 10
     successThreshold: 1
   ## Configure extra options for readiness probe
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#configure-probes
@@ -987,7 +986,7 @@ rbac:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: true 
+  enabled: true
   ## @param networkPolicy.allowExternal The Policy model to apply.
   ## When set to false, only pods with the correct
   ## client label will have network access to the port MySQL is listening
@@ -996,7 +995,6 @@ networkPolicy:
   ##
   allowCurrentNamespace: true
   allowNamespaces: []
-  
 
 ## @section Volume Permissions parameters
 
@@ -1019,7 +1017,7 @@ volumePermissions:
     repository: drycc/base
     tag: bookworm
     digest: ""
-    pullPolicy: IfNotPresent 
+    pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
     ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -1039,7 +1037,7 @@ volumePermissions:
 metrics:
   ## @param metrics.enabled Start a side-car prometheus exporter
   ##
-  enabled: true 
+  enabled: true
   ## @param metrics.image.registry Exporter image registry
   ## @param metrics.image.repository Exporter image repository
   ## @param metrics.image.tag Exporter image tag (immutable tags are recommended)
@@ -1114,10 +1112,9 @@ metrics:
   ## - --collect.heartbeat.table
   ##
 
-
   extraArgs:
-    primary: 
-      - --collect.info_schema.processlist 
+    primary:
+      - --collect.info_schema.processlist
       - --collect.perf_schema.replication_group_members
       - --collect.perf_schema.replication_group_member_stats
       - --collect.perf_schema.replication_applier_status_by_worker
@@ -1137,14 +1134,14 @@ metrics:
     ## limits:
     ##    cpu: 100m
     ##    memory: 256Mi
-    limits: 
+    limits:
       cpu: 100m
       memory: 256Mi
     ## Examples:
     ## requests:
     ##    cpu: 100m
     ##    memory: 256Mi
-    requests: 
+    requests:
       cpu: 100m
       memory: 256Mi
   containerSecurityContext:
@@ -1261,13 +1258,13 @@ metrics:
     ##      summary: MariaDB instance is down
     ##
     rules: []
-    
+
 backup:
-  enabled: false 
+  enabled: false
   schedule: ""
-  s3: 
+  s3:
     endpoint: ""
     bucketName: ""
-    accessKey: "" 
-    secretKey: "" 
+    accessKey: ""
+    secretKey: ""
     region: us-west-1
