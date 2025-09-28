@@ -127,7 +127,7 @@ spec:
             - |
       
               export MYSQL_MASTER_HOST=${MYSQL_HOST}-0.${MYSQL_HOST}
-              echo ${MYSQL_ROOT_PASSWORD} | mysqlrouter --bootstrap root@${MYSQL_MASTER_HOST}:$(MYSQL_PORT_NUMBER)  -d /opt/drycc/mysql/conf/router --name mxrouter --force
+              echo ${MYSQL_ROOT_PASSWORD} | mysqlrouter --bootstrap root@${MYSQL_MASTER_HOST}:$(MYSQL_PORT_NUMBER)  -d /opt/drycc/mysql/conf/router --name mxrouter --conf-set-option=metadata_cache:bootstrap.ttl=5 --conf-set-option=metadata_cache:bootstrap.auth_cache_refresh_interval=300 --force
           env:
             - name: MYSQL_HOST
               value: {{ include "mysql.primary.fullname" . }}
