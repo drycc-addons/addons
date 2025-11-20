@@ -7,7 +7,7 @@ patroni:
     max_worker_processes: 4
     max_parallel_workers: 2
     max_connections: 1000
-    max_slot_wal_keep_size: '2 GB'
+    max_slot_wal_keep_size: "2 GB"
 
 postgresql:
   config: |-
@@ -58,11 +58,11 @@ postgresql:
     # Advanced features 
     enable_partitionwise_join = on 
     enable_partitionwise_aggregate = on
-    jit = on
+    jit = off
     track_wal_io_timing = on
     maintenance_io_concurrency = 100
 
-resources: 
+resources:
   # If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:

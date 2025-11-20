@@ -1,9 +1,9 @@
 replicaCount: 3
-diagnosticMode: 
+diagnosticMode:
   enable: false
 
 service:
- type: ClusterIP
+  type: ClusterIP
 
 image:
   # Image was built from registry.drycc.cc/drycc-addons/patroni:3.2
@@ -11,13 +11,13 @@ image:
   repository: registry.drycc.cc/drycc-addons/postgresql-patroni
   tag: 16
   # IfNotPresent , Always
-  pullPolicy: 'IfNotPresent'
+  pullPolicy: "IfNotPresent"
 
-logicalbackupImages: 
+logicalbackupImages:
   repository: registry.drycc.cc/drycc-addons/postgresql-logicalbackup
   tag: 16
   # IfNotPresent , Always
-  pullPolicy: 'IfNotPresent'
+  pullPolicy: "IfNotPresent"
 
 # Credentials used by Patroni , passwd
 # https://github.com/zalando/patroni/blob/master/docs/SETTINGS.rst#postgresql
@@ -188,8 +188,7 @@ logicalbackupScript: |
 
   echo "Backup process completed!"
 
-
-postgresql: 
+postgresql:
   config: |-
     log_min_duration_statement = 1000
     max_wal_size = 4GB
@@ -204,8 +203,7 @@ patroni:
     max_worker_processes: 64
     max_parallel_workers: 32
     max_connections: 2000
-    max_slot_wal_keep_size: '2 GB'
-
+    max_slot_wal_keep_size: "2 GB"
 
   ## @param patroni.podAnnotations Additional pod annotations for Postgresql patroni pods
   ## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
@@ -251,12 +249,12 @@ patroni:
 ## Postgresql Prometheus exporter parameters
 ##
 metrics:
-  enabled: true 
+  enabled: true
   image:
     repository: registry.drycc.cc/drycc-addons/postgres-exporter
     tag: "0"
     # IfNotPresent , Always
-    pullPolicy: 'IfNotPresent'
+    pullPolicy: "IfNotPresent"
   ## @param metrics.customMetrics Define additional custom metrics
   ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
   ## customMetrics:
@@ -278,14 +276,14 @@ metrics:
     ## Values: ClientIP or None
     ## ref: https://kubernetes.io/docs/user-guide/services/
     ##
-    sessionAffinity: None                                                                                                                                                                                                                                                 
+    sessionAffinity: None
     ## @param metrics.service.annotations [object] Annotations for Prometheus to auto-discover the metrics endpoint
     ##
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/port: "{{ .Values.metrics.service.ports.metrics }}"
 
-  customMetrics: {} 
+  customMetrics: {}
   containerPort: 9187
   containerSecurityContext:
     enabled: false
@@ -293,8 +291,8 @@ metrics:
     runAsNonRoot: true
   customLivenessProbe: {}
   customReadinessProbe:
-    enabled: true 
-  resources: 
+    enabled: true
+  resources:
     limits:
       cpu: 100m
       memory: 512Mi
@@ -303,7 +301,7 @@ metrics:
       cpu: 100m
       memory: 512Mi
 
-logicalbackup: 
+logicalbackup:
   enabled: false
   scheduleCronJob: "22 0 * * 0"
   minio:
@@ -368,13 +366,13 @@ persistentVolume:
   accessModes:
     - ReadWriteOnce
 
-resources: 
+resources:
   # If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 100m
     memory: 512Mi
-    # hugepages-2Mi: 4Mi
+    hugepages-2Mi: 4Mi
   requests:
     cpu: 100m
     memory: 512Mi
@@ -408,7 +406,6 @@ affinityTemplate: |
             application:  {{ template "patroni.name" . }}
             release: {{ .Release.Name | quote }}
 affinity: {}
-
 ## Use an alternate scheduler, e.g. "stork".
 ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
 ##
@@ -429,7 +426,7 @@ serviceAccount:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: true 
+  enabled: true
   ## @param networkPolicy.allowExternal The Policy model to apply.
   ## When set to false, only pods with the correct
   ## client label will have network access to the port Postgresql is listening
@@ -437,5 +434,5 @@ networkPolicy:
   ## (with the correct destination port).
   ##
   allowCurrentNamespace: true
-  allowNamespaces: 
+  allowNamespaces:
 clusterDomain: cluster.local
