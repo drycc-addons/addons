@@ -297,8 +297,8 @@ metrics:
   resources:
     limits:
       cpu: 100m
-      memory: 512Mi
       hugepages-2Mi: 20Mi
+      memory: 512Mi
     requests:
       cpu: 100m
       memory: 512Mi
@@ -373,8 +373,8 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 100m
+    hugepages-2Mi: 4Mi
     memory: 512Mi
-    # hugepages-2Mi: 4Mi
   requests:
     cpu: 100m
     memory: 512Mi
