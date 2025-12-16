@@ -1,0 +1,6 @@
+name: "standard-2c4g3w"
+id: a944eb9d-acdc-4777-ad76-baef535fd895
+description: "etcd standard-2c4g3w plan which limit resources 2 cores 4G memory and 3 workers."
+displayName: "standard-2c4g3w"
+bindable: true
+maximum_polling_duration: 1800

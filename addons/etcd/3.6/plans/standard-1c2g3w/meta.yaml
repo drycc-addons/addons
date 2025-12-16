@@ -1,0 +1,6 @@
+name: "standard-1c2g3w"
+id: becad715-e953-45d1-85eb-c1360e09d830
+description: "etcd standard-2c4g3w plan which limit resources 1 core 2G memory and 3 workers."
+displayName: "standard-1c2g3w"
+bindable: true
+maximum_polling_duration: 1800

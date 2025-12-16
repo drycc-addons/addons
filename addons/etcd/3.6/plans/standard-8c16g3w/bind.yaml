@@ -1,0 +1,42 @@
+credential:
+  {{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: EXTERNAL_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+  {{- end }}
+
+  - name: DOMAIN
+    value: {{ include "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  
+  - name: CLIENT_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.targetPort=="client")].port }'
+
+  - name: PEER_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "common.names.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.targetPort=="peer")].port }'
+
+  {{- if .Values.auth.create }}
+  - name: USER
+    value: root
+
+  - name: PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "etcd.secretName" . }}
+        jsonpath: '{ .data.etcd-root-password }'
+  {{- end }}
+
+  {{- end }}
