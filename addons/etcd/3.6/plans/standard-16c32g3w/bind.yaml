@@ -38,5 +38,3 @@ credential:
         name: {{ include "etcd.secretName" . }}
         jsonpath: '{ .data.etcd-root-password }'
   {{- end }}
-
-  {{- end }}

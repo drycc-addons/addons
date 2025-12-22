@@ -39,4 +39,3 @@ credential:
         jsonpath: '{ .data.etcd-root-password }'
   {{- end }}
 
-  {{- end }}
