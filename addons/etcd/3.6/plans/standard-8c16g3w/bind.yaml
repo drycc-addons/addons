@@ -28,7 +28,7 @@ credential:
         name: {{ include "common.names.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.targetPort=="peer")].port }'
 
-  {{- if .Values.auth.create }}
+  {{- if .Values.auth.rbac.create }}
   - name: USER
     value: root
 
@@ -38,3 +38,4 @@ credential:
         name: {{ include "etcd.secretName" . }}
         jsonpath: '{ .data.etcd-root-password }'
   {{- end }}
+
