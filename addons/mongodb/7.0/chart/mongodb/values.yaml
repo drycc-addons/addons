@@ -111,7 +111,7 @@ image:
   ## Specify a imagePullPolicy
   ## ref: https://kubernetes.io/docs/user-guide/images/#pre-pulling-images
   ##
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   ## Optionally specify an array of imagePullSecrets.
   ## Secrets must be manually created in the namespace.
   ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -494,7 +494,7 @@ podSecurityContext:
 ## @param containerSecurityContext.enabled Enable MongoDB(&reg;) container(s)' Security Context
 ## @param containerSecurityContext.runAsUser User ID for the MongoDB(&reg;) container
 ## @param containerSecurityContext.runAsNonRoot Set MongoDB(&reg;) container's Security Context runAsNonRoot
-## 
+##
 containerSecurityContext:
   enabled: true
   runAsUser: 1001
@@ -1516,7 +1516,7 @@ hidden:
   ## @param hidden.terminationGracePeriodSeconds Hidden Termination Grace Period
   ##
   terminationGracePeriodSeconds: ""
- ## @param hidden.updateStrategy.type Strategy that will be employed to update Pods in the StatefulSet
+  ## @param hidden.updateStrategy.type Strategy that will be employed to update Pods in the StatefulSet
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
   ## updateStrategy:
   ##  type: RollingUpdate
@@ -1873,10 +1873,10 @@ metrics:
   ## @param metrics.resources.requests The requested resources for Prometheus exporter containers
   ##
   resources:
-    limits: 
+    limits:
       cpu: 500m
       memory: 512Mi
-    requests: 
+    requests:
       cpu: 100m
       memory: 128Mi
   ## @param metrics.containerPort Port of the Prometheus metrics container
@@ -2036,7 +2036,7 @@ metrics:
 networkPolicy:
   ## @param networkPolicy.enabled Enable creation of NetworkPolicy resources
   ##
-  enabled: true 
+  enabled: true
   ## @param networkPolicy.allowExternal The Policy model to apply.
   ## When set to false, only pods with the correct
   ## client label will have network access to the port Mongodb is listening
