@@ -465,7 +465,7 @@ spec:
                 -listen :{{ .Values.proxy.containerPorts.proxy }} \
                 -master {{ .Values.sentinel.masterSet }} \
                 -sentinel-addr ${POD_IP}:{{ .Values.sentinel.containerPorts.sentinel }} \
-                -sentinel-pass $(REDIS_PASSWORD) \
+                -sentinel-pass "$(REDIS_PASSWORD)" \
                 -sentinel-user "" \
                 -max-procs={{ .Values.proxy.maxProcs }}
           {{- end }}

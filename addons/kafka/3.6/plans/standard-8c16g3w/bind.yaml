@@ -32,7 +32,7 @@ credential:
     valueFrom:
       serviceRef:
         name: {{ template "common.names.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.name=="tcp-external")].port }'
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-client")].port }'
   {{- end }}
 
   {{- $brokerList := list }}

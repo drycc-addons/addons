@@ -1,0 +1,6 @@
+name: "standard-8c16g3w"
+id: e0c7ee78-b841-449b-9681-ad10912bbaa2
+description: "etcd standard-8c16g3w plan which limit resources 8 cores 16G memory and 3 workers."
+displayName: "standard-8c16g3w"
+bindable: true
+maximum_polling_duration: 1800
