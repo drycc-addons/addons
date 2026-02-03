@@ -1,0 +1,24 @@
+name: mongodb-8.0
+version: 8.0
+id: 7a599bfe-42fe-45f0-a7e5-d706cceeb75a
+description: "mongodb-8.0"
+displayName: "mongodb-8.0"
+metadata:
+  displayName: "mongodb-8.0"
+  provider:
+    name: drycc
+    supportURL: https://www.mongodb.com/docs/manual/
+  documentationURL: https://www.mongodb.com/docs/manual/
+tags: mongodb
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+  - name: "service.type"
+    required: false
+    description: "service type config for values.yaml"
+  - name: "networkPolicy.allowNamespaces"
+    required: false
+    description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false
