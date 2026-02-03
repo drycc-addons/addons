@@ -1,0 +1,36 @@
+{{- $fullName := include "mongodb.fullname" . }}
+{{- $replicaCount := .Values.replicaCount | int }}
+credential:
+{{- if (eq .Values.service.type "LoadBalancer") }}
+ {{- range $i, $e := until $replicaCount }}
+  - name: {{ printf "EXTRANET_HOST_%d" $i }}
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-%d" $fullName $i }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+ {{- end }}
+{{- end }}
+
+{{- range $i, $e := until $replicaCount }}
+  - name: {{ printf "HOSTNAME_%d" $i }}
+    valueFrom:
+      serviceRef:
+        name: {{ printf "%s-%d" $fullName $i }}
+        jsonpath: '{ .spec.clusterIP }'
+{{- end }}
+
+{{- range $i, $e := until $replicaCount }}
+  - name: {{ printf "DOMAIN_%d" $i }}
+    value: {{ printf "%s-%d" $fullName $i }}.{{$fullName}}-headless.{{ $.Release.Namespace }}.svc.{{ $.Values.clusterDomain }}
+{{- end }}
+  - name: REPLICA_SET_NAME
+    value: 'rs0'
+  - name: PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.mongodb-root-password }' 
+  - name: USERNAME
+    value: 'root'
+  - name: PORT
+    value: 27017

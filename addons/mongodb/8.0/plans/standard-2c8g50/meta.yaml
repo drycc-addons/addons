@@ -1,0 +1,6 @@
+name: "standard-2c8g50"
+id: 3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f
+description: "mongodb standard-2c8g50 plan: Disk 50Gi ,vCPUs 2 , RAM 8G "
+displayName: "standard-2c8g50"
+bindable: true
+maximum_polling_duration: 1800

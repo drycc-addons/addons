@@ -67,6 +67,9 @@ entries:
   mongodb:
     - version: 7.0
       description: "MongoDB is a document database designed for ease of application development and scaling."
+  mongodb:
+    - version: 8.0
+      description: "MongoDB is a document database designed for ease of application development and scaling."
   clickhouse:
     - version: 24
       description: "ClickHouse is the fastest and most resource efficient open-source database for real-time apps and analytics."
