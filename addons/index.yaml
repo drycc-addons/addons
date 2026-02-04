@@ -67,6 +67,10 @@ entries:
   mongodb:
     - version: 7.0
       description: "MongoDB is a document database designed for ease of application development and scaling."
+<<<<<<< HEAD
+=======
+  mongodb:
+>>>>>>> e56cc8b135733cfccd5c92f18876c5fd92d8e45f
     - version: 8.0
       description: "MongoDB is a document database designed for ease of application development and scaling."
   clickhouse:
