@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: "hb-opensearch-standard-2c4g32"
+fullnameOverride: "hb-opensearch-standard-2c6g32"
 ## @section Master-elegible nodes parameters
 
 master:
@@ -22,9 +22,9 @@ master:
   resources:
     limits:
       cpu: 2
-      memory: 4Gi
+      memory: 6Gi
     requests:
-      cpu: 200m
+      cpu: 500m
       memory: 512Mi
   ## @param master.heapSize OpenSearch master-eligible node heap size.
   ## Note: The recommended heapSize is half of the container's memory.

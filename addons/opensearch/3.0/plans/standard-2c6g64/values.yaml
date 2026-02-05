@@ -1,6 +1,6 @@
 ## @param fullnameOverride String to fully override common.names.fullname
 ##
-fullnameOverride: "hb-opensearch-standard-2c4g64"
+fullnameOverride: "hb-opensearch-standard-2c6g64"
 ## @section Master-elegible nodes parameters
 
 master:
@@ -22,7 +22,7 @@ master:
   resources:
     limits:
       cpu: 2
-      memory: 4Gi
+      memory: 6Gi
     requests:
       cpu: 500m
       memory: 512Mi
@@ -154,4 +154,4 @@ dashboards:
       cpu: 500m
     requests:
       memory: 512Mi
-      cpu: 100m
+      cpu: 200m
