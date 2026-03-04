@@ -1,0 +1,6 @@
+name: "standard-2c8g50"
+id: 108376d3-0f87-4226-8e80-f200022383aa
+description: "PostgreSQL Cluster standard-2c8g50 plan: Disk 50Gi ,vCPUs 2 , RAM 8G , DB MAX Connection 2000"
+displayName: "standard-2c8g50"
+bindable: true
+maximum_polling_duration: 1800

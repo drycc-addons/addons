@@ -1,0 +1,69 @@
+{{- /*
+Copyright Drycc Community.
+SPDX-License-Identifier: APACHE-2.0
+*/}}
+{{- if (include "patroni.createLogicalBackupCronJob" .) }}
+apiVersion: {{ include "common.capabilities.cronjob.apiVersion" . }}
+kind: CronJob
+metadata:
+  name: {{ include "patroni.fullname" . }}-logicalbackup
+  namespace: {{ include "common.names.namespace" . | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+    application: {{ template "patroni.fullname" . }}
+    cluster-name: {{ template "patroni.fullname" . }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+
+spec:
+  schedule: "{{ .Values.logicalbackup.scheduleCronJob }}"
+  failedJobsHistoryLimit: 1
+  successfulJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: {{ .Chart.Name }}-logicalbackup
+            image: "{{ .Values.logicalbackupImages.repository }}:{{ .Values.logicalbackupImages.tag }}"
+            imagePullPolicy: {{ .Values.logicalbackupImages.pullPolicy | quote }}
+            command: 
+              - /usr/bin/env
+              - bash
+              - -c
+              - |
+                sh /opt/drycc/logicalbackup/logicalbackup.sh
+            env:
+            - name: PGHOST
+              value: {{ include "patroni.fullname" . }}-repl
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "patroni.fullname" . }}
+                  key: password-superuser
+            - name: MINIO_BUCKET
+              value: {{ .Values.logicalbackup.minio.bucket }}
+            - name: MINIO_HOST
+              value: {{ .Values.logicalbackup.minio.endpoint }}
+            - name: MINIO_ACCESS_KEY
+              value: {{ .Values.logicalbackup.minio.access_key }}
+            - name: MINIO_SECRET_KEY
+              value: {{ .Values.logicalbackup.minio.secret_key }}
+
+            volumeMounts:
+              - mountPath: "/opt/drycc/logicalbackup/"
+                name: logicalbackup-config
+        
+          volumes:
+            - name: logicalbackup-config
+              configMap:
+                name: {{ template "common.names.fullname" . }}-logicalbackup
+{{- end -}}
