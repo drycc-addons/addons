@@ -26,3 +26,17 @@ controller:
     ## @param controller.persistence.size PVC Storage Request for Kafka data volume
     ##
     size: 64Gi
+
+## @section Broker-only statefulset parameters
+##
+broker:
+  ## @param broker.heapOpts Kafka Java Heap size for broker-only nodes
+  ##
+  heapOpts: -Xmx2048m -Xms2048m
+  resources:
+    limits:
+      cpu: 2
+      memory: 4Gi
+    requests:
+      cpu: 400m
+      memory: 512Mi
