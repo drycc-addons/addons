@@ -1,0 +1,6 @@
+name: "standard-16c32g3w"
+id: 506965ca-6d49-45ca-90aa-86fba579150b
+description: "Kafka standard-16c32g3w plan which limit resources 3 brokers per broker 16 cores, memory size 32Gi persistence size 768Gi."
+displayName: "standard-16c32g3w"
+bindable: true
+maximum_polling_duration: 1800

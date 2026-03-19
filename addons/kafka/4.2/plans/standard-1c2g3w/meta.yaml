@@ -1,0 +1,6 @@
+name: "standard-1c2g3w"
+id: 83ca1043-39cb-4508-8723-0977e38a8882
+description: "Kafka standard-1c2g3w plan which limit resources 3 brokers per broker 1 core, memory size 2Gi and persistence size 16Gi."
+displayName: "standard-1c2g3w"
+bindable: true
+maximum_polling_duration: 1800

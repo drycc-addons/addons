@@ -1,0 +1,99 @@
+name: kafka-4.2
+version: 4.2
+id: 0ff645c0-54af-4896-80d6-34ae0cb0ca7d
+description: "kafka-4.2"
+displayName: "kafka-4.2"
+metadata:
+  displayName: "kafka-4.2"
+  provider:
+    name: drycc
+    supportURL: https://kafka.apache.org/
+  documentationURL: https://github.com/drycc-addons/containers/tree/main/containers/kafka
+tags: kafka
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "extraEnvVars"
+  required: false
+  description: "extraEnvVars config for values.yaml"
+- name: "extraConfig"
+  required: false
+  description: "extraConfig config for values.yaml"
+- name: "controller.extraConfig"
+  required: false
+  description: "controller.extraConfig config for values.yaml"
+- name: "controller.extraEnvVars"
+  required: false
+  description: "controller.extraEnvVars config for values.yaml"
+- name: "controller.heapOpts"
+  required: false
+  description: "controller.heapOpts config for values.yaml"
+- name: "controller.replicaCount"
+  required: false
+  description: "controller.replicaCount config for values.yaml"
+- name: "controller.controllerOnly"
+  required: false
+  description: "controller.controllerOnly config for values.yaml"
+- name: "controller.nodeSelector"
+  required: false
+  description: "controller.nodeSelector config for values.yaml"
+- name: "controller.persistence"
+  required: false
+  description: "controller.persistence config for values.yaml"
+- name: "broker.replicaCount"
+  required: false
+  description: "broker.replicaCount config for values.yaml"
+- name: "broker.extraConfig"
+  required: false
+  description: "broker.extraConfig config for values.yaml"
+- name: "broker.extraEnvVars"
+  required: false
+  description: "broker.extraEnvVars config for values.yaml"
+- name: "broker.heapOpts"
+  required: false
+  description: "broker.heapOpts config for values.yaml"
+- name: "broker.nodeSelector"
+  required: false
+  description: "broker.nodeSelector config for values.yaml"
+- name: "broker.persistence"
+  required: false
+  description: "broker.persistence config for values.yaml"
+- name: "listeners.client.protocol"
+  required: false
+  description: "listeners client protocol config for values.yaml"
+- name: "listeners.controller.protocol"
+  required: false
+  description: "listeners controller protocol config for values.yaml"
+- name: "listeners.interbroker.protocol"
+  required: false
+  description: "listeners interbroker protocol config for values.yaml"
+- name: "listeners.external.protocol"
+  required: false
+  description: "listeners external protocol config for values.yaml"
+- name: "sasl"
+  required: false
+  description: "sasl config for values.yaml"
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "service.externalTrafficPolicy"
+  required: false
+  description: "service externalTrafficPolicy config for values.yaml"
+- name: "externalAccess.enabled"
+  required: false
+  description: "externalAccess enabled or not config for values.yaml"
+- name: "listeners.advertisedListeners"
+  required: false
+  description: "listeners advertisedListeners or not config for values.yaml"
+- name: "metrics.jmx.enabled"
+  required: false
+  description: "metrics jmx enabled or not config for values.yaml"
+- name: "metrics.nodeSelector"
+  required: false
+  description: "metrics nodeSelector config for values.yaml"
+archive: false
