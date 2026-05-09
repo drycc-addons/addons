@@ -1,0 +1,6 @@
+name: "standard-24c64g3w"
+id: 30259029-8e15-4dd7-97f9-f7811a6263a4
+description: "Kafka standard-24c64g3w plan which limit resources 3 brokers per broker 24 cores, memory size 64Gi persistence size 1Ti."
+displayName: "standard-24c64g3w"
+bindable: true
+maximum_polling_duration: 1800

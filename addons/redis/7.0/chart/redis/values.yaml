@@ -999,8 +999,8 @@ sentinel:
   startupProbe:
     enabled: true
     initialDelaySeconds: 10
-    periodSeconds: 10
-    timeoutSeconds: 5
+    periodSeconds: 20
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 22
   ## @param sentinel.livenessProbe.enabled Enable livenessProbe on Redis&trade; Sentinel nodes
@@ -1013,8 +1013,8 @@ sentinel:
   livenessProbe:
     enabled: true
     initialDelaySeconds: 20
-    periodSeconds: 5
-    timeoutSeconds: 5
+    periodSeconds: 20
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 5
   ## @param sentinel.readinessProbe.enabled Enable readinessProbe on Redis&trade; Sentinel nodes
@@ -1027,8 +1027,8 @@ sentinel:
   readinessProbe:
     enabled: true
     initialDelaySeconds: 20
-    periodSeconds: 5
-    timeoutSeconds: 5
+    periodSeconds: 20
+    timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 5
   ## @param sentinel.customStartupProbe Custom startupProbe that overrides the default one
