@@ -1,0 +1,6 @@
+name: "standard-4c16g100"
+id: 5a7781ec-4b4f-11f1-a392-d7b1c6a70ebb
+description: "Mysql Cluster standard-4c16g100 plan: Disk 100Gi ,vCPUs 4 , RAM 16G , DB MAX Connection 4000"
+displayName: "standard-4c16g100"
+bindable: true
+maximum_polling_duration: 1800
