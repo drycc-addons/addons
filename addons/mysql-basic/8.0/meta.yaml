@@ -1,10 +1,10 @@
-name: mysql
+name: mysql-basic
 version: 8.0
 id: 8da0ded8-4b4f-11f1-aaed-b363117f2edf
-description: "mysql"
-displayName: "mysql-8.0"
+description: "mysql-basic"
+displayName: "mysql-basic"
 metadata:
-  displayName: "mysql-8.0"
+  displayName: "mysql-basic"
   provider:
     name: drycc
     supportURL: https://mysql.io
