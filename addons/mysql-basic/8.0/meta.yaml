@@ -1,0 +1,30 @@
+name: mysql-basic
+version: 8.0
+id: 8da0ded8-4b4f-11f1-aaed-b363117f2edf
+description: "mysql-basic"
+displayName: "mysql-basic"
+metadata:
+  displayName: "mysql-basic"
+  provider:
+    name: drycc
+    supportURL: https://mysql.io
+  documentationURL: https://github.com/drycc-addons/drycc-docker-mysql
+tags: mysql
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "primary.service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "backup"
+  required: false
+  description: "backup config for values.yaml"
+- name: "primary.nodeSelector"
+  required: false
+  description: "primary.nodeSelector for values.yaml"
+archive: false
