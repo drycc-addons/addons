@@ -249,6 +249,7 @@ primary:
     binlog_transaction_dependency_tracking=WRITESET
     default-time-zone='+8:00'
     local_infile=ON
+    binlog_expire_logs_seconds=86400
     # Replication
 
     log_bin=mysql-bin
