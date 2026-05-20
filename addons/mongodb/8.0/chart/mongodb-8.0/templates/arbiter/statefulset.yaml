@@ -134,7 +134,7 @@ spec:
           lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.arbiter.lifecycleHooks "context" $) | nindent 12 }}
           {{- end }}
           env:
-            - name: BITNAMI_DEBUG
+            - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
             - name: MY_POD_NAME
               valueFrom:
