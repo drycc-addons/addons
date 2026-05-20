@@ -11,13 +11,13 @@ Trademarks: This software listing is packaged by Drycc. The respective trademark
 ## TL;DR
 
 ```bash
-$ helm repo add my-repo https://charts.bitnami.com/bitnami
+$ helm repo add my-repo https://charts.drycc.com/drycc
 $ helm install my-release my-repo/mysql
 ```
 
 ## Introduction
 
-This chart bootstraps a [MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) replication cluster deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [MySQL](https://github.com/drycc/containers/tree/main/drycc/mysql) replication cluster deployment on a [Kubernetes](https://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 Drycc charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment and management of Helm Charts in clusters.
 
@@ -32,7 +32,7 @@ Drycc charts can be used with [Kubeapps](https://kubeapps.dev/) for deployment a
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm repo add my-repo https://charts.bitnami.com/bitnami
+$ helm repo add my-repo https://charts.drycc.com/drycc
 $ helm install my-release my-repo/mysql
 ```
 
@@ -83,7 +83,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | Name                       | Description                                                                                                                                                                         | Value                  |
 | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
 | `image.registry`           | MySQL image registry                                                                                                                                                                | `docker.io`            |
-| `image.repository`         | MySQL image repository                                                                                                                                                              | `bitnami/mysql`        |
+| `image.repository`         | MySQL image repository                                                                                                                                                              | `drycc/mysql`        |
 | `image.tag`                | MySQL image tag (immutable tags are recommended)                                                                                                                                    | `8.0.30-debian-11-r27` |
 | `image.digest`             | MySQL image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                                                                               | `""`                   |
 | `image.pullPolicy`         | MySQL image pull policy                                                                                                                                                             | `IfNotPresent`         |
@@ -303,7 +303,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
 | `volumePermissions.enabled`           | Enable init container that changes the owner and group of the persistent volume(s) mountpoint to `runAsUser:fsGroup`              | `false`                 |
 | `volumePermissions.image.registry`    | Init container volume-permissions image registry                                                                                  | `docker.io`             |
-| `volumePermissions.image.repository`  | Init container volume-permissions image repository                                                                                | `bitnami/bitnami-shell` |
+| `volumePermissions.image.repository`  | Init container volume-permissions image repository                                                                                | `drycc/drycc-shell` |
 | `volumePermissions.image.tag`         | Init container volume-permissions image tag (immutable tags are recommended)                                                      | `11-debian-11-r39`      |
 | `volumePermissions.image.digest`      | Init container volume-permissions image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag | `""`                    |
 | `volumePermissions.image.pullPolicy`  | Init container volume-permissions image pull policy                                                                               | `IfNotPresent`          |
@@ -317,7 +317,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------- |
 | `metrics.enabled`                            | Start a side-car prometheus exporter                                                                                           | `false`                   |
 | `metrics.image.registry`                     | Exporter image registry                                                                                                        | `docker.io`               |
-| `metrics.image.repository`                   | Exporter image repository                                                                                                      | `bitnami/mysqld-exporter` |
+| `metrics.image.repository`                   | Exporter image repository                                                                                                      | `drycc/mysqld-exporter` |
 | `metrics.image.tag`                          | Exporter image tag (immutable tags are recommended)                                                                            | `0.14.0-debian-11-r45`    |
 | `metrics.image.digest`                       | Exporter image digest in the way sha256:aa.... Please note this parameter, if set, will override the tag                       | `""`                      |
 | `metrics.image.pullPolicy`                   | Exporter image pull policy                                                                                                     | `IfNotPresent`            |
@@ -358,7 +358,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `metrics.prometheusRule.rules`               | Prometheus Rule definitions                                                                                                    | `[]`                      |
 
 
-The above parameters map to the env variables defined in [bitnami/mysql](https://github.com/bitnami/containers/tree/main/bitnami/mysql). For more information please refer to the [bitnami/mysql](https://github.com/bitnami/containers/tree/main/bitnami/mysql) image documentation.
+The above parameters map to the env variables defined in [drycc/mysql](https://github.com/drycc/containers/tree/main/drycc/mysql). For more information please refer to the [drycc/mysql](https://github.com/drycc/containers/tree/main/drycc/mysql) image documentation.
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
 
@@ -382,7 +382,7 @@ $ helm install my-release -f values.yaml my-repo/mysql
 
 ## Configuration and installation details
 
-### [Rolling VS Immutable tags](https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/)
+### [Rolling VS Immutable tags](https://docs.drycc.com/containers/how-to/understand-rolling-tags-containers/)
 
 It is strongly recommended to use immutable tags in a production environment. This ensures your deployment does not change automatically if the same tag is updated with a different image.
 
@@ -390,17 +390,17 @@ Drycc will release a new chart updating its containers if a new version of the m
 
 ### Use a different MySQL version
 
-To modify the application version used in this chart, specify a different version of the image using the `image.tag` parameter and/or a different repository using the `image.repository` parameter. Refer to the [chart documentation for more information on these parameters and how to use them with images from a private registry](https://docs.bitnami.com/kubernetes/infrastructure/mysql/configuration/change-image-version/).
+To modify the application version used in this chart, specify a different version of the image using the `image.tag` parameter and/or a different repository using the `image.repository` parameter. Refer to the [chart documentation for more information on these parameters and how to use them with images from a private registry](https://docs.drycc.com/kubernetes/infrastructure/mysql/configuration/change-image-version/).
 
 ### Customize a new MySQL instance
 
-The [Drycc MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) image allows you to use your custom scripts to initialize a fresh instance. Custom scripts may be specified using the `initdbScripts` parameter. Alternatively, an external ConfigMap may be created with all the initialization scripts and the ConfigMap passed to the chart via the `initdbScriptsConfigMap` parameter. Note that this will override the `initdbScripts` parameter.
+The [Drycc MySQL](https://github.com/drycc/containers/tree/main/drycc/mysql) image allows you to use your custom scripts to initialize a fresh instance. Custom scripts may be specified using the `initdbScripts` parameter. Alternatively, an external ConfigMap may be created with all the initialization scripts and the ConfigMap passed to the chart via the `initdbScriptsConfigMap` parameter. Note that this will override the `initdbScripts` parameter.
 
 The allowed extensions are `.sh`, `.sql` and `.sql.gz`.
 
 These scripts are treated differently depending on their extension. While `.sh` scripts are executed on all the nodes, `.sql` and `.sql.gz` scripts are only executed on the primary nodes. This is because `.sh` scripts support conditional tests to identify the type of node they are running on, while such tests are not supported in `.sql` or `sql.gz` files.
 
-Refer to the [chart documentation for more information and a usage example](http://docs.bitnami.com/kubernetes/infrastructure/mysql/configuration/customize-new-instance/).
+Refer to the [chart documentation for more information and a usage example](http://docs.drycc.com/kubernetes/infrastructure/mysql/configuration/customize-new-instance/).
 
 ### Sidecars and Init Containers
 
@@ -430,11 +430,11 @@ initContainers:
 
 ## Persistence
 
-The [Drycc MySQL](https://github.com/bitnami/containers/tree/main/bitnami/mysql) image stores the MySQL data and configurations at the `/bitnami/mysql` path of the container.
+The [Drycc MySQL](https://github.com/drycc/containers/tree/main/drycc/mysql) image stores the MySQL data and configurations at the `/drycc/mysql` path of the container.
 
 The chart mounts a [Persistent Volume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) volume at this location. The volume is created using dynamic volume provisioning by default. An existing PersistentVolumeClaim can also be defined for this purpose.
 
-If you encounter errors when working with persistent volumes, refer to our [troubleshooting guide for persistent volumes](https://docs.bitnami.com/kubernetes/faq/troubleshooting/troubleshooting-persistence-volumes/).
+If you encounter errors when working with persistent volumes, refer to our [troubleshooting guide for persistent volumes](https://docs.drycc.com/kubernetes/faq/troubleshooting/troubleshooting-persistence-volumes/).
 
 ## Network Policy
 
@@ -455,11 +455,11 @@ This label will be displayed in the output of a successful install.
 
 This chart allows you to set your custom affinity using the `XXX.affinity` parameter(s). Find more information about Pod affinity in the [Kubernetes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity).
 
-As an alternative, you can use the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [bitnami/common](https://github.com/bitnami/charts/tree/master/bitnami/common#affinities) chart. To do so, set the `XXX.podAffinityPreset`, `XXX.podAntiAffinityPreset`, or `XXX.nodeAffinityPreset` parameters.
+As an alternative, you can use the preset configurations for pod affinity, pod anti-affinity, and node affinity available at the [drycc/common](https://github.com/drycc/charts/tree/master/drycc/common#affinities) chart. To do so, set the `XXX.podAffinityPreset`, `XXX.podAntiAffinityPreset`, or `XXX.nodeAffinityPreset` parameters.
 
 ## Troubleshooting
 
-Find more information about how to deal with common errors related to Drycc's Helm charts in [this troubleshooting guide](https://docs.bitnami.com/general/how-to/troubleshoot-helm-chart-issues).
+Find more information about how to deal with common errors related to Drycc's Helm charts in [this troubleshooting guide](https://docs.drycc.com/general/how-to/troubleshoot-helm-chart-issues).
 
 ## Upgrading
 
@@ -481,7 +481,7 @@ Affected values:
 - The way how passwords are handled has been refactored and value `auth.forcePassword` has been removed. Now, the password configuration will have the following priority:
   1. Search for an already existing 'Secret' resource and reuse previous password.
   2. Password provided via the values.yaml
-  3. If no secret existed, and no password was provided, the bitnami/mysql chart will set a randomly generated password.
+  3. If no secret existed, and no password was provided, the drycc/mysql chart will set a randomly generated password.
 - `primary.service.port` was renamed as `primary.service.ports.mysql`.
 - `secondary.service.port` was renamed as `secondary.service.ports.mysql`.
 - `primary.service.nodePort` was renamed as `primary.service.nodePorts.mysql`.
@@ -500,7 +500,7 @@ Affected values:
   - Credentials parameters are reorganized under the `auth` parameter.
   - `replication.enabled` parameter is deprecated in favor of `architecture` parameter that accepts two values: `standalone` and `replication`.
 - Chart labels were adapted to follow the [Helm charts standard labels](https://helm.sh/docs/chart_best_practices/labels/#standard-labels).
-- This version also introduces `bitnami/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/bitnami/charts/tree/master/bitnami/common#bitnami-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
+- This version also introduces `drycc/common`, a [library chart](https://helm.sh/docs/topics/library_charts/#helm) as a dependency. More documentation about this new utility could be found [here](https://github.com/drycc/charts/tree/master/drycc/common#drycc-common-library-chart). Please, make sure that you have updated the chart dependencies before executing any upgrade.
 
 Consequences:
 
@@ -518,7 +518,7 @@ $ helm install mysql my-repo/mysql --set auth.rootPassword=[ROOT_PASSWORD] --set
 
 [On November 13, 2020, Helm v2 support formally ended](https://github.com/helm/charts#status-of-the-project). This major version is the result of the required changes applied to the Helm Chart to be able to incorporate the different features added in Helm v3 and to be consistent with the Helm project itself regarding the Helm v2 EOL.
 
-[Learn more about this change and related upgrade considerations](https://docs.bitnami.com/kubernetes/infrastructure/mysql/administration/upgrade-helm3/).
+[Learn more about this change and related upgrade considerations](https://docs.drycc.com/kubernetes/infrastructure/mysql/administration/upgrade-helm3/).
 
 ### To 3.0.0
 
