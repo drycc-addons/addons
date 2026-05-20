@@ -193,7 +193,7 @@ spec:
           lifecycle: {{- include "common.tplvalues.render" (dict "value" .Values.hidden.lifecycleHooks "context" $) | nindent 12 }}
           {{- end }}
           env:
-            - name: BITNAMI_DEBUG
+            - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
             {{- if and .Values.externalAccess.hidden.enabled .Values.externalAccess.autoDiscovery.enabled (eq .Values.externalAccess.hidden.service.type "LoadBalancer") }}
             - name: SHARED_FILE
