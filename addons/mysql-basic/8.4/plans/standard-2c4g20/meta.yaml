@@ -1,0 +1,6 @@
+name: "standard-2c4g20"
+id: 38ab43cf-a04d-4721-a06b-a061997de949
+description: "Mysql standard-2c4g20 plan: Disk 20Gi ,vCPUs 2 , RAM 4G , DB MAX Connection 1000"
+displayName: "standard-2c4g20"
+bindable: true
+maximum_polling_duration: 1800

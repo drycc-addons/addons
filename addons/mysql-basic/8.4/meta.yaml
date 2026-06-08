@@ -1,0 +1,33 @@
+name: mysql-basic-8.4
+version: 8.4
+id: 61fc6e70-38b2-4e59-832b-4e6dae529265
+description: "mysql-basic-8.4"
+displayName: "mysql-basic-8.4"
+metadata:
+  displayName: "mysql-basic-8.4"
+  provider:
+    name: drycc
+    supportURL: https://mysql.io
+  documentationURL: https://github.com/drycc-addons/drycc-docker-mysql
+tags: mysql
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "primary.service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "backup"
+  required: false
+  description: "backup config for values.yaml"
+- name: "primary.nodeSelector"
+  required: false
+  description: "primary.nodeSelector for values.yaml"
+- name: "primary.updateStrategy"
+  required: false
+  description: "primary updateStrategy (RollingUpdate/Recreate) for values.yaml, MySQL 8.4 compatibility changes"
+archive: false

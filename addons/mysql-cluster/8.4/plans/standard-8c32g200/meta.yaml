@@ -1,0 +1,6 @@
+name: "standard-8c32g200"
+id: b3c4d5e6-f7a8-49b0-c1d2-e3f4a5b6c7d8
+description: "Mysql Cluster standard-8c32g200 plan: Disk 200Gi ,vCPUs 8 , RAM 32G , DB MAX Connection 8000"
+displayName: "standard-8c32g200"
+bindable: true
+maximum_polling_duration: 1800

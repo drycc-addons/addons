@@ -1,0 +1,6 @@
+name: "standard-2c8g50"
+id: a1b2c3d4-e5f6-4789-a0b1-c2d3e4f5a6b7
+description: "Mysql Cluster standard-2c8g50 plan: Disk 50Gi ,vCPUs 2 , RAM 8G , DB MAX Connection 2000"
+displayName: "standard-2c8g50"
+bindable: true
+maximum_polling_duration: 1800
