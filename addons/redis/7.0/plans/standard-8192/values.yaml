@@ -117,10 +117,10 @@ sentinel:
   ##
   resources:
     limits:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
-      cpu: 50m
+      cpu: 100m
       memory: 128Mi
 
 proxy:

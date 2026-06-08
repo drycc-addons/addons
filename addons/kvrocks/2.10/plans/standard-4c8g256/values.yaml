@@ -117,11 +117,11 @@ sentinel:
   ##
   resources:
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 1
+      memory: 1Gi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 200m
+      memory: 256Mi
 
 proxy:
   ## Kvrocks; Sentinel resource requests and limits
