@@ -1,17 +1,17 @@
 credential:
-{{- if (eq .Values.primary.service.type "LoadBalancer") }}
+{{- if (eq .Values.router.service.type "LoadBalancer") }}
   - name: EXTRANET_HOST
     valueFrom:
       serviceRef:
-        name: {{ include "common.names.fullname" . }}
+        name: {{ include "common.names.fullname" . }}-router
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 {{- end }}
   - name: DOMAIN
-    value: {{ template "common.names.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+    value: {{ template "common.names.fullname" . }}-router.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
   - name: HOST
     valueFrom:
       serviceRef:
-        name: {{ include "common.names.fullname" . }}
+        name: {{ include "common.names.fullname" . }}-router
         jsonpath: '{ .spec.clusterIP }'
   - name: PASSWORD
     valueFrom:
@@ -23,8 +23,13 @@ credential:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}-svcbind-administrator-user
         jsonpath: '{ .data.username }' 
-  - name: PORT
+  - name: READONLY_PORT
     valueFrom:
       secretKeyRef:
         name: {{ template "common.names.fullname" . }}-svcbind-administrator-user
-        jsonpath: '{ .data.port }' 
+        jsonpath: '{ .data.portro }'
+  - name: READWRITE_PORT
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}-svcbind-administrator-user
+        jsonpath: '{ .data.portrw }' 

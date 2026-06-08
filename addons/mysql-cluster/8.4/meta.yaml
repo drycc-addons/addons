@@ -1,0 +1,36 @@
+name: mysql-cluster-8.4
+version: 8.4
+id: b35bb38b-7de3-47cf-b6e2-a6e15060298d
+description: "mysql-cluster-8.4"
+displayName: "mysql-cluster-8.4"
+metadata:
+  displayName: "mysql-cluster-8.4"
+  provider:
+    name: drycc
+    supportURL: https://mysql.io
+  documentationURL: https://github.com/drycc-addons/drycc-docker-mysql-cluster
+tags: mysql-cluster
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "router.service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "router.configuration"
+  required: false
+  description: "router config for values.yaml"
+- name: "backup"
+  required: false
+  description: "backup config for values.yaml"
+- name: "primary.nodeSelector"
+  required: false
+  description: "primary.nodeSelector for values.yaml"
+- name: "router.nodeSelector"
+  required: false
+  description: "router.nodeSelector for values.yaml"
+archive: false
