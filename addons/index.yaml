@@ -5,14 +5,15 @@ entries:
       description: "Apache Airflow is a platform that allows you to create, schedule and monitor workflows using Python, Jinja and a message queue"
     - version: 3
       description: "Apache Airflow is a platform that allows you to create, schedule and monitor workflows using Python, Jinja and a message queue"
-  cloudbeaver:
-    - version: 23
-      description: "Cloud Database Manager."
   mysql-cluster:
     - version: 8.0
       description: "The world's most popular open source database cluster."
+    - version: 8.4
+      description: "The world's most popular open source database cluster."
   mysql-basic:
     - version: 8.0
+      description: "The world's most popular open source database."
+    - version: 8.4
       description: "The world's most popular open source database."
   minio:
     - version: 2023

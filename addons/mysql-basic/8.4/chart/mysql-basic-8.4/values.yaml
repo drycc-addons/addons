@@ -635,9 +635,10 @@ networkPolicy:
   ## (with the correct destination port).
   ##
   allowCurrentNamespace: true
-  allowNamespaces: 
+  allowDefaultNamespaces: 
     - drycc
     - backup
+  allowNamespaces: []
 
 ## @section Volume Permissions parameters
 
