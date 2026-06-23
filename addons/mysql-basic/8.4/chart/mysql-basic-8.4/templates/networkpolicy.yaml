@@ -35,7 +35,6 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: {{ .Release.Namespace }}
       {{- end }}
-<<<<<<< HEAD
       {{- range $namespace := .Values.networkPolicy.allowDefaultNamespaces }}
         {{- if $namespace }}
         - namespaceSelector:
@@ -43,8 +42,7 @@ spec:
               kubernetes.io/metadata.name: {{ $namespace }}
         {{- end }}
       {{- end }}
-=======
->>>>>>> 717aa138fc9c36b785b1544ef4f043d6c77f6d45
+
       {{- range $namespace := .Values.networkPolicy.allowNamespaces }}
         {{- if $namespace }}
         - namespaceSelector:
