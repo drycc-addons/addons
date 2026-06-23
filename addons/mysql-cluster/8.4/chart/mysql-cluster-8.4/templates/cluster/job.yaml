@@ -28,7 +28,7 @@ spec:
       initContainers:
         - name: init-wait
           image: registry.drycc.cc/drycc/python-dev:latest
-          imagePullPolicy: {{.Values.imagePullPolicy}}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           args:
           - netcat
           - -v

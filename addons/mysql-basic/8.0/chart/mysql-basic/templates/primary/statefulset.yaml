@@ -132,6 +132,8 @@ spec:
           env:
             - name: DRYCC_DEBUG
               value: {{ ternary "true" "false" (or .Values.image.debug .Values.diagnosticMode.enabled) | quote }}
+            - name: MALLOC_ARENA_MAX
+              value: "1"
             {{- if .Values.auth.usePasswordFiles }}
             - name: MYSQL_ROOT_PASSWORD_FILE
               value: {{ default "/opt/drycc/mysql/secrets/mysql-root-password" .Values.auth.customPasswordFiles.root }}
