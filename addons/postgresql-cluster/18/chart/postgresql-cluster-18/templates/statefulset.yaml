@@ -44,16 +44,13 @@ spec:
       nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.patroni.nodeSelector "context" $) | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ template "patroni.serviceAccountName" . }}
-      # securityContext:
-      #   runAsUser: postgres
-      #   fsGroup: postgres
+      {{- if .Values.patroni.containerSecurityContext.enabled }}
+      securityContext: {{- omit .Values.patroni.containerSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
-        # securityContext: 
-        #   runAsUser: postgres
-        #   fsGroup: postgres
         env:
         {{- include "patroni.envs" . | indent 8 }} 
         {{- if .Values.env }}
@@ -198,7 +195,7 @@ spec:
           mountPath: "{{ .Values.persistentVolume.mountPath }}" 
         - mountPath: "/opt/drycc/postgresql/backup/"
           name: backup-config
-
+ 
      {{- with .Values.nodeSelector }} 
       nodeSelector:
 {{ toYaml . | indent 8 }}

@@ -28,7 +28,7 @@ spec:
       initContainers:
         - name: init-wait
           image: registry.drycc.cc/drycc/python-dev:latest
-          imagePullPolicy: {{.Values.imagePullPolicy}}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           args:
           - netcat
           - -v
@@ -59,14 +59,32 @@ spec:
 
               # create mysql cluster  --file
               echo "
-              shell.options['dba.restartWaitTimeout']=300;
+              shell.options['dba.restartWaitTimeout']=3600;
+              shell.options['dba.connectTimeout']=3600;
+              shell.options['useWizards']=false;
               dba.createCluster('MXMGR',{disableClone:false});
-              dba.getCluster().addInstance('root@${HOST_1}',{recoveryMethod:'clone'});
-              dba.getCluster().addInstance('root@${HOST_2}',{recoveryMethod:'clone'});
-              dba.getCluster().status();
               " > /tmp/create_cluster.js
+
+              echo "
+              shell.options['dba.restartWaitTimeout']=3600;
+              shell.options['dba.connectTimeout']=3600;
+              shell.options['useWizards']=false;
+              dba.getCluster().addInstance('root@${HOST_1}',{recoveryMethod:'clone',waitRecovery: 0});
+              " > /tmp/add_instance_1.js
+
+              echo "
+              shell.options['dba.restartWaitTimeout']=3600;
+              shell.options['dba.connectTimeout']=3600;
+              shell.options['useWizards']=false;
+              dba.getCluster().addInstance('root@${HOST_2}',{recoveryMethod:'clone',waitRecovery: 0});
+              " > /tmp/add_instance_2.js
+
               mysqlsh --uri=${MYSQL_ROOT_USER}@${HOST_0}:${MYSQL_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -f /tmp/create_cluster.js
-              
+              sleep 5
+              mysqlsh --uri=${MYSQL_ROOT_USER}@${HOST_0}:${MYSQL_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -f /tmp/add_instance_1.js
+              sleep 120
+              mysqlsh --uri=${MYSQL_ROOT_USER}@${HOST_0}:${MYSQL_PORT_NUMBER} -p${MYSQL_ROOT_PASSWORD} -f /tmp/add_instance_2.js
+              sleep 120
               # init sql --sql
               echo "
               GRANT ALL PRIVILEGES ON *.* TO administrator@'%' WITH GRANT OPTION;flush privileges;
