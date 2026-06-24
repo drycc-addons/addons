@@ -210,7 +210,8 @@ patroni:
     enabled: true
     runAsUser: 1000
     runAsNonRoot: true
-    fsGroup: 1000                                     
+    fsGroup: 1000    
+    fsGroupChangePolicy: OnRootMismatch                                  
     runAsGroup: 1000
 
   ## @param patroni.podAnnotations Additional pod annotations for Postgresql patroni pods
