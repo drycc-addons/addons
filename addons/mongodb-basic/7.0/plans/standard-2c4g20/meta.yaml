@@ -1,0 +1,6 @@
+name: "standard-2c4g20"
+id: 44101748-e977-4b27-ae98-dd9606b7c0d0
+description: "mongodb standard-2c4g20 plan: Disk 20Gi ,vCPUs 2 , RAM 4G "
+displayName: "standard-2c4g20"
+bindable: true
+maximum_polling_duration: 1800

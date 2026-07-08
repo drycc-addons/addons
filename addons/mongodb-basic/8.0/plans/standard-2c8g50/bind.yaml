@@ -1,0 +1,24 @@
+credential:
+{{- if (eq .Values.service.type "LoadBalancer") }}
+  - name: EXTRANET_HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "mongodb.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+{{- end }}
+  - name: DOMAIN
+    value: {{ include "mongodb.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "mongodb.fullname" . }}
+        jsonpath: '{ .spec.clusterIP }'
+  - name: PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "common.names.fullname" . }}
+        jsonpath: '{ .data.mongodb-root-password }' 
+  - name: USERNAME
+    value: 'root'
+  - name: PORT
+    value: 27017
