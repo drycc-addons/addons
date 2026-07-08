@@ -1,0 +1,24 @@
+name: mongodb-basic-8.0
+version: 8.0
+id: a9759d6f-44ae-4868-8952-6016eedffd74
+description: "mongodb-basic-8.0"
+displayName: "mongodb-basic-8.0"
+metadata:
+  displayName: "mongodb-basic-8.0"
+  provider:
+    name: drycc
+    supportURL: https://www.mongodb.com/docs/manual/
+  documentationURL: https://www.mongodb.com/docs/manual/
+tags: mongodb
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+  - name: "service.type"
+    required: false
+    description: "service type config for values.yaml"
+  - name: "networkPolicy.allowNamespaces"
+    required: false
+    description: "networkPolicy allowNamespaces config for values.yaml"
+archive: false

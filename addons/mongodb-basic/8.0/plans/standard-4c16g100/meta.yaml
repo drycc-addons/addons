@@ -1,0 +1,6 @@
+name: "standard-4c16g100"
+id: 331b4ae2-593d-40ca-b4ac-5ce7d7fcd275
+description: "mongodb standard-4c16g100 plan: Disk 100Gi ,vCPUs 4 , RAM 16G "
+displayName: "standard-4c16g100"
+bindable: true
+maximum_polling_duration: 1800
