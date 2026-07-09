@@ -1,0 +1,24 @@
+name: clickhouse-basic
+version: 26
+id: e711a9ec-4ffd-4392-b04d-ca07b481f434
+description: "clickhouse-basic"
+displayName: "clickhouse-basic"
+metadata:
+  displayName: "clickhouse-basic"
+  provider:
+    name: drycc
+    supportURL: http://clickhouse.io/
+  documentationURL: https://github.com/drycc-addons/
+tags: clickhouse
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+archive: false

@@ -1,0 +1,6 @@
+name: "standard-4c16g100"
+id: ac6fee99-4839-4044-ab88-3d528cde33c6
+description: "clickhouse standard-4c16g100 plan: Disk 100Gi ,vCPUs 4 , RAM 16G "
+displayName: "standard-4c16g100"
+bindable: true
+maximum_polling_duration: 1800
