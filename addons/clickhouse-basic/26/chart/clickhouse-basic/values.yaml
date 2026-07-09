@@ -85,7 +85,7 @@ diagnosticMode:
 image:
   registry: registry.drycc.cc
   repository: drycc-addons/clickhouse
-  tag: 24
+  tag: 26
   digest: ""
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
@@ -105,11 +105,11 @@ image:
   debug: false
 ## @param shards Number of ClickHouse shards to deploy
 ##
-shards: 2
+shards: 1
 ## @param replicaCount Number of ClickHouse replicas per shard to deploy
 ## if keeper enable, same as keeper count, keeper cluster by shards.
 ##
-replicaCount: 3
+replicaCount: 1
 ## @param distributeReplicasByZone Schedules replicas of the same shard to different availability zones
 ##
 distributeReplicasByZone: false
@@ -271,12 +271,12 @@ auth:
   existingSecretKey: ""
 ## @param logLevel Logging level
 ##
-logLevel: information
+logLevel: warning
 ## @section ClickHouse keeper configuration parameters
 ## @param keeper.enabled Deploy ClickHouse keeper. Support is experimental.
 ##
 keeper:
-  enabled: true
+  enabled: false
 ## @param defaultConfigurationOverrides [string] Default configuration overrides (evaluated as a template)
 ##
 defaultConfigurationOverrides: |
@@ -497,7 +497,7 @@ podAffinityPreset: ""
 ## @param podAntiAffinityPreset Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
 ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
 ##
-podAntiAffinityPreset: soft
+podAntiAffinityPreset: ""
 ## Node affinity preset
 ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
 ##
@@ -536,10 +536,10 @@ updateStrategy:
   ## Can be set to RollingUpdate or OnDelete
   ##
   type: RollingUpdate
-## @param podManagementPolicy Statefulset Pod management policy, it needs to be Parallel to be able to complete the cluster join
+## @param podManagementPolicy Statefulset Pod management policy
 ## Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies
 ##
-podManagementPolicy: Parallel
+podManagementPolicy: OrderedReady
 ## @param priorityClassName ClickHouse pods' priorityClassName
 ##
 priorityClassName: ""

@@ -1,0 +1,6 @@
+name: "standard-32c64g12000"
+id: 4ecdb9f2-654c-48f4-9d9a-1b79f3c98767
+description: "clickhouse standard-32c64g12000 plan: Disk 12000Gi ,vCPUs 32 , RAM 64G "
+displayName: "standard-32c64g12000"
+bindable: true
+maximum_polling_duration: 1800
