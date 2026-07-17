@@ -1,6 +1,10 @@
 name: clickhouse-basic
 version: 26
+<<<<<<< HEAD
 id: a7c11ea2-ec46-4631-a589-36b8ea672969
+=======
+id: e711a9ec-4ffd-4392-b04d-ca07b481f434
+>>>>>>> b8a5d6ca0425fb204871eb07999bb9b91375409b
 description: "clickhouse-basic"
 displayName: "clickhouse-basic"
 metadata:
