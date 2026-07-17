@@ -866,14 +866,19 @@ server:
   ## ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
   ##
   tolerations: []
-  ## @param server.updateStrategy.type Prometheus deployment strategy type. If persistence is enabled, strategy type should be set to Recreate to avoid dead locks.
-  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+  ## @param server.updateStrategy.type Prometheus statefulset strategy type
+  ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
   ##
   updateStrategy:
     ## StrategyType
-    ## Can be set to RollingUpdate or Recreate
+    ## Can be set to RollingUpdate or OnDelete
     ##
-    type: Recreate 
+    type: RollingUpdate
+
+  ## @param server.podManagementPolicy Statefulset Pod management policy
+  ## Ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-management-policies
+  ##
+  podManagementPolicy: OrderedReady
 
   ## @param server.priorityClassName Prometheus pods' priorityClassName
   ##
@@ -1441,6 +1446,13 @@ server:
     ##
     sessionAffinityConfig: {}
 
+  ## Prometheus headless service parameters (required by StatefulSet)
+  ##
+  headlessService:
+    ## @param server.headlessService.annotations Additional custom annotations for Prometheus headless service
+    ##
+    annotations: {}
+
   ## Persistence Parameters
   ##
 
@@ -1449,7 +1461,7 @@ server:
   ##
 
   persistence:
-    ## @param server.persistence.enabled Enable persistence using Persistent Volume Claims. If you have multiple instances (server.repicacount > 1), please considere using an external storage service like Thanos or Grafana Mimir
+    ## @param server.persistence.enabled Enable persistence using Persistent Volume Claims. If you have multiple instances (server.replicaCount > 1), please consider using an external storage service like Thanos or Grafana Mimir
     ##
     enabled: true
     ## @param server.persistence.mountPath Path to mount the volume at.

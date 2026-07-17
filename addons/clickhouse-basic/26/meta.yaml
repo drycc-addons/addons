@@ -1,6 +1,6 @@
 name: clickhouse-basic
 version: 26
-id: e711a9ec-4ffd-4392-b04d-ca07b481f434
+id: a7c11ea2-ec46-4631-a589-36b8ea672969
 description: "clickhouse-basic"
 displayName: "clickhouse-basic"
 metadata:
@@ -15,7 +15,7 @@ instances_retrievable: true
 bindings_retrievable: true
 plan_updateable: true
 allow_parameters:
-- name: "networkPolicy.allowNamespaces"
+- name: "networkPolicy.allowNamespaces "
   required: false
   description: "networkPolicy allowNamespaces config for values.yaml"
 - name: "service.type"

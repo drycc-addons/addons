@@ -3,8 +3,8 @@ Copyright Drycc Community.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
-apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
-kind: Deployment
+apiVersion: {{ include "common.capabilities.statefulset.apiVersion" . }}
+kind: StatefulSet
 metadata:
   name: {{ template "prometheus.server.fullname" . }}
   namespace: {{ include "common.names.namespace" . | quote }}
@@ -16,14 +16,16 @@ metadata:
   {{- end }}
 spec:
   replicas: {{ .Values.server.replicaCount }}
-  {{- if .Values.server.updateStrategy }}
-  strategy: {{- toYaml .Values.server.updateStrategy | nindent 4 }}
-  {{- end }}
+  podManagementPolicy: {{ .Values.server.podManagementPolicy | quote }}
   {{- $podLabels := include "common.tplvalues.merge" ( dict "values" ( list .Values.server.podLabels .Values.commonLabels ) "context" . ) }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" ( dict "customLabels" $podLabels "context" $ ) | nindent 6 }}
       app.kubernetes.io/part-of: prometheus
       app.kubernetes.io/component: server
+  serviceName: {{ template "prometheus.server.fullname" . }}-headless
+  {{- if .Values.server.updateStrategy }}
+  updateStrategy: {{- toYaml .Values.server.updateStrategy | nindent 4 }}
+  {{- end }}
   template:
     metadata:
       annotations:
@@ -253,7 +255,7 @@ spec:
             - --prometheus.url={{ default "http://localhost:9090" .Values.server.thanos.prometheusUrl }}
             - --grpc-address=0.0.0.0:10901
             - --http-address=0.0.0.0:10902
-            - --tsdb.path=/prometheus/
+            - --tsdb.path={{ .Values.server.persistence.mountPath }}/
             {{- if .Values.server.thanos.objectStorageConfig.secretName }}
             - --objstore.config=$(OBJSTORE_CONFIG)
             {{- end }}
@@ -279,7 +281,7 @@ spec:
               containerPort: 10902
               protocol: TCP
           volumeMounts:
-            - mountPath: /prometheus
+            - mountPath: {{ .Values.server.persistence.mountPath }}
               name: data
             {{- if .Values.server.thanos.extraVolumeMounts }}
             {{- include "common.tplvalues.render" (dict "value" .Values.server.thanos.extraVolumeMounts "context" $) | nindent 12 }}
@@ -313,13 +315,41 @@ spec:
         - name: config
           configMap:
             name: {{ include "prometheus.server.configmapName" . }}
+        {{- if .Values.server.persistence.existingClaim }}
         - name: data
-        {{- if .Values.server.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ default (include "prometheus.server.fullname" .) .Values.server.persistence.existingClaim }}
-        {{- else }}
+            claimName: {{ .Values.server.persistence.existingClaim }}
+        {{- else if not .Values.server.persistence.enabled }}
+        - name: data
           emptyDir: {}
         {{- end }}
         {{- if .Values.server.extraVolumes }}
         {{- include "common.tplvalues.render" (dict "value" .Values.server.extraVolumes "context" $) | nindent 8 }}
         {{- end }}
+  {{- if and .Values.server.persistence.enabled (not .Values.server.persistence.existingClaim) }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        {{- if or .Values.server.persistence.annotations .Values.commonAnnotations }}
+        {{- $annotations := include "common.tplvalues.merge" ( dict "values" ( list .Values.server.persistence.annotations .Values.commonAnnotations ) "context" . ) }}
+        annotations: {{- include "common.tplvalues.render" ( dict "value" $annotations "context" $) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.commonLabels }}
+        labels: {{- include "common.tplvalues.render" (dict "value" .Values.commonLabels "context" $) | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes:
+        {{- range .Values.server.persistence.accessModes }}
+          - {{ . | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.server.persistence.size | quote }}
+        {{- if .Values.server.persistence.selector }}
+        selector: {{- include "common.tplvalues.render" (dict "value" .Values.server.persistence.selector "context" $) | nindent 10 }}
+        {{- end }}
+        {{- if .Values.server.persistence.dataSource }}
+        dataSource: {{- include "common.tplvalues.render" (dict "value" .Values.server.persistence.dataSource "context" $) | nindent 10 }}
+        {{- end }}
+        {{- include "common.storage.class" (dict "persistence" .Values.server.persistence "global" .Values.global) | nindent 8 }}
+  {{- end }}

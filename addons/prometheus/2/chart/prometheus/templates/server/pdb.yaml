@@ -3,7 +3,7 @@ Copyright Drycc Community.
 SPDX-License-Identifier: APACHE-2.0
 */}}
 
-{{- $replicaCount := int .Values.replicaCount }}
+{{- $replicaCount := int .Values.server.replicaCount }}
 {{- if and .Values.server.pdb.create (gt $replicaCount 1) }}
 apiVersion: {{ include "common.capabilities.policy.apiVersion" . }}
 kind: PodDisruptionBudget

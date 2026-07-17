@@ -24,6 +24,10 @@ In order to replicate the container startup scripts execute this command:
 
 {{- else }}
 
+Watch the Prometheus StatefulSet status using the command:
+
+    kubectl get sts -w --namespace {{ include "common.names.namespace" . }} -l app.kubernetes.io/component=server,app.kubernetes.io/instance={{ .Release.Name }}
+
 Prometheus can be accessed via port "{{ .Values.server.service.ports.http }}" on the following DNS name from within your cluster:
 
     {{ template "common.names.fullname" . }}.{{ include "common.names.namespace" . }}.svc.cluster.local
