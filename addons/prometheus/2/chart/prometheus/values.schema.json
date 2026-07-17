@@ -1130,7 +1130,7 @@
                     "properties": {
                         "type": {
                             "type": "string",
-                            "description": "Prometheus deployment strategy type. If persistence is enabled, strategy type should be set to Recreate to avoid dead locks.",
+                            "description": "Prometheus statefulset strategy type",
                             "default": "RollingUpdate"
                         }
                     }
@@ -1811,13 +1811,13 @@
                     "properties": {
                         "enabled": {
                             "type": "boolean",
-                            "description": "Enable persistence using Persistent Volume Claims. If you have multiple instances (server.repicacount > 1), please considere using an external storage service like Thanos or Grafana Mimir",
-                            "default": false
+                            "description": "Enable persistence using Persistent Volume Claims. If you have multiple instances (server.replicaCount > 1), please consider using an external storage service like Thanos or Grafana Mimir",
+                            "default": true
                         },
                         "mountPath": {
                             "type": "string",
                             "description": "Path to mount the volume at.",
-                            "default": "/drycc/prometheus/data"
+                            "default": "/opt/drycc/prometheus/data"
                         },
                         "subPath": {
                             "type": "string",
@@ -1881,6 +1881,21 @@
                             "items": {}
                         }
                     }
+                },
+                "headlessService": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "type": "object",
+                            "description": "Additional custom annotations for Prometheus headless service",
+                            "default": {}
+                        }
+                    }
+                },
+                "podManagementPolicy": {
+                    "type": "string",
+                    "description": "Statefulset Pod management policy",
+                    "default": "OrderedReady"
                 }
             }
         },
