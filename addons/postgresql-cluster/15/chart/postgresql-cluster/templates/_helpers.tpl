@@ -143,6 +143,10 @@ Create patroni envs.
   value: '0.0.0.0:5432'
 - name: PATRONI_RESTAPI_LISTEN
   value: '0.0.0.0:8008'
+- name: PATRONI_LOG_LEVEL
+  value: "WARNING"
+- name: MALLOC_ARENA_MAX
+  value: "1"
 {{- end -}}
 
 {{/*
