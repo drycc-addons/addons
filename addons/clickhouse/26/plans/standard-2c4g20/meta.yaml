@@ -1,0 +1,6 @@
+name: "standard-2c4g20"
+id: 9c6be449-7750-4e60-8695-76158eb8894a
+description: "clickhouse standard-2c4g20 plan: Disk 20Gi ,vCPUs 2 , RAM 4G , DO NOT USE THIS PLAN， only for test "
+displayName: "standard-2c4g20"
+bindable: true
+maximum_polling_duration: 1800

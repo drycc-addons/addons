@@ -1,0 +1,30 @@
+name: clickhouse-26
+version: 26
+id: 2e5f53ac-3dba-45fa-abbf-1bdea27a337c
+description: "clickhouse-26"
+displayName: "clickhouse-26"
+metadata:
+  displayName: "clickhouse-26"
+  provider:
+    name: drycc
+    supportURL: http://clickhouse.io/
+  documentationURL: https://github.com/drycc-addons/
+tags: clickhouse
+bindable: true
+instances_retrievable: true
+bindings_retrievable: true
+plan_updateable: true
+allow_parameters:
+- name: "networkPolicy.allowNamespaces"
+  required: false
+  description: "networkPolicy allowNamespaces config for values.yaml"
+- name: "service.type"
+  required: false
+  description: "service type config for values.yaml"
+- name: "shards"
+  required: false
+  description: "number of ClickHouse shards"
+- name: "replicaCount"
+  required: false
+  description: "number of ClickHouse replicas per shard"
+archive: false
