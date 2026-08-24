@@ -67,7 +67,7 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 2000m
-    hugepages-2Mi: 20Mi
+    # hugepages-2Mi: 20Mi
     memory: 4Gi
   requests:
     cpu: 100m
