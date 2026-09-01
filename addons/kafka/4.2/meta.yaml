@@ -93,6 +93,9 @@ allow_parameters:
 - name: "metrics.jmx.enabled"
   required: false
   description: "metrics jmx enabled or not config for values.yaml"
+- name: "metrics.jmx.extraRules"
+  required: false
+  description: "metrics jmx extraRules config for values.yaml"
 - name: "metrics.nodeSelector"
   required: false
   description: "metrics nodeSelector config for values.yaml"

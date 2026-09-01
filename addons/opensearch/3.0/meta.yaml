@@ -27,6 +27,9 @@ allow_parameters:
 - name: "master.nodeSelector"
   required: false
   description: "master nodeSelector config for values.yaml"
+- name: "master.persistence"
+  required: false
+  description: "master persistence config for values.yaml"
 - name: "master.networkPolicy.allowNamespaces"
   required: false
   description: "master networkPolicy allowNamespaces config for values.yaml"
@@ -69,4 +72,10 @@ allow_parameters:
 - name: "dashboards.service.externalTrafficPolicy"
   required: false
   description: "dashboards service externalTrafficPolicy config for values.yaml"
+- name: "dashboards.password"
+  required: false
+  description: "dashboards password config for values.yaml"
+- name: "security"
+  required: false
+  description: "security config for values.yaml"
 archive: false

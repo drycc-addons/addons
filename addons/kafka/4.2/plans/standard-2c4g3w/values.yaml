@@ -11,6 +11,7 @@ controller:
   ## @param controller.controllerOnly If set to true, controller nodes will be deployed as dedicated controllers, instead of controller+broker processes.
   ##
   controllerOnly: true
+  heapOpts: -Xmx2048m -Xms2048m
   ##
   ## @param controller.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   resources:
@@ -37,6 +38,7 @@ broker:
   ## @param broker.replicaCount Number of Kafka broker-only nodes
   ##
   replicaCount: 3
+  heapOpts: -Xmx2048m -Xms2048m
   ## @param broker.resources Set container requests and limits for different resources like CPU or memory (essential for production workloads)
   resources:
     limits:

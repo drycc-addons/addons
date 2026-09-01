@@ -251,7 +251,9 @@ spec:
             - init-stack
             - java
           args:
-            - -XX:MaxRAMPercentage=100
+            - -Xms192m
+            - -Xmx192m
+            - -XX:MaxMetaspaceSize=64m
             - -XshowSettings:vm
             - -jar
             - jmx_prometheus_standalone.jar
