@@ -1,0 +1,28 @@
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: hb-grafana-standard-1c1g
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 1000m
+    memory: 1Gi
+
+lakefsConfig: |
+  database:
+    type: "postgres"
+
+  postgres:
+    connection_string: "xxxx"
+
+  blockstore:
+    type: s3
+    s3:
+      force_path_style: true
+      endpoint: xxx
+      discover_bucket_region: false
+      credentials:
+        access_key_id: xxx
+        secret_access_key: xx
