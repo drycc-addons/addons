@@ -1,0 +1,6 @@
+name: "standard-4c12g128"
+id: 8a0a3b89-947f-4bb2-950f-2fa5e86f8cf8
+description: "Opensearch standard-4c12g128 plan which limit resources 4 cores 12Gi memory and persistence size 128Gi."
+displayName: "standard-4c12g128"
+bindable: true
+maximum_polling_duration: 1800

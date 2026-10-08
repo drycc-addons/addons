@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "taskmanager": {
+      "type": "object",
+      "properties": {
+        "persistence": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "description": "persistence size",
+              "pattern": "^(?:1Ti|(?:[1-9]\\d{0,2}|100[0-9]|101\\d|102[0-4])Gi)$"
+            }
+          }
+        }
+      }
+    }
+  }
+}
