@@ -1,10 +1,10 @@
-name: lakefs-1.88
-version: 1.88
+name: lakefs-1.86
+version: 1.86
 id: 22b23560-d46f-47f2-ac17-57dc58bc24b4
-description: "lakefs-1.88"
-displayName: "lakefs-1.88"
+description: "lakefs-1.86"
+displayName: "lakefs-1.86"
 metadata:
-  displayName: "lakefs-1.88"
+  displayName: "lakefs-1.86"
   provider:
     name: drycc
     supportURL: https://docs.lakefs.io

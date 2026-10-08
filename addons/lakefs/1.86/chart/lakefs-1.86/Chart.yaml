@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 1.88.0
+appVersion: 1.86.0
 description: A Helm chart for running LakeFS on Kubernetes
 home: https://lakefs.io
 icon: https://lakefs.io/wp-content/uploads/2020/07/lake-fs-color-2.svg
@@ -14,4 +14,4 @@ dependencies:
 sources:
 - https://github.com/treeverse/lakeFS
 type: application
-version: 1.88.0
+version: 1.86.0

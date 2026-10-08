@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   pullPolicy: IfNotPresent
   repository: registry.drycc.cc/drycc-addons/lakefs
-  tag: "1.88.0"
+  tag: "1.86.0"
 nameOverride: ""
 fullnameOverride: ""
 
