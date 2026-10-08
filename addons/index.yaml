@@ -104,7 +104,7 @@ entries:
   lakefs:
     - version: "1.52"
       description: "LakeFS provides version control over the data lake, and uses Git-like semantics to create and access those versions. If you know git, you’ll be right at home with lakeFS. "
-    - version: "1.88"
+    - version: "1.86"
       description: "LakeFS provides version control over the data lake, and uses Git-like semantics to create and access those versions. If you know git, you’ll be right at home with lakeFS. "
   victoriametrics:
     - version: "1"
