@@ -36,4 +36,7 @@ allow_parameters:
 - name: "metrics.enabled"
   required: false
   description: "metrics enabled or not config for values.yaml"
+- name: "persistence.storageClass"
+  required: false
+  description: "persistence storageClass config for values.yaml"
 archive: false

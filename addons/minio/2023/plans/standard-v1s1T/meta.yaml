@@ -1,0 +1,6 @@
+name: "standard-v1s1T"
+id: 8767997d-eba0-48ab-9297-5b352044b4a5
+description: "Minio standard-v1s1T plan which limit 1 nodes, each size 1T."
+displayName: "standard-v1s1T"
+bindable: true
+maximum_polling_duration: 1800
