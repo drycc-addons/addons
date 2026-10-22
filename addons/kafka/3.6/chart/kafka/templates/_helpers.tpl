@@ -500,6 +500,13 @@ Returns the Kafka listeners settings based on the listeners.* object
   {{- $listeners = list .context.Values.listeners.controller -}}
   {{- else -}}
   {{- $listeners = append $listeners .context.Values.listeners.controller -}}
+  {{- range $i := .context.Values.listeners.extraListeners -}}
+  {{- $listeners = append $listeners $i -}}
+  {{- end -}}
+  {{- end -}}
+  {{- else -}}
+  {{- range $i := .context.Values.listeners.extraListeners -}}
+  {{- $listeners = append $listeners $i -}}
   {{- end -}}
   {{- end -}}
   {{- $res := list -}}

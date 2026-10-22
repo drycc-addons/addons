@@ -21,6 +21,9 @@ allow_parameters:
 - name: "extraConfig"
   required: false
   description: "extraConfig config for values.yaml"
+- name: "overrideConfiguration"
+  required: false
+  description: "overrideConfiguration config for values.yaml"
 - name: "controller.extraConfig"
   required: false
   description: "controller.extraConfig config for values.yaml"
@@ -84,12 +87,21 @@ allow_parameters:
 - name: "service.externalTrafficPolicy"
   required: false
   description: "service externalTrafficPolicy config for values.yaml"
-- name: "externalAccess.enabled"
+- name: "externalAccess"
   required: false
-  description: "externalAccess enabled or not config for values.yaml"
+  description: "externalAccess config for values.yaml"
 - name: "listeners.advertisedListeners"
   required: false
   description: "listeners advertisedListeners or not config for values.yaml"
+- name: "listeners.extraListeners"
+  required: false
+  description: "listeners extraListeners config for values.yaml"
+- name: "clusterId"
+  required: false
+  description: "clusterId config for values.yaml"
+- name: "defaultInitContainers"
+  required: false
+  description: "defaultInitContainers config for values.yaml"
 - name: "metrics.jmx.enabled"
   required: false
   description: "metrics jmx enabled or not config for values.yaml"
