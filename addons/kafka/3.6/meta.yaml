@@ -78,15 +78,27 @@ allow_parameters:
 - name: "service.externalTrafficPolicy"
   required: false
   description: "service externalTrafficPolicy config for values.yaml"
-- name: "externalAccess.enabled"
+- name: "externalAccess"
   required: false
-  description: "externalAccess enabled or not config for values.yaml"
+  description: "externalAccess config for values.yaml"
 - name: "listeners.advertisedListeners"
   required: false
-  description: "listeners advertisedListeners or not config for values.yaml"
+  description: "listeners advertisedListeners config for values.yaml"
+- name: "listeners.extraListeners"
+  required: false
+  description: "listeners extraListeners config for values.yaml"
+- name: "listeners.overrideListeners"
+  required: false
+  description: "listeners overrideListeners config for values.yaml"
 - name: "kraft.enabled"
   required: false
   description: "kraft enabled or not config for values.yaml"
+- name: "kraft.clusterId"
+  required: false
+  description: "kraft clusterId config for values.yaml"
+- name: "extraInit"
+  required: false
+  description: "extraInit config for values.yaml"
 - name: "metrics.jmx.enabled"
   required: false
   description: "metrics jmx enabled or not config for values.yaml"

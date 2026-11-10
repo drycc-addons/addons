@@ -53,6 +53,9 @@ spec:
     - ports:
         - port: {{ .Values.listeners.external.containerPort }}
         - port: {{ .Values.externalAccess.controller.service.ports.external }}
+        {{- range $listener := .Values.listeners.extraListeners }}
+        - port: {{ $listener.containerPort }}
+        {{- end }}
     {{- if .Values.networkPolicy.externalAccess.from }}
       from: {{- include "common.tplvalues.render" ( dict "value" .Values.networkPolicy.externalAccess.from "context" $ ) | nindent 8 }}
     {{- end }}
