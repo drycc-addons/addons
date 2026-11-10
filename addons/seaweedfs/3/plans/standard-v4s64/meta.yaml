@@ -1,6 +1,0 @@
-name: "standard-v4s64"
-id: bae813b7-cea0-4f9e-81af-868232b34b3a
-description: "Seaweedfs standard-v4s64 plan which limit 4 volumes, each size 64G."
-displayName: "standard-v4s64"
-bindable: true
-maximum_polling_duration: 1800

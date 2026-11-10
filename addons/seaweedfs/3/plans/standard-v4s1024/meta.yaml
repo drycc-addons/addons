@@ -1,6 +1,0 @@
-name: "standard-v4s1024"
-id: e452bc34-c7bf-4d40-a35d-9b2781c7e1d0
-description: "Seaweedfs standard-v4s1024 plan which limit 4 volumes, each size 1024G."
-displayName: "standard-v4s1024"
-bindable: true
-maximum_polling_duration: 1800
